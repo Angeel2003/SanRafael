@@ -18,13 +18,15 @@ import { FormsModule } from '@angular/forms';
             IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, NgIf, NgFor, NgForOf, NgClass, FormsModule],
 })
 export class TareaPasosPage {
-  taskName: string = '';
-  previewUrl: string | ArrayBuffer | null | undefined= null;
-  currentTab: string = 'texto';
-  stepText: string[] = [];
-  stepPicto: string[] = [];
-  stepImg: string[] = [];
-  stepVideo: string[] = [];
+  taskName : string = '';
+  previewUrl : string | ArrayBuffer | null | undefined= null;
+  currentTab : string = 'texto';
+  stepText : string[] = [];
+  stepPicto : string[] = [];
+  stepImg : string[] = [];
+  stepVideo : string[] = [];
+  videoCompletoUrl : string | ArrayBuffer | null = null;
+  audioCompletoUrl : string | ArrayBuffer | null = null;
 
   constructor(private fb: FormBuilder) {
     addIcons({
@@ -49,6 +51,39 @@ export class TareaPasosPage {
     if (input.files && input.files.length) {
       const file = input.files[0];
       const reader = new FileReader();
+      reader.readAsDataURL(file);
+    }
+  }
+
+  videoPaso(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+    }
+  }
+
+  videoCompleto(event: Event){
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.videoCompletoUrl = reader.result; // Guarda la URL del audio
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  audioPaso(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length) {
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.audioCompletoUrl = reader.result; // Guarda la URL del audio
+      };
       reader.readAsDataURL(file);
     }
   }

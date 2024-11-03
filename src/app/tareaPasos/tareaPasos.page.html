@@ -100,17 +100,25 @@
           <ion-list lines="inset">
             <ion-item *ngFor="let step of stepVideo">
               <ion-label>Paso {{step}}</ion-label>
-              <input type="file" accept="image/*" (change)="imagenPaso($event)" />
+              <input type="file" accept="video/*" (change)="videoPaso($event)" />
             </ion-item>
           </ion-list>
         </ng-container>
 
         <ng-container *ngIf="currentTab === 'video'">
-          <p>Contenido relacionado con Video.</p>
+          <ion-item>
+            <ion-label>Selecciona un video</ion-label>
+            <input type="file" accept="video/*" (change)="videoCompleto($event)" />
+          </ion-item>
         </ng-container>
 
         <ng-container *ngIf="currentTab === 'audio'">
-          <p>Contenido relacionado con Audio.</p>
+          <ion-list lines="inset">
+            <ion-item>
+              <ion-label>Selecciona un audio</ion-label>
+              <input type="file" accept="audio/*" (change)="audioPaso($event)" />
+            </ion-item>
+          </ion-list>
         </ng-container>
       </ion-col>
 
