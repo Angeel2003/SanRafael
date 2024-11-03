@@ -1,27 +1,60 @@
-#container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+ion-toolbar {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente el contenido */
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+ion-title {
+  text-align: center; /* Asegura que el texto esté centrado */
+  width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
+  font-size: 24px;
+  color: #005682;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
+.admin-button {
+  position: absolute; // Posición absoluta para ubicarlo en la esquina
+  top: 75px; // Ajusta según la distancia desde la parte superior
+  right: 10px; // Ajusta según la distancia desde la derecha
+  z-index: 10; // Asegúrate de que esté encima de otros elementos
+  border-radius: 50px; // Bordes redondeados
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); // Sombra del botón
+  transition: transform 0.2s; // Transición suave al hacer hover
+  
+  border: 2px solid #005682; // Borde del botón
+  --background: transparent; // Cambia el color de fondo a transparente
+  --color: #005682; // Cambia el color del texto a #005682
 }
 
-#container a {
-  text-decoration: none;
+.admin-button:hover {
+  transform: scale(1.05); // Aumenta el tamaño ligeramente al pasar el mouse
+  --background: rgba(0, 86, 130, 0.1); // Fondo ligeramente azul al pasar el mouse (opcional)
+}
+
+.center-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; // Asegúrate de que el botón esté centrado verticalmente
+}
+
+.user-button {
+  width: 450px; // Ajusta según el tamaño que desees
+  height: 450px; // Ajusta según el tamaño que desees
+  border-radius: 50%; // Esto lo hace redondo
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8); // Sombra del botón
+  transition: transform 0.2s; // Transición suave al hacer hover
+  --background: #005682; // Cambia el color de fondo
+  --color: #fff; // Cambia el color del texto
+}
+
+.user-button:hover {
+  transform: scale(1.05); // Aumenta el tamaño ligeramente al pasar el mouse
+}
+
+ion-icon {
+  font-size: 225px;
+  margin-bottom: 5px; // Añade un espacio entre el ícono y el texto
+}
+
+p {
+  font-size: 32px;
 }

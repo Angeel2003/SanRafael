@@ -1,0 +1,43 @@
+ion-toolbar {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
+}
+  
+ion-title {
+    text-align: center; /* Asegura que el texto esté centrado */
+    width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
+    font-size: 24px;
+    color: #005682;
+}
+
+.adminLogin {
+    display: flex; /* Usar flexbox para centrar el contenido */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    height: 80vh; /* Asegúrate de que ocupe toda la altura del viewport */
+}
+
+ion-item {
+    --background: #f0f0f5;
+    margin: 16px;
+    border-radius: 24px;
+    width: 600px;
+    font-size: 18px;
+}
+
+ion-icon{
+    margin: 8px;
+}
+
+ion-button {
+    --background: #005682; // Cambia el color de fondo
+    --color: #fff; // Cambia el color del texto
+}
+
+ion-item:hover{
+    border: 1px solid #005682;
+}
+
+.eye-icon{
+    cursor: pointer;
+}
