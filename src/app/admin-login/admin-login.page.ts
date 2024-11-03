@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { mailOutline } from 'ionicons/icons';
 import { eyeOff } from 'ionicons/icons';
 import { lockClosedOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton, IonButtons,
+          IonInput, IonItem, IonLabel, IonBackButton } from '@ionic/angular/standalone';
+
 
 @Component({
   selector: 'app-admin-login',
   templateUrl: './admin-login.page.html',
   styleUrls: ['./admin-login.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule]
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton, IonButtons, IonInput, IonItem, IonLabel, IonBackButton]
 })
 export class AdminLoginPage implements OnInit {
   private passwordVisible = false;

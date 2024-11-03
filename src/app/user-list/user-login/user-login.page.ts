@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { lockClosedOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButtons, IonButton, IonBackButton, 
+  IonItem, IonLabel, IonInput } from '@ionic/angular/standalone';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-user-login',
   templateUrl: './user-login.page.html',
   styleUrls: ['./user-login.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule]
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButtons, IonButton, IonBackButton, 
+    IonItem, IonLabel, IonInput, NgIf]
 })
 export class UserLoginPage implements OnInit {
   user: any;

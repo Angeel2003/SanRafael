@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TareaPasosPage } from './tareaPasos.page';
+import { TareaPasosPage } from './tarea-pasos.page';
 
 describe('TareaPasosPage', () => {
   let component: TareaPasosPage;

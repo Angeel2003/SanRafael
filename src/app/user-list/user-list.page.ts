@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButtons, IonButton, IonBackButton, 
+        IonCard, IonCardHeader, IonCardTitle} from '@ionic/angular/standalone';
+import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.page.html',
   styleUrls: ['./user-list.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule]
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButtons, IonButton, IonBackButton, 
+    IonCard, IonCardHeader, IonCardTitle, NgFor]
 })
 export class UserListPage implements OnInit {
   users = [
