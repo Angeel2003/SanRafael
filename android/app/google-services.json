@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "65579135683",
+    "project_id": "indepapp-sanrafael",
+    "storage_bucket": "indepapp-sanrafael.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:65579135683:android:f55adaadd48821ac7fe876",
+        "android_client_info": {
+          "package_name": "com.android.application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJL2Y3LBB7pCx5ce232wcjLKQcPYNJkVE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
