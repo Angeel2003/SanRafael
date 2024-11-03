@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/user-list"></ion-back-button> <!-- Ajusta la ruta si es necesario -->
+    </ion-buttons>
+    <ion-title>{{ user.name }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="userLoginPin" *ngIf="isPIN">
+    <form id="formLogin">
+
+      <ion-item id="item-pin" class="input-item">
+        <ion-icon name="lock-closed-outline"></ion-icon>
+        <ion-label position="fixed">PIN</ion-label>
+        <ion-input id="pinLogin" type="number" [disabled]="false" placeholder="Introduce tu PIN"></ion-input>
+      </ion-item>
+  
+      <ion-button expand="block" shape="round" (click)="onSubmit()">Entrar</ion-button>
+  
+    </form>
+  </div>
+</ion-content>

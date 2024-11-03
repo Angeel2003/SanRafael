@@ -1,0 +1,28 @@
+ion-toolbar {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
+}
+  
+ion-title {
+    text-align: center; /* Asegura que el texto esté centrado */
+    width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
+    font-size: 24px;
+    color: #005682;
+}
+
+ion-card {
+    text-align: center; /* Centrar texto */
+    margin: 10px; /* Espaciado entre tarjetas */
+    background-color: #005682;
+}
+
+ion-card-title {
+    color: #fff;
+    font-size: 36px;
+}
+
+ion-card img {
+    width: 100%; /* Ancho completo */
+    border-radius: 24px;
+    padding: 10px;
+}

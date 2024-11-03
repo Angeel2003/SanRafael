@@ -1,0 +1,92 @@
+/* Variables de color y fuente */
+:root {
+  --font-family: 'Helvetica';
+}
+
+* {
+  font-family: var(--font-family);
+}
+
+/* Estilo del encabezado */
+ion-header {
+  background-color: #ffffff;
+  color: #005682;
+}
+
+/* Estilo del título de la tarea */
+ion-title {
+  font-size: 150%;
+  color: #005682;
+}
+
+/* Botones del encabezado */
+ion-button {
+  color: #FFFFFF;
+}
+
+ion-icon {
+  color: #005682;
+}
+
+ion-icon.icon-add {
+  color: #FFFFFF;
+}
+
+/* Fondo de contenido */
+ion-content {
+  background-color: #FFFFFF;
+  padding: 150%;
+}
+
+/* Input y etiquetas */
+ion-item {
+  background: #FFFFFF;
+  color: #005682;
+  font-size: 100%;
+}
+
+ion-input {
+  color: #005682;
+  font-size: 150%;
+}
+
+input {
+  color: #005682;
+  font-size: 150%;
+}
+
+/* Botón de añadir paso */
+ion-button.add-step-text-button {
+  --background: #005682; /* Fondo azul */
+  color: #FFFFFF; /* Color de texto blanco */
+  border-radius: 10%;
+}
+
+/* Estilo de los tabs */
+ion-tab-bar {
+  color: #005682;
+  background: #FFFFFF;
+}
+
+ion-tab-button {
+  color: #005682;
+}
+
+ion-label{
+  font-size: 150%;
+}
+
+ion-icon{
+  font-size: 200%;
+}
+
+ion-button.button-active {
+  --background: #005682;
+  color: white;
+}
+
+ion-button.button-inactive {
+  --background: white;
+  color: #005682;
+  border: 3px solid #005682;
+}
