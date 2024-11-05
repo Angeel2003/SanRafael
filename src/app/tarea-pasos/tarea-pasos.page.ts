@@ -1,14 +1,12 @@
-import { NgFor, NgForOf, NgIf, NgClass } from '@angular/common';
-import { Component} from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { NgFor, NgIf, NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 import { addIcons } from 'ionicons';
-import { arrowBackOutline } from 'ionicons/icons'
-import { personCircleOutline } from 'ionicons/icons'
-import { addOutline } from 'ionicons/icons'
+import { arrowBackOutline, personCircleOutline, addOutline } from 'ionicons/icons';
 import { FormsModule } from '@angular/forms';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, 
-        IonInput, IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList} from '@ionic/angular/standalone';
-
+import {
+  IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, 
+  IonInput, IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, IonFooter
+} from '@ionic/angular/standalone';
 import { FirebaseService } from '../services/firebase.service';
 
 @Component({
@@ -16,36 +14,48 @@ import { FirebaseService } from '../services/firebase.service';
   templateUrl: './tarea-pasos.page.html',
   styleUrls: ['./tarea-pasos.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, IonInput, 
-            IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, NgIf, NgFor, NgForOf, NgClass, FormsModule],
+  imports: [
+    IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, IonInput, IonFooter,
+    IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, NgIf, NgFor, NgClass, FormsModule
+  ],
 })
 
 export class TareaPasosPage {
-  taskName : string = '';
-  previewUrl : string | ArrayBuffer | null | undefined= null;
-  currentTab : string = 'texto';
-  stepText : string[] = [];
-  stepPicto : string[] = [];
-  stepImg : string[] = [];
-  stepVideo : string[] = [];
-  videoCompletoUrl : string | ArrayBuffer | null = null;
-  audioCompletoUrl : string | ArrayBuffer | null = null;
+  taskName: string = '';
+  previewUrl: File | null = null;
+  currentTab: string = 'texto';
+  stepText: string[] = [];
+  stepPicto: string[] = [];
+  stepImg: string[] = [];
+  stepVideo: string[] = [];
+  videoCompletoFile: File | null = null;
+  audioCompletoFile: File | null = null;
+  selectedText: string[] = [];
+  selectedPicto: File[] = [];
+  selectedImages: File[] = [];
+  selectedVideos: File[] = [];
 
   constructor(private firebaseService: FirebaseService) {
     addIcons({
       arrowBackOutline,
       personCircleOutline,
       addOutline
-    })
+    });
   }
 
   imagenPreview(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = (e) => this.previewUrl = e.target?.result;
-      reader.readAsDataURL(file);
+      this.previewUrl = file;
+    }
+  }
+
+  pictoPaso(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length) {
+      const file = input.files[0];
+      this.selectedPicto.push(file);
     }
   }
 
@@ -53,8 +63,7 @@ export class TareaPasosPage {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       const file = input.files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
+      this.selectedImages.push(file);
     }
   }
 
@@ -62,20 +71,15 @@ export class TareaPasosPage {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       const file = input.files[0];
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
+      this.selectedVideos.push(file);
     }
   }
 
-  videoCompleto(event: Event){
+  videoCompleto(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.videoCompletoUrl = reader.result; // Guarda la URL del audio
-      };
-      reader.readAsDataURL(file);
+      this.videoCompletoFile = file;
     }
   }
 
@@ -83,14 +87,11 @@ export class TareaPasosPage {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.audioCompletoUrl = reader.result; // Guarda la URL del audio
-      };
-      reader.readAsDataURL(file);
+      this.audioCompletoFile = file;
     }
   }
 
+  
   selectTab(tab: string) {
     this.currentTab = tab;
   }
@@ -110,4 +111,65 @@ export class TareaPasosPage {
       this.stepVideo.push(`${stepVideoNumber}`); // Añade el paso al array  
     }
   }
+
+  async guardarTarea() {
+    const timestamp = new Date().getTime();
+
+    const dataToSave: any = {
+      nombre: this.taskName,
+      previewUrl: '',
+      pasosTexto: this.stepText,
+      pasosPicto: [],
+      pasosImagenes: [],
+      pasosVideos: [],
+      videoCompletoUrl: '',
+      audioCompletoUrl: ''
+    };
+
+    if (this.previewUrl) {
+      const path = `imagenes/preview_imagen_${timestamp}.mp4`;
+      await this.firebaseService.uploadFile(this.previewUrl, path);
+      const downloadUrl = await this.firebaseService.getDownloadURL(path);
+      dataToSave.previewUrl = downloadUrl;
+    }
+
+    for (const [index, file] of this.selectedPicto.entries()) {
+      const path = `pictograma/picto_${index}_${timestamp}.png`;
+      await this.firebaseService.uploadFile(file, path);
+      const downloadUrl = await this.firebaseService.getDownloadURL(path);
+      dataToSave.pasosPicto.push(downloadUrl);
+    }
+
+    for (const [index, file] of this.selectedImages.entries()) {
+      const path = `imagenes/imagen_${index}_${timestamp}.png`;
+      await this.firebaseService.uploadFile(file, path);
+      const downloadUrl = await this.firebaseService.getDownloadURL(path);
+      dataToSave.pasosImagenes.push(downloadUrl);
+    }
+
+    for (const [index, file] of this.selectedVideos.entries()) {
+      const path = `videos/paso_video_${index}_${timestamp}.mp4`;
+      await this.firebaseService.uploadFile(file, path);
+      const downloadUrl = await this.firebaseService.getDownloadURL(path);
+      dataToSave.pasosVideos.push(downloadUrl);
+    }
+
+    if (this.videoCompletoFile) {
+      const path = `videos/video_completo_${timestamp}.mp4`;
+      await this.firebaseService.uploadFile(this.videoCompletoFile, path);
+      const downloadUrl = await this.firebaseService.getDownloadURL(path);
+      dataToSave.videoCompletoUrl = downloadUrl;
+    }
+
+    if (this.audioCompletoFile) {
+      const path = `audios/audio_completo_${timestamp}.mp3`;
+      await this.firebaseService.uploadFile(this.audioCompletoFile, path);
+      const downloadUrl = await this.firebaseService.getDownloadURL(path);
+      dataToSave.audioCompletoUrl = downloadUrl;
+    }
+
+    await this.firebaseService.guardarTareaPorPasos(dataToSave);
+    console.log('Datos guardados en Firestore con éxito');
+  }
 }
+

@@ -6,7 +6,6 @@ import { NgIf } from '@angular/common';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButtons, IonButton, IonBackButton, 
   IonItem, IonLabel, IonInput } from '@ionic/angular/standalone';
 
-import { FirebaseService } from 'src/app/services/firebase.service';
 
 @Component({
   selector: 'app-user-login',
@@ -22,7 +21,7 @@ export class UserLoginPage implements OnInit {
   isPIN: boolean = false;
   isPictograma: boolean = false;
 
-  constructor(private route: ActivatedRoute, private firebaseService: FirebaseService) {
+  constructor(private route: ActivatedRoute) {
     addIcons({
       lockClosedOutline
     })
