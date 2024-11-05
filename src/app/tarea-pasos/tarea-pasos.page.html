@@ -82,7 +82,7 @@
           <ion-list lines="inset">
             <ion-item *ngFor="let step of stepPicto">
               <ion-label>Paso {{step}}</ion-label>
-              <input type="file" accept="image/*" (change)="imagenPaso($event)" />
+              <input type="file" accept="image/*" (change)="pictoPaso($event)" />
             </ion-item>
           </ion-list>
         </ng-container>
@@ -130,5 +130,8 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  
 </ion-content>
+
+<ion-footer>
+  <ion-button class="save-button" expand="full" (click)="guardarTarea()">Guardar</ion-button>
+</ion-footer>
