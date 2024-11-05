@@ -27,7 +27,7 @@
 
   <ion-item>
     <ion-label>Foto de la tarea</ion-label>
-    <input type="file" accept="image/*" (change)="imagenPreview($event)" />
+    <input type="file" accept="image/*" (change)="imgPreview($event)" />
   </ion-item>
 
   <!-- Tabs -->
@@ -70,37 +70,69 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <ng-container *ngIf="currentTab === 'texto'">
+        <!-- <ng-container *ngIf="currentTab === 'texto'">
           <ion-list lines="inset">
             <ion-item *ngFor="let step of stepText">
               <ion-input label="Paso {{step}}." placeholder="Insertar paso {{step}}"></ion-input>
             </ion-item>
           </ion-list>
         </ng-container>
+        
 
         <ng-container *ngIf="currentTab === 'picto'">
           <ion-list lines="inset">
             <ion-item *ngFor="let step of stepPicto">
               <ion-label>Paso {{step}}</ion-label>
-              <input type="file" accept="image/*" (change)="pictoPaso($event)" />
+              <input type="file" accept="image/*" (change)="pictoStep($event)" />
+            </ion-item>
+          </ion-list>
+        </ng-container> -->
+
+        <ng-container *ngIf="currentTab === 'texto'">
+          <ion-list lines="inset">
+            <ion-item *ngFor="let step of stepText; let i = index">
+              <ion-input 
+                label="Paso {{step}}." 
+                placeholder="Insertar paso {{step}}"
+                [(ngModel)]="stepTextValues[i]">
+              </ion-input>
             </ion-item>
           </ion-list>
         </ng-container>
+        
+        <ng-container *ngIf="currentTab === 'picto'">
+          <ion-list lines="inset">
+            <ion-item *ngFor="let step of stepPicto; let i = index">
+              <ion-label>Paso {{ step }}</ion-label>
+              <div *ngIf="stepPictoValues[i]">
+                <img [src]="stepPictoValues[i]" alt="Vista previa del pictograma {{ i + 1 }}" style="width: 100px; height: auto;" />
+              </div>
+              <input type="file" accept="image/*" (change)="pictoStep($event, i)" />
+            </ion-item>
+          </ion-list>
+        </ng-container>
+        
 
         <ng-container *ngIf="currentTab === 'imagenes'">
           <ion-list lines="inset">
-            <ion-item *ngFor="let step of stepImg">
-              <ion-label>Paso {{step}}</ion-label>
-              <input type="file" accept="image/*" (change)="imagenPaso($event)" />
+            <ion-item *ngFor="let step of stepImg; let i = index">
+              <ion-label>Paso {{ step }}</ion-label>
+              <div *ngIf="stepImgValues[i]">
+                <img [src]="stepImgValues[i]" alt="Vista previa de la imagen {{ i + 1 }}" style="width: 100px; height: auto;" />
+              </div>
+              <input type="file" accept="image/*" (change)="imgStep($event, i)" />
             </ion-item>
           </ion-list>
         </ng-container>
 
         <ng-container *ngIf="currentTab === 'videoPasos'">
           <ion-list lines="inset">
-            <ion-item *ngFor="let step of stepVideo">
-              <ion-label>Paso {{step}}</ion-label>
-              <input type="file" accept="video/*" (change)="videoPaso($event)" />
+            <ion-item *ngFor="let step of stepVideo; let i = index">
+              <ion-label>Paso {{ step }}</ion-label>
+              <div *ngIf="stepVideoValues[i]">
+                <img [src]="stepVideoValues[i]" alt="Vista previa del video {{ i + 1 }}" style="width: 100px; height: auto;" />
+              </div>
+              <input type="file" accept="video/*" (change)="videoStep($event, i)" />
             </ion-item>
           </ion-list>
         </ng-container>
@@ -116,7 +148,7 @@
           <ion-list lines="inset">
             <ion-item>
               <ion-label>Selecciona un audio</ion-label>
-              <input type="file" accept="audio/*" (change)="audioPaso($event)" />
+              <input type="file" accept="audio/*" (change)="audioStep($event)" />
             </ion-item>
           </ion-list>
         </ng-container>
