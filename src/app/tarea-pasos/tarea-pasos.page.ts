@@ -35,6 +35,12 @@ export class TareaPasosPage {
   selectedImages: File[] = [];
   selectedVideos: File[] = [];
 
+  stepTextValues: string[] = []; // Almacena los textos de cada paso en el tab 'texto'
+  stepPictoValues: (File | null | string)[] = []; // Almacena las imágenes de pictogramas
+  stepImgValues: (File | null | string)[] = []; // Almacena las imágenes
+  stepVideoValues: (File | null | string)[] = []; // Almacena los videos de los pasos
+ 
+
   constructor(private firebaseService: FirebaseService) {
     addIcons({
       arrowBackOutline,
@@ -43,35 +49,57 @@ export class TareaPasosPage {
     });
   }
 
-  imagenPreview(event: Event) {
+  imgPreview(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       const file = input.files[0];
       this.previewUrl = file;
     }
   }
+  
 
-  pictoPaso(event: Event) {
+  // pictoStep(event: Event) {
+  //   const input = event.target as HTMLInputElement;
+  //   if (input.files && input.files.length) {
+  //     const file = input.files[0];
+  //     this.selectedPicto.push(file);
+  //   }
+  // }
+
+  pictoStep(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
+    if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      this.selectedPicto.push(file);
+      this.selectedPicto[index] = file; // Almacena el archivo
+      this.stepPictoValues[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
+      console.log('Archivo seleccionado:', file); // Verifica que el archivo se ha seleccionado
+    } else {
+      console.log('No se seleccionó ningún archivo'); // Mensaje si no hay archivos
+    }
+  }
+  
+
+  imgStep(event: Event, index: number) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.selectedImages[index] = file; // Almacena el archivo
+      this.stepImgValues[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
+      console.log('Archivo seleccionado:', file); // Verifica que el archivo se ha seleccionado
+    } else {
+      console.log('No se seleccionó ningún archivo'); // Mensaje si no hay archivos
     }
   }
 
-  imagenPaso(event: Event) {
+  videoStep(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
+    if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      this.selectedImages.push(file);
-    }
-  }
-
-  videoPaso(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      const file = input.files[0];
-      this.selectedVideos.push(file);
+      this.selectedVideos[index] = file; // Almacena el archivo
+      this.stepVideoValues[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
+      console.log('Archivo seleccionado:', file); // Verifica que el archivo se ha seleccionado
+    } else {
+      console.log('No se seleccionó ningún archivo'); // Mensaje si no hay archivos
     }
   }
 
@@ -83,7 +111,7 @@ export class TareaPasosPage {
     }
   }
 
-  audioPaso(event: Event) {
+  audioStep(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       const file = input.files[0];
@@ -97,20 +125,25 @@ export class TareaPasosPage {
   }
 
   addStep() {
-    if(this.currentTab == 'texto'){
-      const stepTextNumber = this.stepText.length + 1; // Genera el número del paso
-      this.stepText.push(`${stepTextNumber}`); // Añade el paso al array  
-    }else if(this.currentTab == 'picto'){
-      const stepPictoNumber = this.stepPicto.length + 1; // Genera el número del paso
-      this.stepPicto.push(`${stepPictoNumber}`); // Añade el paso al array  
-    }else if(this.currentTab == 'imagenes'){
-      const stepImgNumber = this.stepImg.length + 1; // Genera el número del paso
-      this.stepImg.push(`${stepImgNumber}`); // Añade el paso al array  
-    }else if(this.currentTab == 'videoPasos'){
-      const stepVideoNumber = this.stepVideo.length + 1; // Genera el número del paso
-      this.stepVideo.push(`${stepVideoNumber}`); // Añade el paso al array  
+    if (this.currentTab === 'texto') {
+      const stepTextNumber = this.stepText.length + 1;
+      this.stepText.push(`${stepTextNumber}`);
+      this.stepTextValues.push(''); // Inicializa un valor vacío para el nuevo paso
+    } else if (this.currentTab === 'picto') {
+      const stepPictoNumber = this.stepPicto.length + 1;
+      this.stepPicto.push(`${stepPictoNumber}`);
+      this.stepPictoValues.push(null); // Inicializa un valor nulo para el nuevo pictograma
+    } else if (this.currentTab === 'imagenes') {
+      const stepImgNumber = this.stepImg.length + 1;
+      this.stepImg.push(`${stepImgNumber}`);
+      this.stepImgValues.push(null); // Inicializa un valor nulo para la nueva imagen
+    } else if (this.currentTab === 'videoPasos') {
+      const stepVideoNumber = this.stepVideo.length + 1;
+      this.stepVideo.push(`${stepVideoNumber}`);
+      this.stepVideoValues.push(null); // Inicializa un valor nulo para el nuevo video
     }
   }
+  
 
   async guardarTarea() {
     const timestamp = new Date().getTime();
