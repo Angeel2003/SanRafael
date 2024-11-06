@@ -15,9 +15,12 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, I
 })
 export class UserListPage implements OnInit {
   users = [
-    { name: 'Usuario 1', photoUrl: 'https://via.placeholder.com/150', password: 'PIN' },
-    { name: 'Usuario 2', photoUrl: 'https://via.placeholder.com/150', password: 'Pictograma' },
-    { name: 'Usuario 3', photoUrl: 'https://via.placeholder.com/150', password: 'PIN' },
+    { name: 'Usuario 1', photoUrl: 'https://static.vecteezy.com/system/resources/previews/002/318/271/non_2x/user-profile-icon-free-vector.jpg', password: 'PIN' },
+    { name: 'Usuario 2', photoUrl: 'https://static.vecteezy.com/system/resources/previews/002/318/271/non_2x/user-profile-icon-free-vector.jpg', password: 'Pictograma' },
+    { name: 'Usuario 3', photoUrl: 'https://static.vecteezy.com/system/resources/previews/002/318/271/non_2x/user-profile-icon-free-vector.jpg', password: 'PIN' },
+    { name: 'Usuario 4', photoUrl: 'https://static.vecteezy.com/system/resources/previews/002/318/271/non_2x/user-profile-icon-free-vector.jpg', password: 'Pictograma' },
+    { name: 'Usuario 5', photoUrl: 'https://static.vecteezy.com/system/resources/previews/002/318/271/non_2x/user-profile-icon-free-vector.jpg', password: 'PIN' },
+    { name: 'Usuario 6', photoUrl: 'https://static.vecteezy.com/system/resources/previews/002/318/271/non_2x/user-profile-icon-free-vector.jpg', password: 'Pictograma' },
     // Agrega más usuarios según sea necesario
   ];
 
