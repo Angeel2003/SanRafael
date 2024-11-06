@@ -22,7 +22,7 @@ import { FirebaseService } from '../services/firebase.service';
 
 export class TareaPasosPage {
   taskName: string = '';
-  previewUrl: File | null = null;
+  taskPreview: File | null = null;
   currentTab: string = 'texto';
   stepText: string[] = [];
   stepPicto: string[] = [];
@@ -39,7 +39,8 @@ export class TareaPasosPage {
   stepPictoValues: (File | null | string)[] = []; // Almacena las imágenes de pictogramas
   stepImgValues: (File | null | string)[] = []; // Almacena las imágenes
   stepVideoValues: (File | null | string)[] = []; // Almacena los videos de los pasos
- 
+  videoPreviewUrl: string | null = null;
+  previewUrl: string | null = null;
 
   constructor(private firebaseService: FirebaseService) {
     addIcons({
@@ -53,19 +54,11 @@ export class TareaPasosPage {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       const file = input.files[0];
-      this.previewUrl = file;
+      this.taskPreview = file;
+      this.previewUrl = URL.createObjectURL(file);
     }
   }
   
-
-  // pictoStep(event: Event) {
-  //   const input = event.target as HTMLInputElement;
-  //   if (input.files && input.files.length) {
-  //     const file = input.files[0];
-  //     this.selectedPicto.push(file);
-  //   }
-  // }
-
   pictoStep(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -104,10 +97,10 @@ export class TareaPasosPage {
   }
 
   videoCompleto(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      const file = input.files[0];
-      this.videoCompletoFile = file;
+    const fileInput = event.target as HTMLInputElement;
+    if (fileInput.files && fileInput.files[0]) {
+      const videoFile = fileInput.files[0];
+      this.videoPreviewUrl = URL.createObjectURL(videoFile); // Crea una URL de vista previa
     }
   }
 
@@ -151,7 +144,7 @@ export class TareaPasosPage {
     const dataToSave: any = {
       nombre: this.taskName,
       previewUrl: '',
-      pasosTexto: this.stepText,
+      pasosTexto: this.stepTextValues,
       pasosPicto: [],
       pasosImagenes: [],
       pasosVideos: [],
@@ -159,9 +152,9 @@ export class TareaPasosPage {
       audioCompletoUrl: ''
     };
 
-    if (this.previewUrl) {
+    if (this.taskPreview) {
       const path = `imagenes/preview_imagen_${timestamp}.mp4`;
-      await this.firebaseService.uploadFile(this.previewUrl, path);
+      await this.firebaseService.uploadFile(this.taskPreview, path);
       const downloadUrl = await this.firebaseService.getDownloadURL(path);
       dataToSave.previewUrl = downloadUrl;
     }
@@ -201,8 +194,14 @@ export class TareaPasosPage {
       dataToSave.audioCompletoUrl = downloadUrl;
     }
 
+    this.videoPreviewUrl = null;
+
     await this.firebaseService.guardarTareaPorPasos(dataToSave);
     console.log('Datos guardados en Firestore con éxito');
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   }
 }
 

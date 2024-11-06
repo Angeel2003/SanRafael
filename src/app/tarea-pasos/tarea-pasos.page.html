@@ -27,6 +27,9 @@
 
   <ion-item>
     <ion-label>Foto de la tarea</ion-label>
+    <div *ngIf="previewUrl">
+      <img [src]="previewUrl" alt="Vista previa de la tarea" style="width: 100px; height: auto;" />
+    </div>
     <input type="file" accept="image/*" (change)="imgPreview($event)" />
   </ion-item>
 
@@ -70,24 +73,6 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <!-- <ng-container *ngIf="currentTab === 'texto'">
-          <ion-list lines="inset">
-            <ion-item *ngFor="let step of stepText">
-              <ion-input label="Paso {{step}}." placeholder="Insertar paso {{step}}"></ion-input>
-            </ion-item>
-          </ion-list>
-        </ng-container>
-        
-
-        <ng-container *ngIf="currentTab === 'picto'">
-          <ion-list lines="inset">
-            <ion-item *ngFor="let step of stepPicto">
-              <ion-label>Paso {{step}}</ion-label>
-              <input type="file" accept="image/*" (change)="pictoStep($event)" />
-            </ion-item>
-          </ion-list>
-        </ng-container> -->
-
         <ng-container *ngIf="currentTab === 'texto'">
           <ion-list lines="inset">
             <ion-item *ngFor="let step of stepText; let i = index">
@@ -130,7 +115,7 @@
             <ion-item *ngFor="let step of stepVideo; let i = index">
               <ion-label>Paso {{ step }}</ion-label>
               <div *ngIf="stepVideoValues[i]">
-                <img [src]="stepVideoValues[i]" alt="Vista previa del video {{ i + 1 }}" style="width: 100px; height: auto;" />
+                <video [src]="stepVideoValues[i]" style="width: 100px; height: auto;"></video>
               </div>
               <input type="file" accept="video/*" (change)="videoStep($event, i)" />
             </ion-item>
@@ -142,7 +127,11 @@
             <ion-label>Selecciona un video</ion-label>
             <input type="file" accept="video/*" (change)="videoCompleto($event)" />
           </ion-item>
+          <div *ngIf="videoPreviewUrl">
+            <video [src]="videoPreviewUrl" controls style="width: 100%; max-height: 300px; margin-top: 10px;"></video>
+          </div>
         </ng-container>
+        
 
         <ng-container *ngIf="currentTab === 'audio'">
           <ion-list lines="inset">
