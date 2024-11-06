@@ -41,7 +41,11 @@
       </ion-col>
       <ion-col size="3">
         <ion-item>
-          <ion-input [(ngModel)]="item.imagen" placeholder="URL Imagen {{i + 1}}"></ion-input>
+          <div *ngIf="item.imagen">
+            <img [src]="item.imagen" alt="Vista previa de material {{i + 1}}" style="width: 100px; height: auto;"/>
+          </div>
+          <input type="file" accept="image/*" (change)="imagenPreview($event, i)"/>
+          
         </ion-item>
       </ion-col>
       <ion-col size="3">
@@ -66,11 +70,8 @@
     </ion-button>
   </ion-col>
 
-  <ion-col size="auto">
-    <ion-button class="save-button" (click)="save()">
-      <ion-icon name="save-outline"></ion-icon>
-      <ion-label>Guardar</ion-label>
-    </ion-button>
-  </ion-col>
-
 </ion-content>
+
+<ion-footer>
+  <ion-button class="save-button" expand="full" (click)="save()">Guardar</ion-button>
+</ion-footer>

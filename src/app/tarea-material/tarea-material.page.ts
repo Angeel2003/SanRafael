@@ -1,13 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonGrid, IonRow, IonButton, IonCol, IonIcon, IonItem, IonInput, IonLabel, IonList } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { arrowBackOutline, personCircleOutline, addOutline } from 'ionicons/icons';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonGrid, IonRow, IonButton, IonCol, IonIcon, IonItem, IonInput, IonLabel, IonList, IonFooter } from '@ionic/angular/standalone';
+
+import { FirebaseService } from '../services/firebase.service';
 
 interface MaterialItem {
-  material : string;
-  imagen : string;
-  aula : string;
-  cantidad : number;
+  material: string;
+  imagen: string;
+  aula: string;
+  cantidad: number;
 }
 
 @Component({
@@ -15,41 +19,90 @@ interface MaterialItem {
   templateUrl: './tarea-material.page.html',
   styleUrls: ['./tarea-material.page.scss'],
   standalone: true,
-  imports: [IonList, IonLabel, IonInput, IonItem, IonIcon, IonCol, IonButton, IonRow, IonGrid, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonFooter, IonList, IonLabel, IonInput, IonItem, IonIcon, IonCol, IonButton, IonRow, IonGrid, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 
-
 export class TareaMaterialPage implements OnInit {
-
-  taskName : string = '';
+  taskName: string = '';
   items: MaterialItem[] = [];
 
-  
-  constructor() { }
-
-  ngOnInit() {
+  constructor(private firebaseService: FirebaseService) {
+    addIcons({
+      arrowBackOutline,
+      personCircleOutline,
+      addOutline
+    });
   }
 
-  imagenPreview(event: Event) {
+  ngOnInit() {}
+
+  imagenPreview(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       const file = input.files[0];
       const reader = new FileReader();
+      reader.onload = () => {
+        this.items[index].imagen = reader.result as string; // Almacena la imagen en base64 para vista previa
+      };
       reader.readAsDataURL(file);
     }
   }
 
-  addItem(){
+  addItem() {
     this.items.push({
       material: '',
       imagen: '',
       aula: '',
       cantidad: 0
-    }); 
+    });
   }
 
-  save(){
+  // Función para convertir base64 a Blob
+  base64ToBlob(base64: string): Blob {
+    const byteString = atob(base64.split(',')[1]); // Decodificar el contenido base64
+    const mimeString = base64.split(',')[0].split(':')[1].split(';')[0]; // Obtener el tipo MIME
+    const byteNumbers = new Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) {
+      byteNumbers[i] = byteString.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: mimeString });
+  }
+
+  async uploadMaterialImage(index: number) {
+    const item = this.items[index];
+    const path = `materiales/${item.material}.png`; // Usar el nombre del material como el nombre del archivo
+    
+    try {
+      // Intentar obtener la URL de descarga
+      const existingUrl = await this.firebaseService.getDownloadURL(path);
+      this.items[index].imagen = existingUrl; // Si la imagen ya existe, la muestra
+      console.log('Imagen ya existente encontrada:', existingUrl);
+    } catch (error) {
+      console.log('Imagen no encontrada, procediendo a subir una nueva');
+      // Si no existe, procede con la subida
+      if (item.imagen) {
+        const fileBlob = await fetch(item.imagen).then(r => r.blob());
+        await this.firebaseService.uploadFile(new File([fileBlob], `${item.material}.png`), path); // Sube el archivo con el nombre del material
+        const downloadUrl = await this.firebaseService.getDownloadURL(path);
+        this.items[index].imagen = downloadUrl; // Guarda la URL descargable
+      }
+    }
+  }
+  
+
+  async save() {
+    const dataToSave: any = {
+      nombre: this.taskName,
+      items: this.items,
+    };
+
+    // Subir las imágenes a Firebase antes de guardar
+    for (let i = 0; i < this.items.length; i++) {
+      await this.uploadMaterialImage(i); // Sube cada imagen y actualiza su URL en `this.items`
+    }
+
+    await this.firebaseService.guardarTareaMaterial(dataToSave);
     console.log('Datos guardados: ', this.items);
   }
-
 }
