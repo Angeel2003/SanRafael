@@ -1,0 +1,84 @@
+ion-toolbar {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
+}
+  
+ion-title {
+    text-align: center; /* Asegura que el texto esté centrado */
+    width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
+    font-size: 24px;
+    color: #005682;
+}
+
+.userLoginPin {
+    display: flex; /* Usar flexbox para centrar el contenido */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    height: 80vh; /* Asegúrate de que ocupe toda la altura del viewport */
+}
+
+ion-item {
+    --background: #f0f0f5;
+    margin: 24px;
+    border-radius: 24px;
+    width: 500px;
+    font-size: 24px;
+}
+
+ion-icon{
+    margin: 8px;
+}
+
+ion-button {
+    --background: #005682; // Cambia el color de fondo
+    --color: #fff; // Cambia el color del texto
+    font-size: 24px;
+    height: 75px;
+}
+
+ion-item:hover{
+    border: 1px solid #005682;
+}
+
+.userLoginPictograma {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.pictogram {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 200px;
+  
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* Ajusta la imagen para que se vea completa dentro del botón */
+        border-radius: 8px; /* Opcional: ajusta las esquinas de la imagen */
+      }
+}
+
+.indicator-container {
+    display: flex;
+    justify-content: center; /* Centra los puntos en el contenedor */
+    gap: 64px; /* Ajusta el espacio entre puntos */
+    margin-top: 16px; /* Opcional: separa los puntos de otros elementos */
+}
+
+.indicator {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    background-color: gray; /* Color de punto inicial */
+    transition: background-color 0.3s; /* Suaviza el cambio de color */
+}
+
+.indicator.correct {
+    background-color: green;
+}
+
+.indicator.wrong {
+    background-color: red;
+}

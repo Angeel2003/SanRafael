@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin-dentro"></ion-back-button> <!-- Ajusta la ruta si es necesario -->
+    </ion-buttons>
+    <ion-title>Tarea de Material</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-input type="text" label="Ingresa el nombre de la tarea" label-placement="floating" [(ngModel)]="taskName"></ion-input>
+  </ion-item>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="3" class="column-header">Material</ion-col>
+      <ion-col size="3" class="column-header">Imagen</ion-col>
+      <ion-col size="3" class="column-header">Aula</ion-col>
+      <ion-col size="3" class="column-header">Cantidad</ion-col>
+    </ion-row>
+    
+    <ion-row *ngFor="let item of items; let i = index">
+      <ion-col size="3">
+        <ion-item>
+          <ion-input [(ngModel)]="item.material" placeholder="Material {{i + 1}}"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="3">
+        <ion-item>
+          <ion-input [(ngModel)]="item.imagen" placeholder="URL Imagen {{i + 1}}"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="3">
+        <ion-item>
+          <ion-input [(ngModel)]="item.aula" placeholder="Aula {{i + 1}}"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="3">
+        <ion-item>
+          <ion-input [(ngModel)]="item.cantidad" placeholder="Cantidad {{i + 1}}"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+ 
+  </ion-grid>
+
+  <ion-col size="auto">
+    <ion-button class="add-material-button" (click)="addItem()">
+      <ion-icon name="add-outline"></ion-icon>
+      <ion-label>Añadir material</ion-label>
+    </ion-button>
+  </ion-col>
+
+  <ion-col size="auto">
+    <ion-button class="save-button" (click)="save()">
+      <ion-icon name="save-outline"></ion-icon>
+      <ion-label>Guardar</ion-label>
+    </ion-button>
+  </ion-col>
+
+</ion-content>

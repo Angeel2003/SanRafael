@@ -1,0 +1,65 @@
+/* Variables de color y fuente */
+:root {
+    --font-family: 'Helvetica';
+}
+
+* {
+    font-family: var(--font-family);
+}
+
+ion-toolbar {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
+}
+  
+ion-title {
+    text-align: center; /* Asegura que el texto esté centrado */
+    width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
+    font-size: 24px;
+    color: #005682;
+}
+
+/* Estilo del título de las columnas */
+.column-header {
+    color: #005682;
+    font-size: 200%;
+}
+
+
+/* Input y etiquetas */
+ion-item {
+    background: #FFFFFF;
+    color: #005682;
+    font-size: 100%;
+}
+
+ion-input {
+    color: #005682;
+    font-size: 150%;
+}
+
+input { 
+    color: #005682;
+    font-size: 150%;
+}
+
+
+/* Boton de añadir item */
+ion-button.add-material-button {
+    --background: #005682;
+    color: #FFFFFF;
+    border-radius: 10%;
+    align-items: center;
+}
+
+/* Boton de guardar */
+ion-button.save-button {
+    --background: #005682;
+    color: #FFFFFF;
+    border-radius: 30%;
+    align-items: right;
+}
+
+ion-icon {
+    padding: 4px;
+}
