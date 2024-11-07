@@ -52,7 +52,7 @@
           <div *ngIf="item.imagen">
             <img [src]="item.imagen" alt="Vista previa de material {{i + 1}}" style="width: 100px; height: auto;"/>
           </div>
-          <input type="file" accept="image/*" (change)="imagenPreview($event, i)"/>
+          <input type="file" accept="image/*" (change)="imagenPreview($event, i)" class="small-file-input"/>
           
         </ion-item>
       </ion-col>

@@ -47,11 +47,7 @@ export class TareaMaterialPage implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length){
       const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imgTarea = reader.result as string; // Almacena la imagen en base64 para vista previa
-      };
-      reader.readAsDataURL(file);
+      this.imgTarea = URL.createObjectURL(file);
     }
   }
 
@@ -59,11 +55,7 @@ export class TareaMaterialPage implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.items[index].imagen = reader.result as string; // Almacena la imagen en base64 para vista previa
-      };
-      reader.readAsDataURL(file);
+      this.items[index].imagen = URL.createObjectURL(file);
     }
   }
 
