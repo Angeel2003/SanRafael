@@ -8,6 +8,7 @@ import {
   IonInput, IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, IonFooter
 } from '@ionic/angular/standalone';
 import { FirebaseService } from '../services/firebase.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tarea-pasos',
@@ -42,12 +43,16 @@ export class TareaPasosPage {
   videoPreviewUrl: string | null = null;
   previewUrl: string | null = null;
 
-  constructor(private firebaseService: FirebaseService) {
+  constructor(private firebaseService: FirebaseService, private router: Router) {
     addIcons({
       arrowBackOutline,
       personCircleOutline,
       addOutline
     });
+  }
+
+  goBackToAdmin() {
+    this.router.navigate(['/admin-dentro']);
   }
 
   imgPreview(event: Event) {
@@ -204,4 +209,3 @@ export class TareaPasosPage {
     }, 500);
   }
 }
-
