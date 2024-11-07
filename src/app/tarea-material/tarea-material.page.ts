@@ -7,6 +7,8 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonGrid, IonRow, IonButton
 
 import { FirebaseService } from '../services/firebase.service';
 
+import { Router } from '@angular/router';
+
 interface MaterialItem {
   material: string;
   imagen: string;
@@ -27,12 +29,16 @@ export class TareaMaterialPage implements OnInit {
   imgTarea: string = '';
   items: MaterialItem[] = [];
 
-  constructor(private firebaseService: FirebaseService) {
+  constructor(private firebaseService: FirebaseService, private router: Router) {
     addIcons({
       arrowBackOutline,
       personCircleOutline,
       addOutline
     });
+  }
+
+  goBackToAdmin(){
+    this.router.navigate(['/admin-dentro']);
   }
 
   ngOnInit() {}

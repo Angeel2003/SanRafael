@@ -7,7 +7,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'tarea-material',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
   {
@@ -29,6 +29,10 @@ export const routes: Routes = [
   {
     path: 'tarea-material',
     loadComponent: () => import('./tarea-material/tarea-material.page').then( m => m.TareaMaterialPage)
+  },
+  {
+    path: 'admin-dentro',
+    loadComponent: () => import('./admin-dentro/admin-dentro.page').then( m => m.AdminDentro)
   },
 
 

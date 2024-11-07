@@ -13,6 +13,19 @@ ion-header {
     color: #005682;
 }
 
+/* Botones del encabezado */
+ion-button {
+    color: #FFFFFF;
+}
+  
+ion-icon {  // iconos flecha y usuario del encabezado
+    color: #005682;
+}
+  
+ion-icon.icon-add { // icono + de boton añadir material
+    color: #FFFFFF;
+}
+
 /* Estilo del título de la tarea */
 ion-title {
     font-size: 150%;
@@ -25,6 +38,13 @@ ion-title {
     color: #005682;
     font-size: 200%;
 }
+
+/* Fondo de contenido */
+ion-content {
+    background-color: #FFFFFF;
+    padding: 150%;
+}
+
 
 
 /* Input y etiquetas */
