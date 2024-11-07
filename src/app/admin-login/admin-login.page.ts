@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { mailOutline } from 'ionicons/icons';
 import { eyeOff } from 'ionicons/icons';
+import { eye } from 'ionicons/icons';
 import { lockClosedOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton, IonButtons,
@@ -22,7 +23,8 @@ export class AdminLoginPage implements OnInit {
     addIcons({
       mailOutline,
       eyeOff,
-      lockClosedOutline
+      lockClosedOutline,
+      eye
     })
   }
 

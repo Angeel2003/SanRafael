@@ -22,7 +22,7 @@ import { FirebaseService } from '../services/firebase.service';
 
 export class TareaPasosPage {
   taskName: string = '';
-  previewUrl: File | null = null;
+  taskPreview: File | null = null;
   currentTab: string = 'texto';
   stepText: string[] = [];
   stepPicto: string[] = [];
@@ -35,6 +35,13 @@ export class TareaPasosPage {
   selectedImages: File[] = [];
   selectedVideos: File[] = [];
 
+  stepTextValues: string[] = []; // Almacena los textos de cada paso en el tab 'texto'
+  stepPictoValues: (File | null | string)[] = []; // Almacena las imágenes de pictogramas
+  stepImgValues: (File | null | string)[] = []; // Almacena las imágenes
+  stepVideoValues: (File | null | string)[] = []; // Almacena los videos de los pasos
+  videoPreviewUrl: string | null = null;
+  previewUrl: string | null = null;
+
   constructor(private firebaseService: FirebaseService) {
     addIcons({
       arrowBackOutline,
@@ -43,47 +50,61 @@ export class TareaPasosPage {
     });
   }
 
-  imagenPreview(event: Event) {
+  imgPreview(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       const file = input.files[0];
-      this.previewUrl = file;
+      this.taskPreview = file;
+      this.previewUrl = URL.createObjectURL(file);
+    }
+  }
+  
+  pictoStep(event: Event, index: number) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.selectedPicto[index] = file; // Almacena el archivo
+      this.stepPictoValues[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
+      console.log('Archivo seleccionado:', file); // Verifica que el archivo se ha seleccionado
+    } else {
+      console.log('No se seleccionó ningún archivo'); // Mensaje si no hay archivos
+    }
+  }
+  
+
+  imgStep(event: Event, index: number) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.selectedImages[index] = file; // Almacena el archivo
+      this.stepImgValues[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
+      console.log('Archivo seleccionado:', file); // Verifica que el archivo se ha seleccionado
+    } else {
+      console.log('No se seleccionó ningún archivo'); // Mensaje si no hay archivos
     }
   }
 
-  pictoPaso(event: Event) {
+  videoStep(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
+    if (input.files && input.files.length > 0) {
       const file = input.files[0];
-      this.selectedPicto.push(file);
-    }
-  }
-
-  imagenPaso(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      const file = input.files[0];
-      this.selectedImages.push(file);
-    }
-  }
-
-  videoPaso(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      const file = input.files[0];
-      this.selectedVideos.push(file);
+      this.selectedVideos[index] = file; // Almacena el archivo
+      this.stepVideoValues[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
+      console.log('Archivo seleccionado:', file); // Verifica que el archivo se ha seleccionado
+    } else {
+      console.log('No se seleccionó ningún archivo'); // Mensaje si no hay archivos
     }
   }
 
   videoCompleto(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      const file = input.files[0];
-      this.videoCompletoFile = file;
+    const fileInput = event.target as HTMLInputElement;
+    if (fileInput.files && fileInput.files[0]) {
+      const videoFile = fileInput.files[0];
+      this.videoPreviewUrl = URL.createObjectURL(videoFile); // Crea una URL de vista previa
     }
   }
 
-  audioPaso(event: Event) {
+  audioStep(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       const file = input.files[0];
@@ -97,20 +118,25 @@ export class TareaPasosPage {
   }
 
   addStep() {
-    if(this.currentTab == 'texto'){
-      const stepTextNumber = this.stepText.length + 1; // Genera el número del paso
-      this.stepText.push(`${stepTextNumber}`); // Añade el paso al array  
-    }else if(this.currentTab == 'picto'){
-      const stepPictoNumber = this.stepPicto.length + 1; // Genera el número del paso
-      this.stepPicto.push(`${stepPictoNumber}`); // Añade el paso al array  
-    }else if(this.currentTab == 'imagenes'){
-      const stepImgNumber = this.stepImg.length + 1; // Genera el número del paso
-      this.stepImg.push(`${stepImgNumber}`); // Añade el paso al array  
-    }else if(this.currentTab == 'videoPasos'){
-      const stepVideoNumber = this.stepVideo.length + 1; // Genera el número del paso
-      this.stepVideo.push(`${stepVideoNumber}`); // Añade el paso al array  
+    if (this.currentTab === 'texto') {
+      const stepTextNumber = this.stepText.length + 1;
+      this.stepText.push(`${stepTextNumber}`);
+      this.stepTextValues.push(''); // Inicializa un valor vacío para el nuevo paso
+    } else if (this.currentTab === 'picto') {
+      const stepPictoNumber = this.stepPicto.length + 1;
+      this.stepPicto.push(`${stepPictoNumber}`);
+      this.stepPictoValues.push(null); // Inicializa un valor nulo para el nuevo pictograma
+    } else if (this.currentTab === 'imagenes') {
+      const stepImgNumber = this.stepImg.length + 1;
+      this.stepImg.push(`${stepImgNumber}`);
+      this.stepImgValues.push(null); // Inicializa un valor nulo para la nueva imagen
+    } else if (this.currentTab === 'videoPasos') {
+      const stepVideoNumber = this.stepVideo.length + 1;
+      this.stepVideo.push(`${stepVideoNumber}`);
+      this.stepVideoValues.push(null); // Inicializa un valor nulo para el nuevo video
     }
   }
+  
 
   async guardarTarea() {
     const timestamp = new Date().getTime();
@@ -118,7 +144,7 @@ export class TareaPasosPage {
     const dataToSave: any = {
       nombre: this.taskName,
       previewUrl: '',
-      pasosTexto: this.stepText,
+      pasosTexto: this.stepTextValues,
       pasosPicto: [],
       pasosImagenes: [],
       pasosVideos: [],
@@ -126,9 +152,9 @@ export class TareaPasosPage {
       audioCompletoUrl: ''
     };
 
-    if (this.previewUrl) {
+    if (this.taskPreview) {
       const path = `imagenes/preview_imagen_${timestamp}.mp4`;
-      await this.firebaseService.uploadFile(this.previewUrl, path);
+      await this.firebaseService.uploadFile(this.taskPreview, path);
       const downloadUrl = await this.firebaseService.getDownloadURL(path);
       dataToSave.previewUrl = downloadUrl;
     }
@@ -168,8 +194,14 @@ export class TareaPasosPage {
       dataToSave.audioCompletoUrl = downloadUrl;
     }
 
+    this.videoPreviewUrl = null;
+
     await this.firebaseService.guardarTareaPorPasos(dataToSave);
     console.log('Datos guardados en Firestore con éxito');
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
   }
 }
 

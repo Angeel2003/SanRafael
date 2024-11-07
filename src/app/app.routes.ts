@@ -7,7 +7,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'tarea-pasos',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
   {
