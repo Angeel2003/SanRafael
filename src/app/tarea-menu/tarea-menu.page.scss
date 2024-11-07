@@ -1,0 +1,104 @@
+:root {
+    --font-family: 'Helvetica';
+    --primary-color: #005682;
+    --secondary-color: #f4f4f4;
+    --button-radius: 10%;
+}
+
+* {
+    font-family: var(--font-family);
+    box-sizing: border-box;
+}
+
+ion-header {
+    background-color: #ffffff;
+    color: #005682;
+}
+
+ion-title {
+    font-size: 150%;
+    color: #005682;
+}
+
+.column-header {
+    color: var(--primary-color);
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+}
+
+ion-item {
+    background: var(--secondary-color);
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+ion-input,
+input {
+    color: var(--primary-color);
+    font-size: 1.3rem;
+    background: transparent;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--primary-color);
+}
+
+ion-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ion-button.add-material-button {
+    --background: var(--primary-color);
+    color: #fff;
+    border-radius: var(--button-radius);
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    width: auto;
+    margin: 10px 0;
+}
+
+ion-button.save-button {
+    --background: var(--primary-color);
+    color: #fff;
+    border-radius: 50%;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    width: auto;
+    margin: 10px 0;
+}
+
+ion-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+ion-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+ion-button[fill="clear"] {
+    padding: 5px;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+ion-label {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    padding: 0 10px;
+}
+
+ion-grid {
+    padding: 10px;
+}
+
+ion-row>ion-col {
+    padding: 5px;
+}
