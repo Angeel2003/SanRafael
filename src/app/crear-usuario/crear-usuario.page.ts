@@ -14,7 +14,7 @@ import { IonBackButton, IonButton, IonButtons, IonCard, IonCardContent, IonCheck
 export class CrearUsuarioPage implements OnInit {
 
   passwordType : string = '';
-  accessibilityLevel: string = 'pictogramas'; // Valor inicial por defecto
+  accessibilityLevel: string = ''; // Valor inicial por defecto
 
 
   constructor() { }

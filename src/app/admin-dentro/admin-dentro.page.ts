@@ -29,7 +29,6 @@ export class AdminDentro {
   }
 
   goToCreateUser() {
-    console.log("ELIMINAR CUANDO ESTE CREADO")
-    //this.router.navigate(['/crear-usuario']);
+    this.router.navigate(['/crear-usuario']);
   }
 }
