@@ -34,5 +34,10 @@ export const routes: Routes = [
     path: 'admin-dentro',
     loadComponent: () => import('./admin-dentro/admin-dentro.page').then( m => m.AdminDentro)
   },
+  {
+    path: 'crear-usuario',
+    loadComponent: () => import('./crear-usuario/crear-usuario.page').then( m => m.CrearUsuarioPage)
+  },
+
 
 ];

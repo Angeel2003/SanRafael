@@ -1,0 +1,13 @@
+:root {
+    --font-family: 'Helvetica';
+}
+
+* {
+    font-family: var(--font-family);
+}
+
+/* Estilo del encabezado */
+ion-title {
+    background-color: #ffffff;
+    color: #005682;
+}
