@@ -37,7 +37,11 @@ export const routes: Routes = [
   {
     path: 'crear-usuario',
     loadComponent: () => import('./crear-usuario/crear-usuario.page').then( m => m.CrearUsuarioPage)
+  },  {
+    path: 'tarea-comanda',
+    loadComponent: () => import('./tarea-comanda/tarea-comanda.page').then( m => m.TareaComandaPage)
   },
+
 
 
 ];
