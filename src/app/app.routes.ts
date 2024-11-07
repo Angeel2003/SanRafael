@@ -7,7 +7,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'tarea-material',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
   {
