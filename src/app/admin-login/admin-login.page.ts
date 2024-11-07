@@ -7,6 +7,7 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton, IonBut
           IonInput, IonItem, IonLabel, IonBackButton } from '@ionic/angular/standalone';
 
 import { FirebaseService } from '../services/firebase.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-login',
@@ -18,7 +19,7 @@ import { FirebaseService } from '../services/firebase.service';
 export class AdminLoginPage implements OnInit {
   private passwordVisible = false;
 
-  constructor(private firebaseService: FirebaseService) {
+  constructor(private firebaseService: FirebaseService, private router: Router) {
     addIcons({
       mailOutline,
       eyeOff,
@@ -45,7 +46,7 @@ export class AdminLoginPage implements OnInit {
   }
 
   onSubmit() {
-    // Lógica para manejar el envío del formulario
+    this.router.navigate(['/admin-dentro']);
   }
 
 }
