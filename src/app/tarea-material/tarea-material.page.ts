@@ -24,6 +24,7 @@ interface MaterialItem {
 
 export class TareaMaterialPage implements OnInit {
   taskName: string = '';
+  imgTarea: string = '';
   items: MaterialItem[] = [];
 
   constructor(private firebaseService: FirebaseService) {
@@ -35,6 +36,18 @@ export class TareaMaterialPage implements OnInit {
   }
 
   ngOnInit() {}
+
+  imgPreview(event: Event){
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length){
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imgTarea = reader.result as string; // Almacena la imagen en base64 para vista previa
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 
   imagenPreview(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
@@ -94,8 +107,17 @@ export class TareaMaterialPage implements OnInit {
   async save() {
     const dataToSave: any = {
       nombre: this.taskName,
+      img: '',
       items: this.items,
     };
+
+    if (this.imgTarea){
+      const path = `imagenes/imagen_tarea_material_${this.taskName}.png`;
+      const fileBlob = await fetch(this.imgTarea).then(r => r.blob());
+      await this.firebaseService.uploadFile(new File([fileBlob], `${this.imgTarea}.png`), path); // Sube el archivo con el nombre del material
+      const downloadUrl = await this.firebaseService.getDownloadURL(path);
+      dataToSave.img = downloadUrl; // Guarda la URL descargable
+    }
 
     // Subir las imágenes a Firebase antes de guardar
     for (let i = 0; i < this.items.length; i++) {

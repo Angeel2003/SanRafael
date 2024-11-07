@@ -30,10 +30,6 @@ export const routes: Routes = [
     path: 'tarea-material',
     loadComponent: () => import('./tarea-material/tarea-material.page').then( m => m.TareaMaterialPage)
   },
-  {
-    path: 'agenda',
-    loadComponent: () => import('./agenda/agenda.page').then( m => m.AgendaPage)
-  },
 
 
 ];
