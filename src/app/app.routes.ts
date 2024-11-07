@@ -7,7 +7,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'agenda',
     pathMatch: 'full',
   },
   {
@@ -34,6 +34,11 @@ export const routes: Routes = [
     path: 'admin-dentro',
     loadComponent: () => import('./admin-dentro/admin-dentro.page').then( m => m.AdminDentro)
   },
+  {
+    path: 'agenda',
+    loadComponent: () => import('./agenda/agenda.page').then( m => m.AgendaPage)
+  },
+
 
 
 ];

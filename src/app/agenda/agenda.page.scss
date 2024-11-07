@@ -1,0 +1,58 @@
+/* Variables de color y fuente */
+:root {
+    --font-family: 'Helvetica';
+}
+
+* {
+    font-family: var(--font-family);
+}
+
+/* Estilo del encabezado */
+ion-header {
+    background-color: #ffffff;
+    color: #005682;
+}
+
+  
+ion-icon {  // iconos flecha y usuario del encabezado
+    color: #005682;
+}
+  
+
+/* Estilo del título de la tarea */
+ion-title {
+    font-size: 150%;
+    color: #005682;
+    text-align: center;
+}
+
+
+/* Fondo de contenido */
+ion-content {
+    background-color: #FFFFFF;
+    padding: 150%;
+}
+
+ion-label {
+    color: #005682;
+    font-size: 150%;
+}
+
+/* Input y etiquetas */
+ion-item {
+    background: #FFFFFF;
+    color: #005682;
+    font-size: 100%;
+}
+
+ion-input {
+    color: #005682;
+    font-size: 150%;
+}
+
+input { 
+    color: #005682;
+    font-size: 150%;
+}
+
+
