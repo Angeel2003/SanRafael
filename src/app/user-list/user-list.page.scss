@@ -12,8 +12,10 @@ ion-title {
 
 ion-card {
     text-align: center; /* Centrar texto */
-    margin: 10px; /* Espaciado entre tarjetas */
+    margin: 40px; /* Espaciado entre tarjetas */
     background-color: #005682;
+    padding: 10px;
+    border-radius: 18px;
 }
 
 ion-card-title {

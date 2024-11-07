@@ -209,4 +209,3 @@ export class TareaPasosPage {
     }, 500);
   }
 }
-
