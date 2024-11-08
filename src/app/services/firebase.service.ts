@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from "firebase/analytics";
-import { addDoc, collection, getFirestore } from "firebase/firestore"; // Para Firestore Database
+import { addDoc, collection, getDocs, getFirestore, query, where } from "firebase/firestore"; // Para Firestore Database
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Para Firebase Storage
 import { getAuth } from "firebase/auth"; 
+import { from, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -73,5 +74,30 @@ export class FirebaseService {
       console.error('Error al guardar la tarea de material: ', error);
       throw new Error('Error al guardar la tarea de material');
     }
+  }
+
+   // Método para obtener un usuario por tipo de contraseña y contraseña
+async verifyLoginData(type: 'PIN' | 'Texto', value: string | number): Promise<boolean> {
+  try {
+    const usersCollection = collection(this.db, 'alumnos'); // Reemplaza 'alumnos' con el nombre de tu colección si es diferente
+    const q = query(usersCollection, where('tipoContrasena', '==', type), where('contrasena', '==', value));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty; // Si hay al menos un documento, el usuario es válido
+  } catch (error) {
+    console.error("Error verificando datos de login: ", error);
+    return false;
+  }
+}
+
+  // Método para obtener la lista de usuarios
+  getAlumnos(): Observable<any[]> {
+    const usersRef = collection(this.db, 'alumnos');  // Referencia a la colección 'users'
+
+    // Usamos `from` para convertir el Promise en un Observable
+    return from(getDocs(usersRef)).pipe(
+      map((snapshot) =>
+        snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))  // Mapeo de datos de Firestore a un arreglo de objetos
+      )
+    );
   }
 }
