@@ -38,9 +38,5 @@ export const routes: Routes = [
     path: 'crear-menu',
     loadComponent: () => import('./crear-menu/crear-menu.page').then(m => m.CrearMenuPage)
   },
-  {
-    path: 'tarea-menu',
-    loadComponent: () => import('./tarea-menu/tarea-menu.page').then(m => m.TareaMenuPage)
-  },
 
 ];
