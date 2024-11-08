@@ -10,7 +10,7 @@ ion-title {
     color: #005682;
 }
 
-.userLoginPin {
+.userLoginPin, .userLoginTexto {
     display: flex; /* Usar flexbox para centrar el contenido */
     justify-content: center; /* Centra horizontalmente */
     align-items: center; /* Centra verticalmente */
@@ -38,6 +38,14 @@ ion-button {
 
 ion-item:hover{
     border: 1px solid #005682;
+}
+
+.userLoginTexto ion-input{
+    margin-left: 6px;
+}
+
+.userLoginTexto ion-label{
+    font-size: 18px;
 }
 
 .userLoginPictograma {
@@ -81,4 +89,16 @@ ion-item:hover{
 
 .indicator.wrong {
     background-color: red;
+}
+
+.incorrectPassword {
+    display: block;
+    justify-content: center;
+    text-align: center;
+    color: red;
+    font-size: 36px;
+    img {
+        width: 100px;
+        height: 100px;
+    }
 }

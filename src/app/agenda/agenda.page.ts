@@ -24,7 +24,6 @@ export class AgendaPage implements OnInit {
 
   constructor() {
     addIcons({
-
     })
     
     this.tareas.push({nombre: "A", imagen: '', horaIni: "10:00", horaFin: "13:00"});

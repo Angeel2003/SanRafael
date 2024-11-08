@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from "firebase/analytics";
-import { addDoc, collection, getFirestore } from "firebase/firestore"; // Para Firestore Database
+import { addDoc, collection, getDocs, getFirestore, query, where } from "firebase/firestore"; // Para Firestore Database
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Para Firebase Storage
 import { getAuth } from "firebase/auth"; 
+import { from, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -62,5 +63,68 @@ export class FirebaseService {
       console.error('Error al guardar la tarea: ', error);
       throw new Error('Error al guardar la tarea');
     }
+  }
+
+  async getCollectionTaskNames(collectionName: string): Promise<string[]> {
+    const names: string[] = [];
+    const querySnapshot = await getDocs(collection(this.db, collectionName));
+
+    querySnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data['nombre']) { // Asegúrate de que el campo 'nombre' exista
+        names.push(data['nombre']);
+      }
+    });
+
+    return names;
+  }
+
+  // Método para obtener nombres de múltiples colecciones
+  async getAllTaskNames(): Promise<string[]> {
+    const collectionNames = ['tarea-por-pasos', 'tarea-comedor', 'tarea-materia'];
+    let allNames: string[] = [];
+
+    for (const collectionName of collectionNames) {
+      const names = await this.getCollectionTaskNames(collectionName);
+      allNames = allNames.concat(names);
+    }
+
+    return allNames;
+  }
+  
+  async guardarTareaMaterial(taskData: any): Promise<void> {
+    const tasksCollection = collection(this.db, 'tarea-material');
+    try {
+      await addDoc(tasksCollection, taskData);
+      console.log('Tarea de material guardada con éxito');
+    } catch (error) {
+      console.error('Error al guardar la tarea de material: ', error);
+      throw new Error('Error al guardar la tarea de material');
+    }
+  }
+
+   // Método para obtener un usuario por tipo de contraseña y contraseña
+async verifyLoginData(type: 'PIN' | 'Texto', value: string | number): Promise<boolean> {
+  try {
+    const usersCollection = collection(this.db, 'alumnos'); // Reemplaza 'alumnos' con el nombre de tu colección si es diferente
+    const q = query(usersCollection, where('tipoContrasena', '==', type), where('contrasena', '==', value));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty; // Si hay al menos un documento, el usuario es válido
+  } catch (error) {
+    console.error("Error verificando datos de login: ", error);
+    return false;
+  }
+}
+
+  // Método para obtener la lista de usuarios
+  getAlumnos(): Observable<any[]> {
+    const usersRef = collection(this.db, 'alumnos');  // Referencia a la colección 'users'
+
+    // Usamos `from` para convertir el Promise en un Observable
+    return from(getDocs(usersRef)).pipe(
+      map((snapshot) =>
+        snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))  // Mapeo de datos de Firestore a un arreglo de objetos
+      )
+    );
   }
 }
