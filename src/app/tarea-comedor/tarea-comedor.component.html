@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <span style="font-size: 150%;">Tarea Comida</span>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  <div style="font-size: 230%;text-align: center; margin-top: 2%;"><span>{{nombreTarea}}</span></div>
+  <ion-grid style="text-align: center;">
+    <!--Estructura de columna: Menu-Pictograma-Cantidad -->
+    <ion-row *ngFor="let menu of menus; let i = index">
+      <ion-col><p style="font-size: 150%;">{{ menu.name }}</p></ion-col>
+      <ion-col><img [src]='menu.img' alt="Imagen de elemento {{menu.name}}"></ion-col>
+      <ion-col>
+                <p>
+                    <button class="numButton" (click)="Decrementar(i)">-</button>
+                    <span class="numBox">{{menu.num}}</span>
+                    <button class="numButton" (click)="Aumentar(i)">+</button>
+                </p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <button class="Guardar">Guardar</button>
+</ion-content>
