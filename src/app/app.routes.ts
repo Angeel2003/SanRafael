@@ -37,7 +37,8 @@ export const routes: Routes = [
   {
     path: 'crear-usuario',
     loadComponent: () => import('./crear-usuario/crear-usuario.page').then( m => m.CrearUsuarioPage)
-  },  {
+  },
+  {
     path: 'tarea-comanda',
     loadComponent: () => import('./tarea-comanda/tarea-comanda.page').then( m => m.TareaComandaPage)
   },
@@ -45,7 +46,8 @@ export const routes: Routes = [
     path: 'agenda',
     loadComponent: () => import('./agenda/agenda.page').then( m => m.AgendaPage)
   },
-
-
-
+  {
+    path: 'crear-menu',
+    loadComponent: () => import('./crear-menu/crear-menu.page').then(m => m.CrearMenuPage)
+  }
 ];
