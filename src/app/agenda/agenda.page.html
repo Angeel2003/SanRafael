@@ -1,23 +1,10 @@
 <ion-header>
-  <ion-grid>
-    <ion-row class="ion-justify-content-between">
-      <ion-col size="auto">
-        <ion-button fill="clear" size="small">
-          <ion-icon name="arrow-back-outline"></ion-icon>
-        </ion-button>
-      </ion-col>
-
-      <ion-col size="auto">
-        <ion-title>Agenda</ion-title>
-      </ion-col>
-
-      <ion-col size="auto" class="ion-text-end">
-        <ion-button fill="clear" size="small">
-          <ion-icon name="person-circle-outline"></ion-icon>
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin-dentro"></ion-back-button> <!-- Ajusta la ruta si es necesario -->
+    </ion-buttons>
+    <ion-title>Agenda</ion-title>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">

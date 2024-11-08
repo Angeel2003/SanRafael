@@ -7,25 +7,17 @@
     font-family: var(--font-family);
 }
 
-/* Estilo del encabezado */
-ion-header {
-    background-color: #ffffff;
-    color: #005682;
-}
-
-  
-ion-icon {  // iconos flecha y usuario del encabezado
-    color: #005682;
+ion-toolbar {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
 }
   
-
-/* Estilo del título de la tarea */
 ion-title {
-    font-size: 150%;
+    text-align: center; /* Asegura que el texto esté centrado */
+    width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
+    font-size: 24px;
     color: #005682;
-    text-align: center;
 }
-
 
 /* Fondo de contenido */
 ion-content {
@@ -54,5 +46,3 @@ input {
     color: #005682;
     font-size: 150%;
 }
-
-
