@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/admin-dentro"></ion-back-button> <!-- Ajusta la ruta si es necesario -->
+      <ion-back-button defaultHref="/admin-dentro"></ion-back-button>
     </ion-buttons>
     <ion-title>Crear Usuario</ion-title>
   </ion-toolbar>
@@ -29,13 +29,14 @@
           </ion-item>
         </ion-col>
       </ion-row>
-  
+
+      
       <ion-row>
         <ion-col size="12">
           <ion-text class="ion-padding-top">
             <h3>Selección del Nivel de Accesibilidad:</h3>
           </ion-text>
-          
+      
           <ion-radio-group [(ngModel)]="accessibilityLevel">
             <ion-item>
               <ion-label>Texto</ion-label>
@@ -51,7 +52,7 @@
             </ion-item>
             <ion-item>
               <ion-label>Pictogramas</ion-label>
-              <ion-radio slot="start" value="pictogramas" checked></ion-radio>
+              <ion-radio slot="start" value="pictogramas"></ion-radio>
             </ion-item>
           </ion-radio-group>
         </ion-col>
