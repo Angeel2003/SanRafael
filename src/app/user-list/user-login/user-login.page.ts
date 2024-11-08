@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { lockClosedOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { NgIf, NgForOf, NgClass } from '@angular/common';
@@ -35,7 +35,7 @@ export class UserLoginPage implements OnInit {
   indicators = ['null', 'null', 'null']; // Estado del progreso: null = sin seleccionar, 'correct' o 'wrong'
 
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private router: Router) {
     addIcons({
       lockClosedOutline
     })
@@ -91,7 +91,7 @@ export class UserLoginPage implements OnInit {
   }
 
   onSubmit() {
-    // Lógica para el inicio de sesión del usuario
     console.log('Iniciando sesión para:', this.user);
+    this.router.navigate(['/agenda']);
   }
 }
