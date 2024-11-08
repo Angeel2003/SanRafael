@@ -64,7 +64,7 @@ export class FirebaseService {
     }
   }
 
-  async getCollectionNames(collectionName: string): Promise<string[]> {
+  async getCollectionTaskNames(collectionName: string): Promise<string[]> {
     const names: string[] = [];
     const querySnapshot = await getDocs(collection(this.db, collectionName));
 
@@ -84,7 +84,7 @@ export class FirebaseService {
     let allNames: string[] = [];
 
     for (const collectionName of collectionNames) {
-      const names = await this.getCollectionNames(collectionName);
+      const names = await this.getCollectionTaskNames(collectionName);
       allNames = allNames.concat(names);
     }
 
