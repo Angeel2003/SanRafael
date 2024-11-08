@@ -45,9 +45,9 @@ export const routes: Routes = [
   {
     path: 'agenda',
     loadComponent: () => import('./agenda/agenda.page').then( m => m.AgendaPage)
-  },
-  {
+  },  {
     path: 'crear-menu',
-    loadComponent: () => import('./crear-menu/crear-menu.page').then(m => m.CrearMenuPage)
+    loadComponent: () => import('./crear-menu/crear-menu.page').then( m => m.CrearMenuPage)
   }
+
 ];
