@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { saveOutline } from 'ionicons/icons';
 import { addOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonGrid, IonRow, IonButton, IonButtons, IonCol, IonIcon, IonItem, IonInput, IonLabel, IonList, IonBackButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonGrid, IonRow, IonButton, IonButtons, IonCol, IonIcon, IonItem, IonInput, IonLabel, IonList, IonBackButton, IonFooter } from '@ionic/angular/standalone';
 
 interface MaterialItem {
   material: string;
@@ -18,7 +18,7 @@ interface MaterialItem {
   templateUrl: './tarea-material.page.html',
   styleUrls: ['./tarea-material.page.scss'],
   standalone: true,
-  imports: [IonList, IonLabel, IonInput, IonItem, IonIcon, IonCol, IonButton, IonButtons, IonRow, IonGrid, IonContent, IonHeader, IonTitle, IonToolbar, IonBackButton, CommonModule, FormsModule]
+  imports: [IonFooter, IonList, IonLabel, IonInput, IonItem, IonIcon, IonCol, IonButton, IonButtons, IonRow, IonGrid, IonContent, IonHeader, IonTitle, IonToolbar, IonBackButton, CommonModule, FormsModule]
 })
 
 export class TareaMaterialPage implements OnInit {
