@@ -5,7 +5,7 @@ import { arrowBackOutline, personCircleOutline, addOutline } from 'ionicons/icon
 import { FormsModule } from '@angular/forms';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, 
-  IonInput, IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, IonFooter
+  IonInput, IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, IonFooter, IonBackButton, IonButtons
 } from '@ionic/angular/standalone';
 import { FirebaseService } from '../services/firebase.service';
 import { Router } from '@angular/router';
@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [
     IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, IonInput, IonFooter,
-    IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, NgIf, NgFor, NgClass, FormsModule
+    IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, NgIf, NgFor, NgClass, FormsModule, IonBackButton, IonButtons
   ],
 })
 

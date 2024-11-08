@@ -7,11 +7,11 @@
     font-family: var(--font-family);
 }
 
-/* Estilo del encabezado */
-ion-header {
-    background-color: #ffffff;
-    color: #005682;
+ion-toolbar {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
 }
+<<<<<<< HEAD
 
 /* Botones del encabezado */
 ion-button {
@@ -27,10 +27,14 @@ ion-icon.icon-add { // icono + de boton añadir material
 }
 
 /* Estilo del título de la tarea */
+=======
+  
+>>>>>>> master
 ion-title {
-    font-size: 150%;
+    text-align: center; /* Asegura que el texto esté centrado */
+    width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
+    font-size: 24px;
     color: #005682;
-    text-align: center;
 }
 
 /* Estilo del título de las columnas */
@@ -87,4 +91,8 @@ ion-button.save-button {
     color: #FFFFFF;
     border-radius: 30%;
     align-items: right;
+}
+
+ion-icon {
+    padding: 4px;
 }

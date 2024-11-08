@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { personOutline } from 'ionicons/icons';
-import { addIcons } from 'ionicons';
 import { Router } from '@angular/router';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton} from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButtons, IonBackButton, IonButton} from '@ionic/angular/standalone';
 
 import { FirebaseService } from '../services/firebase.service';
 
@@ -11,13 +9,10 @@ import { FirebaseService } from '../services/firebase.service';
   templateUrl: 'admin-dentro.page.html',
   styleUrls: ['admin-dentro.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton], 
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButtons, IonButton, IonBackButton], 
 })
 export class AdminDentro {
   constructor(private router: Router, private firebaseService: FirebaseService){
-    addIcons({
-      personOutline
-    })
   }
 
   goToStepTask() {
@@ -25,7 +20,7 @@ export class AdminDentro {
   }
 
   goToMenuTask() {
-    this.router.navigate(['/tarea-menu']);
+    this.router.navigate(['/tarea-comanda']);
   }
 
   goToMaterialTask() {
@@ -34,5 +29,9 @@ export class AdminDentro {
 
   goToCreateUser() {
     this.router.navigate(['/crear-usuario']);
+  }
+
+  goToCreateMenu() {
+    this.router.navigate(['/crear-menu']);
   }
 }

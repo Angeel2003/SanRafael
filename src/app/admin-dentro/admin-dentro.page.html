@@ -1,5 +1,8 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/user-list"></ion-back-button> <!-- Ajusta la ruta si es necesario -->
+    </ion-buttons>
     <ion-title>Administrador</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,4 +12,5 @@
   <ion-button (click)="goToMenuTask()" shape="round">Tarea de comanda</ion-button>
   <ion-button (click)="goToMaterialTask()" shape="round">Tarea de material</ion-button>
   <ion-button (click)="goToCreateUser()" shape="round">Crear usuario alumno</ion-button>
+  <ion-button (click)="goToCreateMenu()" shape="round">Editar menús</ion-button>
 </ion-content>

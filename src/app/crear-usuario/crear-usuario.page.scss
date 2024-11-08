@@ -1,0 +1,23 @@
+:root {
+    --font-family: 'Helvetica';
+}
+
+* {
+    font-family: var(--font-family);
+}
+
+ion-toolbar {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
+}
+  
+ion-title {
+    text-align: center; /* Asegura que el texto esté centrado */
+    width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
+    font-size: 24px;
+    color: #005682;
+}
+
+h2, h3 {
+    color: #005682;
+}
