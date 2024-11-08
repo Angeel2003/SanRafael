@@ -30,4 +30,8 @@ export class AdminDentro {
   goToCreateUser() {
     this.router.navigate(['/crear-usuario']);
   }
+
+  goToAsignTask() {
+    this.router.navigate(['/asignar-tarea']);
+  }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from "firebase/analytics";
-import { addDoc, collection, getFirestore } from "firebase/firestore"; // Para Firestore Database
+import { addDoc, collection, doc, getDoc, getDocs, getFirestore } from "firebase/firestore"; // Para Firestore Database
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Para Firebase Storage
 import { getAuth } from "firebase/auth"; 
 
@@ -63,4 +63,32 @@ export class FirebaseService {
       throw new Error('Error al guardar la tarea');
     }
   }
+
+  async getCollectionNames(collectionName: string): Promise<string[]> {
+    const names: string[] = [];
+    const querySnapshot = await getDocs(collection(this.db, collectionName));
+
+    querySnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data['nombre']) { // Asegúrate de que el campo 'nombre' exista
+        names.push(data['nombre']);
+      }
+    });
+
+    return names;
+  }
+
+  // Método para obtener nombres de múltiples colecciones
+  async getAllTaskNames(): Promise<string[]> {
+    const collectionNames = ['tarea-por-pasos', 'tarea-comedor', 'tarea-materia'];
+    let allNames: string[] = [];
+
+    for (const collectionName of collectionNames) {
+      const names = await this.getCollectionNames(collectionName);
+      allNames = allNames.concat(names);
+    }
+
+    return allNames;
+  }
+  
 }

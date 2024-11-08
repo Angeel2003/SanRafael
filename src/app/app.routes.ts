@@ -42,6 +42,10 @@ export const routes: Routes = [
     path: 'tarea-comanda',
     loadComponent: () => import('./tarea-comanda/tarea-comanda.page').then( m => m.TareaComandaPage)
   },
+  {
+    path: 'asignar-tarea',
+    loadComponent: () => import('./asignar-tarea/asignar-tarea.page').then( m => m.AsignarTarea)
+  },
 
 
 
