@@ -11,25 +11,7 @@ ion-toolbar {
     display: flex;
     justify-content: center; /* Centra horizontalmente el contenido */
 }
-<<<<<<< HEAD
 
-/* Botones del encabezado */
-ion-button {
-    color: #FFFFFF;
-}
-  
-ion-icon {  // iconos flecha y usuario del encabezado
-    color: #005682;
-}
-  
-ion-icon.icon-add { // icono + de boton añadir material
-    color: #FFFFFF;
-}
-
-/* Estilo del título de la tarea */
-=======
-  
->>>>>>> master
 ion-title {
     text-align: center; /* Asegura que el texto esté centrado */
     width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
