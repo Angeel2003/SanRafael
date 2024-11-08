@@ -1,15 +1,45 @@
 <ion-header>
+<<<<<<< HEAD
+  <ion-grid>
+    <ion-row class="ion-justify-content-between">
+      <ion-col size="auto">
+        <ion-button fill="clear" size="small" (click)="goBackToAdmin()">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+
+      <ion-col size="auto">
+        <ion-title>Tarea de material</ion-title>
+      </ion-col>
+
+      <ion-col size="auto" class="ion-text-end">
+        <ion-button fill="clear" size="small">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+=======
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/admin-dentro"></ion-back-button> <!-- Ajusta la ruta si es necesario -->
     </ion-buttons>
     <ion-title>Tarea de Material</ion-title>
   </ion-toolbar>
+>>>>>>> master
 </ion-header>
 
 <ion-content>
   <ion-item>
     <ion-input type="text" label="Ingresa el nombre de la tarea" label-placement="floating" [(ngModel)]="taskName"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Foto de la tarea</ion-label>
+    <div *ngIf="imgTarea">
+      <img [src]="imgTarea" alt="Vista previa de la tarea" style="width: 100px; height: auto;" />
+    </div>
+    <input type="file" accept="image/*" (change)="imgPreview($event)" />
   </ion-item>
 
   <ion-grid>
@@ -28,7 +58,11 @@
       </ion-col>
       <ion-col size="3">
         <ion-item>
-          <ion-input [(ngModel)]="item.imagen" placeholder="URL Imagen {{i + 1}}"></ion-input>
+          <div *ngIf="item.imagen">
+            <img [src]="item.imagen" alt="Vista previa de material {{i + 1}}" style="width: 100px; height: auto;"/>
+          </div>
+          <input type="file" accept="image/*" (change)="imagenPreview($event, i)" class="small-file-input"/>
+          
         </ion-item>
       </ion-col>
       <ion-col size="3">
@@ -48,16 +82,13 @@
 
   <ion-col size="auto">
     <ion-button class="add-material-button" (click)="addItem()">
-      <ion-icon name="add-outline"></ion-icon>
+      <ion-icon class="icon-add" name="add-outline"></ion-icon>
       <ion-label>Añadir material</ion-label>
     </ion-button>
   </ion-col>
 
-  <ion-col size="auto">
-    <ion-button class="save-button" (click)="save()">
-      <ion-icon name="save-outline"></ion-icon>
-      <ion-label>Guardar</ion-label>
-    </ion-button>
-  </ion-col>
-
 </ion-content>
+
+<ion-footer>
+  <ion-button class="save-button" expand="full" (click)="save()">Guardar</ion-button>
+</ion-footer>

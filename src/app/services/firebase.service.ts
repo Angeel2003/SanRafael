@@ -63,4 +63,15 @@ export class FirebaseService {
       throw new Error('Error al guardar la tarea');
     }
   }
+
+  async guardarTareaMaterial(taskData: any): Promise<void> {
+    const tasksCollection = collection(this.db, 'tarea-material');
+    try {
+      await addDoc(tasksCollection, taskData);
+      console.log('Tarea de material guardada con éxito');
+    } catch (error) {
+      console.error('Error al guardar la tarea de material: ', error);
+      throw new Error('Error al guardar la tarea de material');
+    }
+  }
 }
