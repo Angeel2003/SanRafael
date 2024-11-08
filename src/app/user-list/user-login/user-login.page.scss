@@ -39,3 +39,46 @@ ion-button {
 ion-item:hover{
     border: 1px solid #005682;
 }
+
+.userLoginPictograma {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.pictogram {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 200px;
+  
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* Ajusta la imagen para que se vea completa dentro del botón */
+        border-radius: 8px; /* Opcional: ajusta las esquinas de la imagen */
+      }
+}
+
+.indicator-container {
+    display: flex;
+    justify-content: center; /* Centra los puntos en el contenedor */
+    gap: 64px; /* Ajusta el espacio entre puntos */
+    margin-top: 16px; /* Opcional: separa los puntos de otros elementos */
+}
+
+.indicator {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    background-color: gray; /* Color de punto inicial */
+    transition: background-color 0.3s; /* Suaviza el cambio de color */
+}
+
+.indicator.correct {
+    background-color: green;
+}
+
+.indicator.wrong {
+    background-color: red;
+}
