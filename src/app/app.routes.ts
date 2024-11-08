@@ -47,6 +47,11 @@ export const routes: Routes = [
     loadComponent: () => import('./asignar-tarea/asignar-tarea.page').then( m => m.AsignarTarea)
   },
 
-
-
+    path: 'agenda',
+    loadComponent: () => import('./agenda/agenda.page').then( m => m.AgendaPage)
+  },
+  {
+    path: 'crear-menu',
+    loadComponent: () => import('./crear-menu/crear-menu.page').then(m => m.CrearMenuPage)
+  }
 ];
