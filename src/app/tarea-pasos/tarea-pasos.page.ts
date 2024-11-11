@@ -1,7 +1,7 @@
 import { NgFor, NgIf, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 import { addIcons } from 'ionicons';
-import { arrowBackOutline, personCircleOutline, addOutline } from 'ionicons/icons';
+import { addOutline } from 'ionicons/icons';
 import { FormsModule } from '@angular/forms';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, 
@@ -24,7 +24,8 @@ import { Router } from '@angular/router';
 export class TareaPasosPage {
   taskName: string = '';
   taskPreview: File | null = null;
-  currentTab: string = 'texto';
+  taskDescription: string = '';
+  currentTab: string = 'video';
   stepText: string[] = [];
   stepPicto: string[] = [];
   stepImg: string[] = [];
@@ -45,8 +46,6 @@ export class TareaPasosPage {
 
   constructor(private firebaseService: FirebaseService, private router: Router) {
     addIcons({
-      arrowBackOutline,
-      personCircleOutline,
       addOutline
     });
   }
@@ -123,23 +122,19 @@ export class TareaPasosPage {
   }
 
   addStep() {
-    if (this.currentTab === 'texto') {
-      const stepTextNumber = this.stepText.length + 1;
-      this.stepText.push(`${stepTextNumber}`);
-      this.stepTextValues.push(''); // Inicializa un valor vacío para el nuevo paso
-    } else if (this.currentTab === 'picto') {
-      const stepPictoNumber = this.stepPicto.length + 1;
-      this.stepPicto.push(`${stepPictoNumber}`);
-      this.stepPictoValues.push(null); // Inicializa un valor nulo para el nuevo pictograma
-    } else if (this.currentTab === 'imagenes') {
-      const stepImgNumber = this.stepImg.length + 1;
-      this.stepImg.push(`${stepImgNumber}`);
-      this.stepImgValues.push(null); // Inicializa un valor nulo para la nueva imagen
-    } else if (this.currentTab === 'videoPasos') {
-      const stepVideoNumber = this.stepVideo.length + 1;
-      this.stepVideo.push(`${stepVideoNumber}`);
-      this.stepVideoValues.push(null); // Inicializa un valor nulo para el nuevo video
-    }
+    const stepTextNumber = this.stepText.length + 1;
+    this.stepText.push(`${stepTextNumber}`);
+    this.stepTextValues.push('');
+    const stepPictoNumber = this.stepPicto.length + 1;
+    this.stepPicto.push(`${stepPictoNumber}`);
+    this.stepPictoValues.push(null);
+    const stepImgNumber = this.stepImg.length + 1;
+    this.stepImg.push(`${stepImgNumber}`);
+    this.stepImgValues.push(null);
+    const stepVideoNumber = this.stepVideo.length + 1;
+    this.stepVideo.push(`${stepVideoNumber}`);
+    this.stepVideoValues.push(null);
+
   }
   
 
@@ -149,6 +144,7 @@ export class TareaPasosPage {
     const dataToSave: any = {
       nombre: this.taskName,
       previewUrl: '',
+      description: this.taskDescription,
       pasosTexto: this.stepTextValues,
       pasosPicto: [],
       pasosImagenes: [],

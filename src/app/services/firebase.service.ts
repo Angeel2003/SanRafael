@@ -28,6 +28,7 @@ export class FirebaseService {
 
   constructor() {}
 
+  //Tarea por pasos
   async uploadFile(file: File, path: string): Promise<void> {
     const storageRef = ref(this.storage, path); // Crea una referencia en Firebase Storage
 
@@ -64,33 +65,54 @@ export class FirebaseService {
     }
   }
 
-  async getCollectionTaskNames(collectionName: string): Promise<string[]> {
+  //Asignar tarea a alumno
+  async getCollectionDocId(collectionName: string, docId: string): Promise<string[]> {
     const names: string[] = [];
     const querySnapshot = await getDocs(collection(this.db, collectionName));
 
     querySnapshot.forEach(doc => {
       const data = doc.data();
-      if (data['nombre']) { // Asegúrate de que el campo 'nombre' exista
-        names.push(data['nombre']);
+      if (data[docId]) { // Asegúrate de que el campo 'nombre' exista
+        names.push(data[docId]);
       }
     });
 
     return names;
   }
 
-  // Método para obtener nombres de múltiples colecciones
   async getAllTaskNames(): Promise<string[]> {
-    const collectionNames = ['tarea-por-pasos', 'tarea-comedor', 'tarea-materia'];
+    const collectionNames = ['tarea-por-pasos', 'tarea-comedor', 'tarea-material'];
     let allNames: string[] = [];
 
     for (const collectionName of collectionNames) {
-      const names = await this.getCollectionTaskNames(collectionName);
+      const names = await this.getCollectionDocId(collectionName, 'nombre');
       allNames = allNames.concat(names);
     }
 
     return allNames;
   }
+
+  async getAllStudentsNames(): Promise<string[]> {
+    const collectionName = 'alumnos';
+    let allNames: string[] = [];
+
+    const names = await this.getCollectionDocId(collectionName, 'nombre');
+    allNames = allNames.concat(names);
   
+    return allNames;
+  }
+  
+  async getAllDefaultAccesValues(): Promise<string[]> {
+    const collectionName = 'alumnos';
+    let allAccesibilities: string[] = [];
+
+    const names = await this.getCollectionDocId(collectionName, 'nivelAccesibilidad');
+    allAccesibilities = allAccesibilities.concat(names);
+
+    return allAccesibilities;
+  }
+
+  //Tarea material
   async guardarTareaMaterial(taskData: any): Promise<void> {
     const tasksCollection = collection(this.db, 'tarea-material');
     try {
