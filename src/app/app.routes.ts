@@ -52,6 +52,7 @@ export const routes: Routes = [
   },
   {
     path: 'crear-menu',
-    loadComponent: () => import('./crear-menu/crear-menu.page').then(m => m.CrearMenuPage)
+    loadComponent: () => import('./crear-menu/crear-menu.page').then( m => m.CrearMenuPage)
   }
+
 ];

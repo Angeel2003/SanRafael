@@ -1,22 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonGrid, IonRow, IonButton, IonCol, IonIcon, IonItem, IonInput, IonLabel, IonList } from '@ionic/angular/standalone';
-import { MenuItem } from '../models/menu.interface';
-import { Router } from '@angular/router';
 import { arrowBackOutline, personCircleOutline, addOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonCol, IonGrid, IonRow, IonItem, IonLabel, IonIcon, IonButton, IonInput } from '@ionic/angular/standalone';
+import { Router } from '@angular/router';
+
+export interface MenuItem {
+  name: string;
+  pictogram: string;
+  image: string;
+  quantity?: number;
+}
 
 @Component({
   selector: 'app-crear-menu',
   templateUrl: './crear-menu.page.html',
   styleUrls: ['./crear-menu.page.scss'],
   standalone: true,
-  imports: [IonList, IonLabel, IonInput, IonItem, IonIcon, IonCol, IonButton, IonRow, IonGrid, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButtons, IonBackButton, IonCol, IonGrid, IonRow, IonItem, IonLabel, IonIcon, IonButton, IonInput]
 })
-
-
 export class CrearMenuPage implements OnInit {
 
   menus: MenuItem[] = [
@@ -50,10 +54,6 @@ export class CrearMenuPage implements OnInit {
 
   saveMenus() {
     console.log('Datos guardados: ', this.menus);
-  }
-
-  goBackToAdmin() {
-    this.router.navigate(['/admin-dentro']);
   }
 
 }
