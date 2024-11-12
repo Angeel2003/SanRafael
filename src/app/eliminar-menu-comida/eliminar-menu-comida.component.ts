@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonGrid, IonRow, IonCol, IonFooter, IonCheckbox } from '@ionic/angular/standalone';
-import { menu } from '../menu';
+import { FirebaseService } from '../services/firebase.service';
 
 @Component({
   selector: 'app-eliminar-menu-comida',
@@ -14,13 +14,19 @@ import { menu } from '../menu';
 })
 export class EliminarMenuComidaComponent  implements OnInit {
 
-  menus: menu[] = [
-    {name: 'Menu1', img: '../assets/carne1.png', avaliable: true},
-    {name: 'Menu2', img: '../assets/carne2.png', avaliable: true}
-  ]
+  menus: any[] = []
   
-  constructor() { }
+  constructor(private firebaseService: FirebaseService) { }
 
-  ngOnInit() {}
+  async ngOnInit() {
+    this.menus = await this.firebaseService.getMenus();
+  }
+
+  eliminarMenu(menuId: string, index: any){
+    //Eliminamos el menu de la base de datos
+    this.firebaseService.deleteMenu(menuId);
+    //Eliminamos el menu del array de elementos menus para que se actualice la vista
+    this.menus.splice(index, 1);
+  }
 
 }
