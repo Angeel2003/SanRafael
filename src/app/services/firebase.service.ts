@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { initializeApp } from 'firebase/app';
+import { FirebaseError, initializeApp } from 'firebase/app';
 import { getAnalytics } from "firebase/analytics";
 import { addDoc, collection, getDocs, getFirestore, query, where } from "firebase/firestore"; // Para Firestore Database
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Para Firebase Storage
-import { getAuth } from "firebase/auth"; 
+import { Auth, getAuth, signInWithEmailAndPassword } from "firebase/auth"; 
 import { from, map, Observable } from 'rxjs';
 
 @Injectable({
@@ -149,4 +149,17 @@ async verifyLoginData(type: 'PIN' | 'Texto', value: string | number): Promise<bo
       )
     );
   }
+
+  // Método para iniciar sesión
+  async loginUser(email: string, password: string): Promise<boolean> {
+    try {
+      await signInWithEmailAndPassword(this.auth, email, password);
+      return true; // Login exitoso
+    } catch (error) {
+      const firebaseError = error as FirebaseError;
+      console.error("Error en inicio de sesión:", firebaseError.message);
+      return false; // Login fallido
+    }
+  }
 }
+

@@ -9,16 +9,16 @@
     box-sizing: border-box;
 }
 
-ion-header {
-    background-color: #ffffff;
-    color: #005682;
-    padding: 1rem;
+ion-toolbar {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
 }
-
+  
 ion-title {
-    font-size: 1.5rem;
+    text-align: center; /* Asegura que el texto esté centrado */
+    width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
+    font-size: 24px;
     color: #005682;
-    margin-bottom: 0.5rem;
 }
 
 ion-button {
