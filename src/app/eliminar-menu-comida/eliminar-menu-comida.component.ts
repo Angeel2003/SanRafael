@@ -3,7 +3,12 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonGrid, IonRow, IonCol, IonFooter, IonCheckbox } from '@ionic/angular/standalone';
-import { menu } from '../menu';
+
+interface menu {
+  name : string;
+  img : string;
+  avaliable : boolean;
+  }  
 
 @Component({
   selector: 'app-eliminar-menu-comida',
@@ -12,6 +17,7 @@ import { menu } from '../menu';
   styleUrls: ['./eliminar-menu-comida.component.scss'],
   imports: [IonCheckbox, IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonGrid, IonRow, IonCol, IonFooter, CommonModule, FormsModule],
 })
+
 export class EliminarMenuComidaComponent  implements OnInit {
 
   menus: menu[] = [
