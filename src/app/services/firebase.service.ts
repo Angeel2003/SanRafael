@@ -120,7 +120,6 @@ export class FirebaseService {
     return accesibilityLevels;
   }
 
-
   async addTaskToStudent(studentName: string, asignacion: Asignacion): Promise<void> {
     const querySnapshot = await getDocs(collection(this.db, 'alumnos'));
   
@@ -218,4 +217,3 @@ async verifyLoginData(type: 'PIN' | 'Texto', value: string | number): Promise<bo
     
   }
 }
-
