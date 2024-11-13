@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { lockClosedOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { NgIf, NgForOf, NgClass } from '@angular/common';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButtons, IonButton, IonBackButton, 
   IonItem, IonLabel, IonInput } from '@ionic/angular/standalone';
+import { FirebaseService } from 'src/app/services/firebase.service';
 
 
 @Component({
@@ -17,9 +18,16 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, I
 })
 
 export class UserLoginPage implements OnInit {
+  @ViewChild('pinInput') pinInput!: number;
+  @ViewChild('textInput') textInput!: string;
+
   user: any;
   isPIN: boolean = false;
   isPictograma: boolean = false;
+  isTexto: boolean = false;
+  pinValue: number = -1;
+  textValue: string = '';
+  isPasswordIncorrect: boolean = false;
 
   buttons = [
     { image: 'https://img.freepik.com/vector-premium/cuadrado-sencillo-poner-fecha-blanco-negro-ilustracion-vectorial-linea-arte_969863-348534.jpg' },
@@ -35,21 +43,25 @@ export class UserLoginPage implements OnInit {
   indicators = ['null', 'null', 'null']; // Estado del progreso: null = sin seleccionar, 'correct' o 'wrong'
 
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private router: Router, private firebaseService: FirebaseService) {
     addIcons({
       lockClosedOutline
     })
 
-    this.route.params.subscribe(params => {
-      this.user = JSON.parse(params['user']);
-      // Verificar si el usuario tiene password = 'PIN'
-      if (this.user.password === 'PIN') {
-        this.isPIN = true;
-      }
-      else {
-        this.isPictograma = true;
-      }
-    });
+    const navigation = this.router.getCurrentNavigation();
+    this.user = navigation?.extras.state?.['user'];
+    console.log(this.user);
+
+    // Verificar si el usuario tiene password = 'PIN'
+    if (this.user.tipoContrasena === 'PIN') {
+      this.isPIN = true;
+    }
+    else if (this.user.tipoContrasena === 'Pictograma'){
+      this.isPictograma = true;
+    }
+    else {
+      this.isTexto = true;
+    }
   }
 
   ngOnInit() {
@@ -90,8 +102,33 @@ export class UserLoginPage implements OnInit {
     }
   }
 
+  async onSubmitPass() {
+    const type = this.isPIN ? 'PIN' : 'Texto';
+    
+    // Obtener los valores de los inputs según el id
+    this.pinValue = parseInt((document.getElementById('pinLogin') as HTMLInputElement)?.value || '');
+    this.textValue = (document.getElementById('textoLogin') as HTMLInputElement)?.value || '';
+
+    const value = this.isPIN ? this.pinValue : this.textValue;
+    const isValid = await this.firebaseService.verifyLoginData(type, value);
+
+    if (isValid) {
+      this.isPasswordIncorrect = false;
+      this.onSubmit();
+    } else {
+      this.isPasswordIncorrect = true;
+      this.resetInputs(); // Restablece los campos
+
+    }
+  }
+
+  resetInputs() {
+    this.pinValue = -1;
+    this.textValue = '';
+  }
+
   onSubmit() {
-    // Lógica para el inicio de sesión del usuario
     console.log('Iniciando sesión para:', this.user);
+    this.router.navigate(['/agenda']);
   }
 }

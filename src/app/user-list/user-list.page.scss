@@ -6,25 +6,58 @@ ion-toolbar {
 ion-title {
     text-align: center; /* Asegura que el texto esté centrado */
     width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
-    font-size: 24px;
+    font-size: 28px;
     color: #005682;
 }
 
+// ion-card {
+//     text-align: center; /* Centrar texto */
+//     margin: 40px; /* Espaciado entre tarjetas */
+//     background-color: #005682;
+//     padding: 10px;
+//     border-radius: 18px;
+// }
+
 ion-card {
-    text-align: center; /* Centrar texto */
-    margin: 40px; /* Espaciado entre tarjetas */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 100px 0;
     background-color: #005682;
-    padding: 10px;
+    padding: 16px;
     border-radius: 18px;
 }
 
 ion-card-title {
     color: #fff;
-    font-size: 36px;
+    font-size: 28px; /* Tamaño del texto */
 }
 
 ion-card img {
-    width: 100%; /* Ancho completo */
-    border-radius: 24px;
-    padding: 10px;
+    width: 100%;
+    border-radius: 18px;
+}
+
+ion-icon {
+    font-size: 50px;
+}
+
+.pagination-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 32px; /* Espaciado entre los botones */
+}
+
+.custom-button {
+    --background: #005682; /* Cambia el color de fondo */
+    --color: #ffffff;      /* Cambia el color del texto y el icono */
+    width: 100px;
+    height: 50px;
+}
+
+.custom-button[disabled] {
+    --background: #cccccc; /* Color de fondo para el botón deshabilitado */
+    --color: #666666;      /* Color del texto e icono para el botón deshabilitado */
 }

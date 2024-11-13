@@ -1,11 +1,13 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>
-      <span style="font-size: 150%;">Tarea Comida</span>
-    </ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin-dentro"></ion-back-button> <!-- Ajusta la ruta si es necesario -->
+    </ion-buttons>
+    <ion-title>Tarea Comanda</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content [fullscreen]="true">
+
+<ion-content>
   <div style="font-size: 230%;text-align: center; margin-top: 2%;"><span>{{nombreTarea}}</span></div>
   <ion-grid style="text-align: center;">
     <!--Estructura de columna: Menu-Pictograma-Cantidad -->

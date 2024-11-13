@@ -35,8 +35,24 @@ export const routes: Routes = [
     loadComponent: () => import('./admin-dentro/admin-dentro.page').then( m => m.AdminDentro)
   },
   {
-    path: 'eliminar-menu-comida',
-    loadComponent: () => import('./eliminar-menu-comida/eliminar-menu-comida.page').then( m => m.EliminarMenuComidaComponent)
+    path: 'crear-usuario',
+    loadComponent: () => import('./crear-usuario/crear-usuario.page').then( m => m.CrearUsuarioPage)
   },
+  {
+    path: 'tarea-comanda',
+    loadComponent: () => import('./tarea-comanda/tarea-comanda.page').then( m => m.TareaComandaPage)
+  },
+  {
+    path: 'asignar-tarea',
+    loadComponent: () => import('./asignar-tarea/asignar-tarea.page').then( m => m.AsignarTarea)
+  },
+  {
+    path: 'agenda',
+    loadComponent: () => import('./agenda/agenda.page').then( m => m.AgendaPage)
+  },
+  {
+    path: 'crear-menu',
+    loadComponent: () => import('./crear-menu/crear-menu.page').then( m => m.CrearMenuPage)
+  }
 
 ];

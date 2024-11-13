@@ -47,8 +47,19 @@ export class AdminLoginPage implements OnInit {
     }
   }
 
-  onSubmit() {
-    this.router.navigate(['/admin-dentro']);
+  async onSubmit() {
+    const email = (<HTMLInputElement>document.getElementById('emailLogin')).value;
+    const password = (<HTMLInputElement>document.getElementById('password')).value;
+    const isAuthenticated = await this.firebaseService.loginUser(email, password);
+
+    if (isAuthenticated) {
+      console.log("Inicio de sesión exitoso");
+      this.router.navigate(['/admin-dentro']);
+    } else {
+      console.log("Error en las credenciales. Inténtalo de nuevo.");
+      // Muestra un mensaje de error en la interfaz
+    }
   }
 
 }
+

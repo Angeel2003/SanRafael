@@ -20,8 +20,7 @@ export class AdminDentro {
   }
 
   goToMenuTask() {
-    console.log("ELIMINAR CUANDO ESTE CREADO")
-    //this.router.navigate(['/tarea-menu']);
+    this.router.navigate(['/tarea-comanda']);
   }
 
   goToMaterialTask() {
@@ -29,8 +28,13 @@ export class AdminDentro {
   }
 
   goToCreateUser() {
-    console.log("ELIMINAR CUANDO ESTE CREADO")
-    //this.router.navigate(['/crear-usuario']);
+    this.router.navigate(['/crear-usuario']);
+  }
+  goToAsignTask() {
+    this.router.navigate(['/asignar-tarea']);
+  }
+  goToCreateMenu() {
+    this.router.navigate(['/crear-menu']);
   }
   goToDeleteMenu() {
     this.router.navigate(['/eliminar-menu-comida']);
