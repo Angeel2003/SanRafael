@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { FirebaseError, initializeApp } from 'firebase/app';
 import { getAnalytics } from "firebase/analytics";
-import { addDoc, collection, getDocs, getFirestore, query, where } from "firebase/firestore"; // Para Firestore Database
+import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Para Firebase Storage
 import { Auth, getAuth, signInWithEmailAndPassword } from "firebase/auth"; 
 import { from, map, Observable } from 'rxjs';
+import { Asignacion } from '../asignar-tarea/asignar-tarea.page';
 
 @Injectable({
   providedIn: 'root'
@@ -73,7 +74,7 @@ export class FirebaseService {
 
     querySnapshot.forEach(doc => {
       const data = doc.data();
-      if (data[docId]) { // Asegúrate de que el campo 'nombre' exista
+      if (data[docId]) {
         names.push(data[docId]);
       }
     });
@@ -103,14 +104,41 @@ export class FirebaseService {
     return allNames;
   }
   
-  async getAllDefaultAccesValues(): Promise<string[]> {
+  async getAllDefaultAccesValues(nombreAlumno: string): Promise<string[]> {
     const collectionName = 'alumnos';
-    let allAccesibilities: string[] = [];
+    let accesibilityLevels: string[] = [];
 
-    const names = await this.getCollectionDocId(collectionName, 'nivelAccesibilidad');
-    allAccesibilities = allAccesibilities.concat(names);
+    const querySnapshot = await getDocs(collection(this.db, collectionName));
 
-    return allAccesibilities;
+    querySnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data['nombre'] == nombreAlumno) {
+        accesibilityLevels.push(data['nivelAccesibilidad']);
+      }
+    });
+
+    return accesibilityLevels;
+  }
+
+
+  async addTaskToStudent(studentName: string, asignacion: Asignacion): Promise<void> {
+    const querySnapshot = await getDocs(collection(this.db, 'alumnos'));
+  
+    for (const docSnapshot of querySnapshot.docs) {
+      const data = docSnapshot.data();
+      if (data['nombre'] == studentName) {
+        try {
+          const studentDocRef = doc(this.db, 'alumnos', docSnapshot.id);
+          
+          await updateDoc(studentDocRef, {
+            tareasAsig: arrayUnion(asignacion)
+          });
+          console.log('Tarea agregada correctamente al estudiante');
+        } catch (error) {
+          console.error('Error al agregar la tarea:', error);
+        }
+      }
+    }
   }
 
   //Tarea material
