@@ -18,3 +18,84 @@ ion-title {
   font-size: 24px;
   color: #005682;
 }
+
+
+/* Botón de regreso */
+ion-back-button {
+  color: black;
+}
+
+/* Etiquetas de columnas */
+ion-label {
+  color: #005682;
+  font-size:x-large;
+}
+
+/* Elementos en las filas */
+ion-content {
+  --ion-background-color: #ffffff;
+  padding: 16px;
+}
+
+ion-grid {
+  margin-top: 10px;
+}
+
+.cabecera{
+  background-color: #005682;
+}
+
+.cabecera-label{
+  color: #ffffff;
+}
+
+ion-item {
+  --background: #ffffff;
+  --color: #005682;
+  --placeholder-color: #005682;
+  font-size:x-large;
+
+}
+
+/* Selectores */
+ion-select {
+  --background: white;
+  --color: #005682;
+}
+
+ion-select-option {
+  --ion-color-primary: #005682;
+  color: #005682;
+}
+
+/* Checkbox */
+ion-checkbox {
+  --color-checked: #005682;
+  --background: white;
+}
+
+ion-checkbox::part(background-checked) {
+  background-color: #005682;
+}
+
+ion-checkbox::part(indicator-checked) {
+  background-color: #005682;
+}
+
+
+ion-button.save-button{
+  --background: #005682;
+  font-size: 150%;
+}
+
+.custom-toast {
+  --background: #f5f5f5;
+  --color: #005682;
+  font-size: xx-large;
+  font-weight: bold;
+  text-align: center;
+  --box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7); 
+  --border-radius: 10px;
+  margin-top: 50px;
+}
+
