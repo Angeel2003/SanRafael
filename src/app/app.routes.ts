@@ -53,6 +53,10 @@ export const routes: Routes = [
   {
     path: 'crear-menu',
     loadComponent: () => import('./crear-menu/crear-menu.page').then( m => m.CrearMenuPage)
+  },
+  {
+    path: 'eliminar-menu-comida',
+    loadComponent: () => import('./eliminar-menu-comida/eliminar-menu-comida.page').then( m => m.EliminarMenuComidaComponent)
   }
 
 ];
