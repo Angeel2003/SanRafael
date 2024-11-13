@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { initializeApp } from 'firebase/app';
+import { FirebaseError, initializeApp } from 'firebase/app';
 import { getAnalytics } from "firebase/analytics";
-import { addDoc, collection, getDocs, getFirestore, query, where } from "firebase/firestore"; // Para Firestore Database
+import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Para Firebase Storage
-import { getAuth } from "firebase/auth"; 
+import { Auth, getAuth, signInWithEmailAndPassword } from "firebase/auth"; 
 import { from, map, Observable } from 'rxjs';
+import { Asignacion } from '../asignar-tarea/asignar-tarea.page';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,7 @@ export class FirebaseService {
 
   constructor() {}
 
+  //Tarea por pasos
   async uploadFile(file: File, path: string): Promise<void> {
     const storageRef = ref(this.storage, path); // Crea una referencia en Firebase Storage
 
@@ -65,33 +67,81 @@ export class FirebaseService {
     }
   }
 
-  async getCollectionTaskNames(collectionName: string): Promise<string[]> {
+  //Asignar tarea a alumno
+  async getCollectionDocId(collectionName: string, docId: string): Promise<string[]> {
     const names: string[] = [];
     const querySnapshot = await getDocs(collection(this.db, collectionName));
 
     querySnapshot.forEach(doc => {
       const data = doc.data();
-      if (data['nombre']) { // Asegúrate de que el campo 'nombre' exista
-        names.push(data['nombre']);
+      if (data[docId]) {
+        names.push(data[docId]);
       }
     });
 
     return names;
   }
 
-  // Método para obtener nombres de múltiples colecciones
   async getAllTaskNames(): Promise<string[]> {
-    const collectionNames = ['tarea-por-pasos', 'tarea-comedor', 'tarea-materia'];
+    const collectionNames = ['tarea-por-pasos', 'tarea-comedor', 'tarea-material'];
     let allNames: string[] = [];
 
     for (const collectionName of collectionNames) {
-      const names = await this.getCollectionTaskNames(collectionName);
+      const names = await this.getCollectionDocId(collectionName, 'nombre');
       allNames = allNames.concat(names);
     }
 
     return allNames;
   }
+
+  async getAllStudentsNames(): Promise<string[]> {
+    const collectionName = 'alumnos';
+    let allNames: string[] = [];
+
+    const names = await this.getCollectionDocId(collectionName, 'nombre');
+    allNames = allNames.concat(names);
   
+    return allNames;
+  }
+  
+  async getAllDefaultAccesValues(nombreAlumno: string): Promise<string[]> {
+    const collectionName = 'alumnos';
+    let accesibilityLevels: string[] = [];
+
+    const querySnapshot = await getDocs(collection(this.db, collectionName));
+
+    querySnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data['nombre'] == nombreAlumno) {
+        accesibilityLevels.push(data['nivelAccesibilidad']);
+      }
+    });
+
+    return accesibilityLevels;
+  }
+
+
+  async addTaskToStudent(studentName: string, asignacion: Asignacion): Promise<void> {
+    const querySnapshot = await getDocs(collection(this.db, 'alumnos'));
+  
+    for (const docSnapshot of querySnapshot.docs) {
+      const data = docSnapshot.data();
+      if (data['nombre'] == studentName) {
+        try {
+          const studentDocRef = doc(this.db, 'alumnos', docSnapshot.id);
+          
+          await updateDoc(studentDocRef, {
+            tareasAsig: arrayUnion(asignacion)
+          });
+          console.log('Tarea agregada correctamente al estudiante');
+        } catch (error) {
+          console.error('Error al agregar la tarea:', error);
+        }
+      }
+    }
+  }
+
+  //Tarea material
   async guardarTareaMaterial(taskData: any): Promise<void> {
     const tasksCollection = collection(this.db, 'tarea-material');
     try {
@@ -127,4 +177,17 @@ async verifyLoginData(type: 'PIN' | 'Texto', value: string | number): Promise<bo
       )
     );
   }
+
+  // Método para iniciar sesión
+  async loginUser(email: string, password: string): Promise<boolean> {
+    try {
+      await signInWithEmailAndPassword(this.auth, email, password);
+      return true; // Login exitoso
+    } catch (error) {
+      const firebaseError = error as FirebaseError;
+      console.error("Error en inicio de sesión:", firebaseError.message);
+      return false; // Login fallido
+    }
+  }
 }
+
