@@ -3,16 +3,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonGrid, IonRow, IonCol, IonFooter, IonCheckbox } from '@ionic/angular/standalone';
-<<<<<<< HEAD
 import { FirebaseService } from '../services/firebase.service';
-=======
 
-interface menu {
-  name : string;
-  img : string;
-  avaliable : boolean;
-  }  
->>>>>>> 934167db54618992a938874ae919f7d1ba024ab7
 
 @Component({
   selector: 'app-eliminar-menu-comida',
