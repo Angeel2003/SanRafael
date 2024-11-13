@@ -29,6 +29,7 @@ export class FirebaseService {
 
   constructor() {}
 
+  //Tarea por pasos
   async uploadFile(file: File, path: string): Promise<void> {
     const storageRef = ref(this.storage, path); // Crea una referencia en Firebase Storage
 
@@ -62,6 +63,102 @@ export class FirebaseService {
     } catch (error) {
       console.error('Error al guardar la tarea: ', error);
       throw new Error('Error al guardar la tarea');
+    }
+  }
+
+  //Asignar tarea a alumno
+  async getCollectionDocId(collectionName: string, docId: string): Promise<string[]> {
+    const names: string[] = [];
+    const querySnapshot = await getDocs(collection(this.db, collectionName));
+
+    querySnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data[docId]) { // Asegúrate de que el campo 'nombre' exista
+        names.push(data[docId]);
+      }
+    });
+
+    return names;
+  }
+
+  async getAllTaskNames(): Promise<string[]> {
+    const collectionNames = ['tarea-por-pasos', 'tarea-comedor', 'tarea-material'];
+    let allNames: string[] = [];
+
+    for (const collectionName of collectionNames) {
+      const names = await this.getCollectionDocId(collectionName, 'nombre');
+      allNames = allNames.concat(names);
+    }
+
+    return allNames;
+  }
+
+  async getAllStudentsNames(): Promise<string[]> {
+    const collectionName = 'alumnos';
+    let allNames: string[] = [];
+
+    const names = await this.getCollectionDocId(collectionName, 'nombre');
+    allNames = allNames.concat(names);
+  
+    return allNames;
+  }
+  
+  async getAllDefaultAccesValues(): Promise<string[]> {
+    const collectionName = 'alumnos';
+    let allAccesibilities: string[] = [];
+
+    const names = await this.getCollectionDocId(collectionName, 'nivelAccesibilidad');
+    allAccesibilities = allAccesibilities.concat(names);
+
+    return allAccesibilities;
+  }
+
+  //Tarea material
+  async guardarTareaMaterial(taskData: any): Promise<void> {
+    const tasksCollection = collection(this.db, 'tarea-material');
+    try {
+      await addDoc(tasksCollection, taskData);
+      console.log('Tarea de material guardada con éxito');
+    } catch (error) {
+      console.error('Error al guardar la tarea de material: ', error);
+      throw new Error('Error al guardar la tarea de material');
+    }
+  }
+
+   // Método para obtener un usuario por tipo de contraseña y contraseña
+async verifyLoginData(type: 'PIN' | 'Texto', value: string | number): Promise<boolean> {
+  try {
+    const usersCollection = collection(this.db, 'alumnos'); // Reemplaza 'alumnos' con el nombre de tu colección si es diferente
+    const q = query(usersCollection, where('tipoContrasena', '==', type), where('contrasena', '==', value));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty; // Si hay al menos un documento, el usuario es válido
+  } catch (error) {
+    console.error("Error verificando datos de login: ", error);
+    return false;
+  }
+}
+
+  // Método para obtener la lista de usuarios
+  getAlumnos(): Observable<any[]> {
+    const usersRef = collection(this.db, 'alumnos');  // Referencia a la colección 'users'
+
+    // Usamos `from` para convertir el Promise en un Observable
+    return from(getDocs(usersRef)).pipe(
+      map((snapshot) =>
+        snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))  // Mapeo de datos de Firestore a un arreglo de objetos
+      )
+    );
+  }
+
+  // Método para iniciar sesión
+  async loginUser(email: string, password: string): Promise<boolean> {
+    try {
+      await signInWithEmailAndPassword(this.auth, email, password);
+      return true; // Login exitoso
+    } catch (error) {
+      const firebaseError = error as FirebaseError;
+      console.error("Error en inicio de sesión:", firebaseError.message);
+      return false; // Login fallido
     }
   }
 
