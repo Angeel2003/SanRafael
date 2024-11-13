@@ -7,7 +7,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'eliminar-menu-comida',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
   {
@@ -33,6 +33,10 @@ export const routes: Routes = [
   {
     path: 'admin-dentro',
     loadComponent: () => import('./admin-dentro/admin-dentro.page').then( m => m.AdminDentro)
+  },
+  {
+    path: 'eliminar-menu-comida',
+    loadComponent: () => import('./eliminar-menu-comida/eliminar-menu-comida.page').then( m => m.EliminarMenuComidaComponent)
   },
 
 ];

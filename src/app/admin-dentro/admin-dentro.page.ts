@@ -32,4 +32,7 @@ export class AdminDentro {
     console.log("ELIMINAR CUANDO ESTE CREADO")
     //this.router.navigate(['/crear-usuario']);
   }
+  goToDeleteMenu() {
+    this.router.navigate(['/eliminar-menu-comida']);
+  }
 }
