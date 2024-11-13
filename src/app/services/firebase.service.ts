@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirebaseError, initializeApp } from 'firebase/app';
 import { getAnalytics } from "firebase/analytics";
-<<<<<<< HEAD
-import { addDoc, collection, deleteDoc, doc, getDocs, getFirestore, query, where } from "firebase/firestore"; // Para Firestore Database
-=======
-import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
->>>>>>> 934167db54618992a938874ae919f7d1ba024ab7
+import { addDoc, arrayUnion, collection, deleteDoc, doc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Para Firebase Storage
 import { Auth, getAuth, signInWithEmailAndPassword } from "firebase/auth"; 
 import { from, map, Observable } from 'rxjs';
