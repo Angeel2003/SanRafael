@@ -7,7 +7,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'eliminar-menu-comida',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
   {
