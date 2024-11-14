@@ -12,51 +12,47 @@ export const routes: Routes = [
   },
   {
     path: 'admin-login',
-    loadComponent: () => import('./admin-login/admin-login.page').then( m => m.AdminLoginPage)
+    loadComponent: () => import('./admin-login/admin-login.page').then(m => m.AdminLoginPage)
   },
   {
     path: 'user-list',
-    loadComponent: () => import('./user-list/user-list.page').then( m => m.UserListPage)
+    loadComponent: () => import('./user-list/user-list.page').then(m => m.UserListPage)
   },
   {
     path: 'user-login',
-    loadComponent: () => import('./user-list/user-login/user-login.page').then( m => m.UserLoginPage)
+    loadComponent: () => import('./user-list/user-login/user-login.page').then(m => m.UserLoginPage)
   },
   {
     path: 'tarea-pasos',
-    loadComponent: () => import('./tarea-pasos/tarea-pasos.page').then( m => m.TareaPasosPage)
+    loadComponent: () => import('./tarea-pasos/tarea-pasos.page').then(m => m.TareaPasosPage)
   },
   {
     path: 'tarea-material',
-    loadComponent: () => import('./tarea-material/tarea-material.page').then( m => m.TareaMaterialPage)
+    loadComponent: () => import('./tarea-material/tarea-material.page').then(m => m.TareaMaterialPage)
   },
   {
     path: 'admin-dentro',
-    loadComponent: () => import('./admin-dentro/admin-dentro.page').then( m => m.AdminDentro)
+    loadComponent: () => import('./admin-dentro/admin-dentro.page').then(m => m.AdminDentro)
   },
   {
     path: 'crear-usuario',
-    loadComponent: () => import('./crear-usuario/crear-usuario.page').then( m => m.CrearUsuarioPage)
+    loadComponent: () => import('./crear-usuario/crear-usuario.page').then(m => m.CrearUsuarioPage)
   },
   {
     path: 'tarea-comanda',
-    loadComponent: () => import('./tarea-comanda/tarea-comanda.page').then( m => m.TareaComandaPage)
+    loadComponent: () => import('./tarea-comanda/tarea-comanda.page').then(m => m.TareaComandaPage)
   },
   {
     path: 'asignar-tarea',
-    loadComponent: () => import('./asignar-tarea/asignar-tarea.page').then( m => m.AsignarTarea)
+    loadComponent: () => import('./asignar-tarea/asignar-tarea.page').then(m => m.AsignarTarea)
   },
   {
     path: 'agenda',
-    loadComponent: () => import('./agenda/agenda.page').then( m => m.AgendaPage)
+    loadComponent: () => import('./agenda/agenda.page').then(m => m.AgendaPage)
   },
   {
-    path: 'crear-menu',
-    loadComponent: () => import('./crear-menu/crear-menu.page').then( m => m.CrearMenuPage)
+    path: 'editar-menu',
+    loadComponent: () => import('./editar-menu/editar-menu.page').then(m => m.EditarMenuPage)
   },
-  {
-    path: 'eliminar-menu-comida',
-    loadComponent: () => import('./eliminar-menu-comida/eliminar-menu-comida.page').then( m => m.EliminarMenuComidaComponent)
-  }
 
 ];
