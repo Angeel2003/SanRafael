@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from "firebase/analytics";
 import { addDoc, collection, getFirestore } from "firebase/firestore"; // Para Firestore Database
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Para Firebase Storage
+import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Para Firebase Storage
 import { getAuth } from "firebase/auth"; 
 
 @Injectable({
@@ -49,6 +49,18 @@ export class FirebaseService {
     } catch (error) {
       console.error('Error al obtener la URL de descarga: ', error);
       throw new Error('Error al obtener la URL de descarga');
+    }
+  }
+
+  async deleteFile(path: string): Promise<void> {
+    const storageRef = ref(this.storage, path);
+
+    try {
+      await deleteObject(storageRef);
+      console.log('Archivo eliminado con éxito');
+    } catch (error) {
+      console.error('Error al eliminar el archivo: ', error);
+      throw new Error('Error al eliminar el archivo');
     }
   }
 
