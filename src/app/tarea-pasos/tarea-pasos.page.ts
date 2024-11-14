@@ -1,11 +1,12 @@
 import { NgFor, NgIf, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 import { addIcons } from 'ionicons';
-import { arrowBackOutline, personCircleOutline, addOutline } from 'ionicons/icons';
+import { addOutline } from 'ionicons/icons';
 import { FormsModule } from '@angular/forms';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, 
-  IonInput, IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, IonFooter, IonBackButton, IonButtons
+  IonInput, IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, IonFooter, IonBackButton, IonButtons,
+  IonToast
 } from '@ionic/angular/standalone';
 import { FirebaseService } from '../services/firebase.service';
 import { Router } from '@angular/router';
@@ -17,14 +18,16 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [
     IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, IonInput, IonFooter,
-    IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, NgIf, NgFor, NgClass, FormsModule, IonBackButton, IonButtons
+    IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, NgIf, NgFor, NgClass, FormsModule, IonBackButton, IonButtons,
+    IonToast
   ],
 })
 
 export class TareaPasosPage {
   taskName: string = '';
   taskPreview: File | null = null;
-  currentTab: string = 'texto';
+  taskDescription: string = '';
+  currentTab: string = 'video';
   stepText: string[] = [];
   stepPicto: string[] = [];
   stepImg: string[] = [];
@@ -45,10 +48,32 @@ export class TareaPasosPage {
 
   constructor(private firebaseService: FirebaseService, private router: Router) {
     addIcons({
-      arrowBackOutline,
-      personCircleOutline,
       addOutline
     });
+  }
+
+  initializeComponents(){
+    this.taskName = '';
+    this.taskDescription = '';
+    this.taskPreview = null;
+    this.currentTab = 'video';
+    this.stepText = [];
+    this.stepPicto = [];
+    this.stepImg = [];
+    this.stepVideo = [];
+    this.videoCompletoFile = null;
+    this.audioCompletoFile = null;
+    this.selectedText = [];
+    this.selectedPicto = [];
+    this.selectedImages = [];
+    this.selectedVideos = [];
+
+    this.stepTextValues = []; // Almacena los textos de cada paso en el tab 'texto'
+    this.stepPictoValues = []; // Almacena las imágenes de pictogramas
+    this.stepImgValues = []; // Almacena las imágenes
+    this.stepVideoValues = []; // Almacena los videos de los pasos
+    this.videoPreviewUrl = null;
+    this.previewUrl = null;
   }
 
   goBackToAdmin() {
@@ -123,23 +148,19 @@ export class TareaPasosPage {
   }
 
   addStep() {
-    if (this.currentTab === 'texto') {
-      const stepTextNumber = this.stepText.length + 1;
-      this.stepText.push(`${stepTextNumber}`);
-      this.stepTextValues.push(''); // Inicializa un valor vacío para el nuevo paso
-    } else if (this.currentTab === 'picto') {
-      const stepPictoNumber = this.stepPicto.length + 1;
-      this.stepPicto.push(`${stepPictoNumber}`);
-      this.stepPictoValues.push(null); // Inicializa un valor nulo para el nuevo pictograma
-    } else if (this.currentTab === 'imagenes') {
-      const stepImgNumber = this.stepImg.length + 1;
-      this.stepImg.push(`${stepImgNumber}`);
-      this.stepImgValues.push(null); // Inicializa un valor nulo para la nueva imagen
-    } else if (this.currentTab === 'videoPasos') {
-      const stepVideoNumber = this.stepVideo.length + 1;
-      this.stepVideo.push(`${stepVideoNumber}`);
-      this.stepVideoValues.push(null); // Inicializa un valor nulo para el nuevo video
-    }
+    const stepTextNumber = this.stepText.length + 1;
+    this.stepText.push(`${stepTextNumber}`);
+    this.stepTextValues.push('');
+    const stepPictoNumber = this.stepPicto.length + 1;
+    this.stepPicto.push(`${stepPictoNumber}`);
+    this.stepPictoValues.push(null);
+    const stepImgNumber = this.stepImg.length + 1;
+    this.stepImg.push(`${stepImgNumber}`);
+    this.stepImgValues.push(null);
+    const stepVideoNumber = this.stepVideo.length + 1;
+    this.stepVideo.push(`${stepVideoNumber}`);
+    this.stepVideoValues.push(null);
+
   }
   
 
@@ -149,6 +170,7 @@ export class TareaPasosPage {
     const dataToSave: any = {
       nombre: this.taskName,
       previewUrl: '',
+      description: this.taskDescription,
       pasosTexto: this.stepTextValues,
       pasosPicto: [],
       pasosImagenes: [],
@@ -204,8 +226,8 @@ export class TareaPasosPage {
     await this.firebaseService.guardarTareaPorPasos(dataToSave);
     console.log('Datos guardados en Firestore con éxito');
 
-    setTimeout(() => {
-      window.location.reload();
-    }, 500);
+    
+    this.initializeComponents();
+
   }
 }

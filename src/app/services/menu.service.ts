@@ -1,7 +1,7 @@
 import { addDoc, collection, deleteDoc, doc, DocumentData, getDocs } from "firebase/firestore";
 import { FirebaseService } from "./firebase.service";
 import { Injectable } from "@angular/core";
-import { MenuItem } from "../models/menu.interface";
+import { MenuItem } from "../editar-menu/editar-menu.page";
 
 
 @Injectable({

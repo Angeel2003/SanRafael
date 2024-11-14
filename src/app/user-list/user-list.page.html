@@ -1,23 +1,33 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/"></ion-back-button> <!-- Volver a la página anterior -->
+      <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
-    <ion-title>Usuario</ion-title>
+    <ion-title>Usuarios</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-grid>
     <ion-row>
-      <ion-col size="6" *ngFor="let user of users">
+      <ion-col size="3" *ngFor="let user of paginatedUsers">
         <ion-card (click)="goToUserLogin(user)">
-          <img [src]="user.photoUrl" alt="{{ user.name }}" />
+          <img [src]="user.foto" alt="{{ user.nombre }}" />
           <ion-card-header>
-            <ion-card-title>{{ user.name }}</ion-card-title>
+            <ion-card-title>{{ user.nombre }}</ion-card-title>
           </ion-card-header>
         </ion-card>
       </ion-col>
     </ion-row>
   </ion-grid>
+
+  <!-- Botones de navegación -->
+  <div class="pagination-buttons">
+    <ion-button class="custom-button" (click)="previousPage()" [disabled]="currentPage === 0">
+      <ion-icon name="arrow-back"></ion-icon>
+    </ion-button>
+    <ion-button class="custom-button" (click)="nextPage()" [disabled]="currentPage >= maxPage">
+      <ion-icon name="arrow-forward"></ion-icon>
+    </ion-button>
+  </div>
 </ion-content>
