@@ -92,9 +92,6 @@ export class AsignarTarea {
 
   }
 
-  
-  
-
   async guardarAsignacion(){
     this.newAsignation.nombreTarea = this.selectedTask;
     this.newAsignation.fechaInicio = this.dateInit;
