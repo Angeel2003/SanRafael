@@ -5,7 +5,8 @@ import { addOutline } from 'ionicons/icons';
 import { FormsModule } from '@angular/forms';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, 
-  IonInput, IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, IonFooter, IonBackButton, IonButtons
+  IonInput, IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, IonFooter, IonBackButton, IonButtons,
+  IonToast
 } from '@ionic/angular/standalone';
 import { FirebaseService } from '../services/firebase.service';
 import { Router } from '@angular/router';
@@ -17,7 +18,8 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [
     IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, IonInput, IonFooter,
-    IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, NgIf, NgFor, NgClass, FormsModule, IonBackButton, IonButtons
+    IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, NgIf, NgFor, NgClass, FormsModule, IonBackButton, IonButtons,
+    IonToast
   ],
 })
 
@@ -48,6 +50,30 @@ export class TareaPasosPage {
     addIcons({
       addOutline
     });
+  }
+
+  initializeComponents(){
+    this.taskName = '';
+    this.taskDescription = '';
+    this.taskPreview = null;
+    this.currentTab = 'video';
+    this.stepText = [];
+    this.stepPicto = [];
+    this.stepImg = [];
+    this.stepVideo = [];
+    this.videoCompletoFile = null;
+    this.audioCompletoFile = null;
+    this.selectedText = [];
+    this.selectedPicto = [];
+    this.selectedImages = [];
+    this.selectedVideos = [];
+
+    this.stepTextValues = []; // Almacena los textos de cada paso en el tab 'texto'
+    this.stepPictoValues = []; // Almacena las imágenes de pictogramas
+    this.stepImgValues = []; // Almacena las imágenes
+    this.stepVideoValues = []; // Almacena los videos de los pasos
+    this.videoPreviewUrl = null;
+    this.previewUrl = null;
   }
 
   goBackToAdmin() {
@@ -200,8 +226,8 @@ export class TareaPasosPage {
     await this.firebaseService.guardarTareaPorPasos(dataToSave);
     console.log('Datos guardados en Firestore con éxito');
 
-    setTimeout(() => {
-      window.location.reload();
-    }, 500);
+    
+    this.initializeComponents();
+
   }
 }
