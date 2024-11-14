@@ -8,7 +8,7 @@ import { MenuService } from '../services/menu.service';
 import { saveOutline } from 'ionicons/icons';
 import { trashOutline } from 'ionicons/icons';
 
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonCol, IonGrid, IonRow, IonItem, IonLabel, IonIcon, IonButton, IonInput } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonCol, IonGrid, IonRow, IonItem, IonLabel, IonIcon, IonButton, IonInput, IonFooter } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 
 export interface MenuItem {
@@ -31,7 +31,7 @@ export interface MenuItem {
   templateUrl: './editar-menu.page.html',
   styleUrls: ['./editar-menu.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButtons, IonBackButton, IonCol, IonGrid, IonRow, IonItem, IonLabel, IonIcon, IonButton, IonInput]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButtons, IonBackButton, IonCol, IonGrid, IonRow, IonItem, IonLabel, IonIcon, IonButton, IonInput, IonFooter]
 })
 
 /*
