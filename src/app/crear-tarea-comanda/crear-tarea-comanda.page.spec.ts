@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CrearTareaComandaPage } from './crear-tarea-comanda.page';
 
-describe('TareaMaterialPage', () => {
+describe('CrearTareaComandalPage', () => {
   let component: CrearTareaComandaPage;
   let fixture: ComponentFixture<CrearTareaComandaPage>;
 
