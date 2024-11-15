@@ -28,7 +28,7 @@ export class CrearUsuarioPage implements OnInit {
   //   video: false,
   //   pictogramas: false
   // };
-
+  
   // // Lista de URLs de imágenes cargadas (máximo 6 imágenes)
   // selectedImages: (string | null)[] = [null, null, null, null, null, null];
 
