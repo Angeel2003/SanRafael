@@ -63,4 +63,16 @@ export class FirebaseService {
       throw new Error('Error al guardar la tarea');
     }
   }
+
+  async guardarPerfil(profileData: any): Promise<void> {
+    const usersCollection = collection(this.db, 'alumnos'); // Define la colección 'usuarios'
+  
+    try {
+      await addDoc(usersCollection, profileData);   
+      console.log('Perfil guardado con éxito en Firestore');
+    } catch (error) {
+      console.error('Error al guardar el perfil: ', error);
+      throw new Error('Error al guardar el perfil');
+    }
+  }  
 }
