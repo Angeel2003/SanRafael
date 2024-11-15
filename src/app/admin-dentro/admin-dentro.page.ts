@@ -36,4 +36,7 @@ export class AdminDentro {
   goToCreateMenu() {
     this.router.navigate(['/crear-menu']);
   }
+  goToDeleteMenu() {
+    this.router.navigate(['/eliminar-menu-comida']);
+  }
 }

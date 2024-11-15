@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { EliminarMenuComidaComponent } from './eliminar-menu-comida.component';
+import { EliminarMenuComidaComponent } from './eliminar-menu-comida.page';
 
 describe('EliminarMenuComidaComponent', () => {
   let component: EliminarMenuComidaComponent;

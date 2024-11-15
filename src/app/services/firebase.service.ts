@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FirebaseError, initializeApp } from 'firebase/app';
 import { getAnalytics } from "firebase/analytics";
-import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
+import { addDoc, arrayUnion, collection, deleteDoc, doc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Para Firebase Storage
 import { Auth, getAuth, signInWithEmailAndPassword } from "firebase/auth"; 
 import { from, map, Observable } from 'rxjs';
@@ -120,7 +120,6 @@ export class FirebaseService {
     return accesibilityLevels;
   }
 
-
   async addTaskToStudent(studentName: string, asignacion: Asignacion): Promise<void> {
     const querySnapshot = await getDocs(collection(this.db, 'alumnos'));
   
@@ -189,5 +188,32 @@ async verifyLoginData(type: 'PIN' | 'Texto', value: string | number): Promise<bo
       return false; // Login fallido
     }
   }
-}
 
+  async getMenus(): Promise<any[]> {
+    try {
+      // Referencia a la colección 'menu-prueba'
+      const menuCollection = collection(this.db, 'menu-prueba');
+      // Obtén los documentos de la colección
+      const snapshot = await getDocs(menuCollection);
+      // Mapea los documentos a un array de objetos
+      return  snapshot.docs.map(doc => ({
+        id: doc.id, // ID del documento
+        ...doc.data() // Datos del documento
+      }));
+
+    } catch (error) {
+      console.error("Error al obtener los menús:", error);
+      return []; // Devuelve un array vacío en caso de error
+    }
+  }
+
+  async deleteMenu(docId: string): Promise<void>{
+    try{
+      const menuDocRef = doc(this.db, 'menu-prueba', docId);
+      await deleteDoc(menuDocRef);
+    }catch (error) {
+      console.error("Error al eliminar menu:", error);
+    }
+    
+  }
+}

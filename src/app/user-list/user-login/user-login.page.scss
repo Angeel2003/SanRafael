@@ -65,7 +65,7 @@ ion-item:hover{
         height: 100%;
         object-fit: contain; /* Ajusta la imagen para que se vea completa dentro del botón */
         border-radius: 8px; /* Opcional: ajusta las esquinas de la imagen */
-      }
+    }
 }
 
 .indicator-container {
@@ -76,19 +76,28 @@ ion-item:hover{
 }
 
 .indicator {
-    width: 75px;
-    height: 75px;
-    border-radius: 50%;
-    background-color: gray; /* Color de punto inicial */
-    transition: background-color 0.3s; /* Suaviza el cambio de color */
+    width: 125px;
+    height: 100px;
+    background-color: rgb(204, 204, 204); /* Color de punto inicial */
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* Ajusta la imagen para que se vea completa dentro del botón */
+        border-radius: 8px; /* Opcional: ajusta las esquinas de la imagen */
+    }
 }
 
-.indicator.correct {
-    background-color: green;
+.cross-overlay {
+    color: red;
+    font-size: 100px; /* Ajusta el tamaño según sea necesario */
+    pointer-events: none; /* Evita que interfiera con el clic en la imagen */
 }
 
-.indicator.wrong {
-    background-color: red;
+.check-overlay {
+    color: green;
+    font-size: 100px; /* Ajusta el tamaño según sea necesario */
+    pointer-events: none; /* Evita que interfiera con el clic en la imagen */
 }
 
 .incorrectPassword {
@@ -96,9 +105,14 @@ ion-item:hover{
     justify-content: center;
     text-align: center;
     color: red;
-    font-size: 36px;
+    font-size: 32px;
     img {
-        width: 100px;
-        height: 100px;
+        width: 70px;
+        height: 70px;
+    }
+
+    p {
+        margin-top: 5%;
+        margin-bottom: 0;
     }
 }
