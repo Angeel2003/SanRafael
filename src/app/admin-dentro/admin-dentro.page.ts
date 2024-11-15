@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButtons, IonBackButton, IonButton} from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButtons, IonBackButton, IonButton } from '@ionic/angular/standalone';
 
 import { FirebaseService } from '../services/firebase.service';
 
@@ -9,10 +9,10 @@ import { FirebaseService } from '../services/firebase.service';
   templateUrl: 'admin-dentro.page.html',
   styleUrls: ['admin-dentro.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButtons, IonButton, IonBackButton], 
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButtons, IonButton, IonBackButton],
 })
 export class AdminDentro {
-  constructor(private router: Router, private firebaseService: FirebaseService){
+  constructor(private router: Router, private firebaseService: FirebaseService) {
   }
 
   goToStepTask() {
@@ -33,7 +33,7 @@ export class AdminDentro {
   goToAsignTask() {
     this.router.navigate(['/asignar-tarea']);
   }
-  goToCreateMenu() {
-    this.router.navigate(['/crear-menu']);
+  goToEditMenu() {
+    this.router.navigate(['/editar-menu']);
   }
 }

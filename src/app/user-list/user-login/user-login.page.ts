@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { lockClosedOutline } from 'ionicons/icons';
+import { lockClosedOutline, closeOutline, checkmarkOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { NgIf, NgForOf, NgClass } from '@angular/common';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButtons, IonButton, IonBackButton, 
@@ -28,6 +28,7 @@ export class UserLoginPage implements OnInit {
   pinValue: number = -1;
   textValue: string = '';
   isPasswordIncorrect: boolean = false;
+  incorrectPictogram: number[] = [-1, -1, -1];
 
   buttons = [
     { image: 'https://img.freepik.com/vector-premium/cuadrado-sencillo-poner-fecha-blanco-negro-ilustracion-vectorial-linea-arte_969863-348534.jpg' },
@@ -40,17 +41,18 @@ export class UserLoginPage implements OnInit {
 
   userSelection: number[] = [];
   correctCombination = [0, 2, 4]; // Índices de la combinación correcta
-  indicators = ['null', 'null', 'null']; // Estado del progreso: null = sin seleccionar, 'correct' o 'wrong'
+  indicators = ['https://img.freepik.com/fotos-premium/fondo-gris-claro-pequenos-destellos-textura-enfoque-macro-microtextura_328295-112.jpg', 'https://img.freepik.com/fotos-premium/fondo-gris-claro-pequenos-destellos-textura-enfoque-macro-microtextura_328295-112.jpg', 'https://img.freepik.com/fotos-premium/fondo-gris-claro-pequenos-destellos-textura-enfoque-macro-microtextura_328295-112.jpg'];
 
 
   constructor(private route: ActivatedRoute, private router: Router, private firebaseService: FirebaseService) {
     addIcons({
-      lockClosedOutline
+      lockClosedOutline,
+      closeOutline,
+      checkmarkOutline
     })
 
     const navigation = this.router.getCurrentNavigation();
     this.user = navigation?.extras.state?.['user'];
-    console.log(this.user);
 
     // Verificar si el usuario tiene password = 'PIN'
     if (this.user.tipoContrasena === 'PIN') {
@@ -74,13 +76,19 @@ export class UserLoginPage implements OnInit {
   async selectButton(index: number) {
     if (this.userSelection.length < 3) {
       this.userSelection.push(index);
-      this.indicators[this.userSelection.length - 1] = this.correctCombination[this.userSelection.length - 1] === index ? 'correct' : 'wrong';
+      // this.indicators[this.userSelection.length - 1] = this.correctCombination[this.userSelection.length - 1] === index ? 'correct' : 'wrong';
+      this.indicators[this.userSelection.length - 1] = this.buttons[index].image;
 
       if (this.userSelection.some((selection, i) => selection !== this.correctCombination[i])) {
-        await this.sleep(1000);
-        this.resetSelection();
-      } else if (this.userSelection.length === 3) {
-        console.log('¡Contraseña correcta!');
+        this.incorrectPictogram[this.userSelection.length - 1] = 1;
+        await this.sleep(750);
+        this.deleteSelection();
+      } else {
+        this.incorrectPictogram[this.userSelection.length - 1] = 0;
+        await this.sleep(250);
+      } 
+
+      if (this.userSelection.length === 3) {
         this.verifyCombination();
         await this.sleep(1000);
         this.resetSelection();
@@ -88,16 +96,30 @@ export class UserLoginPage implements OnInit {
     }
   }
 
+  deleteSelection() {
+    // Elimina el último elemento de `userSelection`
+    const lastIndex = this.userSelection.length - 1;
+    if (lastIndex >= 0) {
+      this.userSelection.pop();  // Quita el último elemento
+  
+      // Restablece la imagen del último indicador
+      this.indicators[lastIndex] = 'https://img.freepik.com/fotos-premium/fondo-gris-claro-pequenos-destellos-textura-enfoque-macro-microtextura_328295-112.jpg';
+  
+      // Restablece el estado de incorrectPictogram en el último índice
+      this.incorrectPictogram[lastIndex] = -1;
+    }
+  }
+
   resetSelection() {
     this.userSelection = [];
-    this.indicators = ['null', 'null', 'null']; // Reinicia el progreso
+    this.indicators = ['https://img.freepik.com/fotos-premium/fondo-gris-claro-pequenos-destellos-textura-enfoque-macro-microtextura_328295-112.jpg', 'https://img.freepik.com/fotos-premium/fondo-gris-claro-pequenos-destellos-textura-enfoque-macro-microtextura_328295-112.jpg', 'https://img.freepik.com/fotos-premium/fondo-gris-claro-pequenos-destellos-textura-enfoque-macro-microtextura_328295-112.jpg']; // Reinicia el progreso
+    this.incorrectPictogram= [-1, -1, -1];
   }
 
   verifyCombination() {
     if (JSON.stringify(this.userSelection) === JSON.stringify(this.correctCombination)) {
       this.onSubmit();
     } else {
-      console.log('Contraseña incorrecta');
       this.userSelection = []; // Reiniciar la selección
     }
   }
@@ -115,6 +137,12 @@ export class UserLoginPage implements OnInit {
     if (isValid) {
       this.isPasswordIncorrect = false;
       this.onSubmit();
+
+      if(type == 'PIN')
+        (document.getElementById('pinLogin') as HTMLInputElement).value = '';
+      else
+        (document.getElementById('textoLogin') as HTMLInputElement).value = '';
+      
     } else {
       this.isPasswordIncorrect = true;
       this.resetInputs(); // Restablece los campos
@@ -128,7 +156,6 @@ export class UserLoginPage implements OnInit {
   }
 
   onSubmit() {
-    console.log('Iniciando sesión para:', this.user);
     this.router.navigate(['/agenda']);
   }
 }
