@@ -141,15 +141,9 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-toast
-    trigger="open-toast"
-    [duration]="3000"
-    message="Tarea creada con éxito"
-    class="custom-toast"
-    position="top"
-  ></ion-toast>
+  
 </ion-content>
 
 <ion-footer>
-  <ion-button class="save-button" id="open-toast" expand="full" (click)="guardarTarea()">Guardar</ion-button>
+  <ion-button class="save-button" expand="full" (click)="guardarTarea()">Guardar</ion-button>
 </ion-footer>
