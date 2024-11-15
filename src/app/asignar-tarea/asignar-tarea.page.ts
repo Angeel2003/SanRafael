@@ -10,6 +10,7 @@ import {
 
 import { FirebaseService } from '../services/firebase.service';
 
+import {ToastController} from '@ionic/angular';
 
 export interface Asignacion{
   nombreTarea: string;
@@ -39,7 +40,7 @@ export class AsignarTarea {
   dateEnd: string = '';
   newAsignation: Asignacion = {nombreTarea: '', fechaInicio: '', fechaFin: '' };
 
-  constructor(private firebaseService: FirebaseService) {
+  constructor(private firebaseService: FirebaseService, private toastController: ToastController) {
 
   }
 
@@ -92,13 +93,51 @@ export class AsignarTarea {
 
   }
 
+  
+  async mostrarToast(mensaje: string, exito: boolean) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 2000,
+      position: 'top'
+    });
+    if(exito){
+      toast.style.setProperty('--background', '#4caf50');
+    }else{
+      toast.style.setProperty('--background', '#fa3333');
+    }
+    toast.style.setProperty('--color', '#ffffff');
+    toast.style.setProperty('font-weight', 'bold');
+    toast.style.setProperty('font-size', 'xx-large');
+    toast.style.setProperty('text-align', 'center');
+    toast.style.setProperty('box-shadow', '0px 0px 10px rgba(0, 0, 0, 0.7)');
+    toast.style.setProperty('border-radius', '10px');
+    toast.style.marginTop = '50px';
+    await toast.present();
+  }
+
   async guardarAsignacion(){
     this.newAsignation.nombreTarea = this.selectedTask;
     this.newAsignation.fechaInicio = this.dateInit;
     this.newAsignation.fechaFin = this.dateEnd;
 
-    await this.firebaseService.addTaskToStudent(this.selectedStudent, this.newAsignation);
+    if(this.selectedTask != '' && this.selectedStudent != '' && this.dateInit != '' && this.dateEnd != ''){
+      const guardadoExitoso = await this.firebaseService.addTaskToStudent(this.selectedStudent, this.newAsignation);
+      console.log('Datos guardados en Firestore con éxito');  
+      
+      if (guardadoExitoso) {
+        this.mostrarToast('Guardado con éxito', true);
+        console.log('exito');
+      } else {
+        this.mostrarToast('Error al guardar', false);
+        console.log('error1');
 
+      }
+    }else{
+      this.mostrarToast('Error al guardar', false);
+      console.log('error2');
+
+    }
+    
     this.initializeComponents();
     
   }
