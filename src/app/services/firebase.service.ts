@@ -54,6 +54,19 @@ export class FirebaseService {
       throw new Error('Error al obtener la URL de descarga');
     }
   }
+
+  async deleteFile(path: string): Promise<void> {
+    const storageRef = ref(this.storage, path);
+
+    try {
+      await deleteObject(storageRef);
+      console.log('Archivo eliminado con éxito');
+    } catch (error) {
+      console.error('Error al eliminar el archivo: ', error);
+      throw new Error('Error al eliminar el archivo');
+    }
+  }
+
   async guardarTareaPorPasos(taskData: any): Promise<boolean> {
     const tasksCollection = collection(this.db, 'tarea-por-pasos'); 
 
