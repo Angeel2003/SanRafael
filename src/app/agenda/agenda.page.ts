@@ -18,6 +18,8 @@ interface Tareas {
   standalone: true,
   imports: [IonLabel, IonItem, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonIcon, IonGrid, IonRow, IonButtons, IonBackButton]
 })
+
+
 export class AgendaPage implements OnInit {
 
   tareas: Tareas[] = [];

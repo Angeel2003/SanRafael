@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { saveOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, personCircleOutline, addOutline } from 'ionicons/icons';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonGrid, IonRow, IonButton, IonButtons, IonCol, IonIcon, IonItem, IonInput, IonLabel, IonList, IonBackButton, IonFooter, IonCheckbox, IonSelect, IonSelectOption, IonRadio, IonRadioGroup } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonGrid, IonRow, IonButton, IonButtons, IonCol, IonIcon, IonItem, IonInput, IonLabel, IonList, IonBackButton, IonFooter, IonCheckbox, IonSelect, IonSelectOption, IonRadio, IonRadioGroup, IonToast } from '@ionic/angular/standalone';
 
 import { FirebaseService } from '../services/firebase.service';
 import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 
 interface MaterialItem {
   material: string;
@@ -26,7 +27,7 @@ interface MaterialItem {
   templateUrl: './tarea-material.page.html',
   styleUrls: ['./tarea-material.page.scss'],
   standalone: true,
-  imports: [IonRadioGroup, IonRadio, IonSelectOption, IonSelect, IonCheckbox, IonButtons, IonBackButton, IonFooter, IonList, IonLabel, IonInput, IonItem, IonIcon, IonCol, IonButton, IonRow, IonGrid, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonToast, IonRadioGroup, IonRadio, IonSelectOption, IonSelect, IonCheckbox, IonButtons, IonBackButton, IonFooter, IonList, IonLabel, IonInput, IonItem, IonIcon, IonCol, IonButton, IonRow, IonGrid, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 
 export class TareaMaterialPage implements OnInit {
@@ -35,7 +36,7 @@ export class TareaMaterialPage implements OnInit {
   items: MaterialItem[] = [];
 
 
-  constructor(private firebaseService: FirebaseService, private router: Router) {
+  constructor(private firebaseService: FirebaseService, private router: Router, private toastController: ToastController) {
     addIcons({
       arrowBackOutline,
       personCircleOutline,
@@ -128,7 +129,9 @@ export class TareaMaterialPage implements OnInit {
         cantidad: 0,
         imgCantidad: ''
       });
+      this.mostrarToast('Nuevo item', true);
     } else {
+      this.mostrarToast('Faltan campos por rellenar (debe haber nombre e imagen de la tarea y nombre, aula y cantidad de cada item)', false);
       console.log("Faltan campos por rellenar");
     }
   }
@@ -143,6 +146,27 @@ export class TareaMaterialPage implements OnInit {
     }
     const byteArray = new Uint8Array(byteNumbers);
     return new Blob([byteArray], { type: mimeString });
+  }
+
+  async mostrarToast(mensaje: string, exito: boolean){
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 2000,
+      position: 'middle'
+    });
+    if (exito){
+      toast.style.setProperty('--background', '#4caf50');
+    } else {
+      toast.style.setProperty('--background', '#fa3333');
+    }
+    toast.style.setProperty('--color', '#ffffff');
+    toast.style.setProperty('font-weight', 'bold');
+    toast.style.setProperty('font-size', 'xx-large');
+    toast.style.setProperty('text-align', 'center');
+    toast.style.setProperty('box-shadow', '0px 0px 10px rgba(0, 0, 0, 0.7)');
+    toast.style.setProperty('border-radius', '10px');
+    toast.style.marginTop = '50px';
+    await toast.present();
   }
 
   async uploadMaterialImage(index: number) {
@@ -177,21 +201,6 @@ export class TareaMaterialPage implements OnInit {
       const downloadUrl = await this.firebaseService.getDownloadURL(pathCantidad);
       this.items[index].imgCantidad = downloadUrl;
     }
-    // try {
-    //   // Intentar obtener la URL de descarga
-    //   const existingUrl = await this.firebaseService.getDownloadURL(path);
-    //   this.items[index].imagen = existingUrl; // Si la imagen ya existe, la muestra
-    //   console.log('Imagen ya existente encontrada:', existingUrl);
-    // } catch (error) {
-    //   console.log('Imagen no encontrada, procediendo a subir una nueva');
-    //   // Si no existe, procede con la subida
-    //   if (item.imagen) {
-    //     const fileBlob = await fetch(item.imagen).then(r => r.blob());
-    //     await this.firebaseService.uploadFile(new File([fileBlob], `${item.material}.png`), path); // Sube el archivo con el nombre del material
-    //     const downloadUrl = await this.firebaseService.getDownloadURL(path);
-    //     this.items[index].imagen = downloadUrl; // Guarda la URL descargable
-    //   }
-    // }
   }
 
 
@@ -201,8 +210,6 @@ export class TareaMaterialPage implements OnInit {
   }
 
   async save() {
-    
-
     if (this.canSave()){
       const dataToSave: any = {
         nombre: this.taskName,
@@ -227,7 +234,9 @@ export class TareaMaterialPage implements OnInit {
       await this.firebaseService.guardarTareaMaterial(dataToSave);
       console.log('Datos guardados: ', this.items);
       this.router.navigate(['/admin-dentro']);
+      this.mostrarToast('Tarea material guardada', true);
     } else {
+      this.mostrarToast('Faltan campos por rellenar (debe haber nombre e imagen de la tarea y nombre, aula y cantidad de cada item)', false);
       console.log('Faltan campos por rellenar');
     }
   }
