@@ -22,12 +22,12 @@ import { Router } from '@angular/router';
 })
 export class CrearUsuarioPage implements OnInit {
   passwordType: string = ''; // Para el tipo de contraseña
-  accessibilityLevel: any = { // Objeto para almacenar la selección de accesibilidad
-    texto: false,
-    audio: false,
-    video: false,
-    pictogramas: false
-  };
+  // accessibilityLevel: any = { // Objeto para almacenar la selección de accesibilidad
+  //   texto: false,
+  //   audio: false,
+  //   video: false,
+  //   pictogramas: false
+  // };
 
   // // Lista de URLs de imágenes cargadas (máximo 6 imágenes)
   // selectedImages: (string | null)[] = [null, null, null, null, null, null];
@@ -35,6 +35,7 @@ export class CrearUsuarioPage implements OnInit {
   // Almacena archivos y URLs separadamente
   selectedImages: (File | null)[] = [null, null, null, null, null, null];
   selectedImageUrls: (string | null)[] = [null, null, null, null, null, null];
+  accessibilityLevel: string = ''; // Valor inicial por defecto
 
 
   // Lista de nombres de archivos de las imágenes cargadas, sin extensión
