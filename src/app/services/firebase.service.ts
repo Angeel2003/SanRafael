@@ -7,6 +7,7 @@ import { from, map, Observable } from 'rxjs';
 import { Asignacion } from '../asignar-tarea/asignar-tarea.page';
 import { addDoc, arrayUnion, collection, deleteDoc, doc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Para Firebase Storage
+import { OrderTask } from '../crear-tarea-comanda/crear-tarea-comanda.page';
 @Injectable({
   providedIn: 'root'
 })
@@ -200,5 +201,18 @@ export class FirebaseService {
       return false; // Login fallido
     }
   }
+
+  //Crear tarea commanda
+  async guardarTareaComanda(taskData: OrderTask): Promise<void> {
+    const tasksCollection = collection(this.db, 'tarea-comanda');
+    try {
+      await addDoc(tasksCollection, taskData);
+      console.log('Tarea de comanda guardada con éxito');
+    } catch (error) {
+      console.error('Error al guardar la tarea de comanda: ', error);
+      throw new Error('Error al guardar la tarea de comanda');
+    }
+  }
+
 
 }
