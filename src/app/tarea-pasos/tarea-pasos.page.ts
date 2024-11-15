@@ -10,6 +10,7 @@ import {
 } from '@ionic/angular/standalone';
 import { FirebaseService } from '../services/firebase.service';
 import { Router } from '@angular/router';
+import {ToastController} from '@ionic/angular';
 
 @Component({
   selector: 'app-tarea-pasos',
@@ -19,7 +20,7 @@ import { Router } from '@angular/router';
   imports: [
     IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, IonInput, IonFooter,
     IonItem, IonLabel, IonTabs, IonTabBar, IonTabButton, IonList, NgIf, NgFor, NgClass, FormsModule, IonBackButton, IonButtons,
-    IonToast
+    IonToast 
   ],
 })
 
@@ -45,8 +46,11 @@ export class TareaPasosPage {
   stepVideoValues: (File | null | string)[] = []; // Almacena los videos de los pasos
   videoPreviewUrl: string | null = null;
   previewUrl: string | null = null;
+  showToast: boolean = false;
+  toastMessage: string = '';
+  toastClass: string = '';
 
-  constructor(private firebaseService: FirebaseService, private router: Router) {
+  constructor(private firebaseService: FirebaseService, private router: Router, private toastController: ToastController) {
     addIcons({
       addOutline
     });
@@ -74,6 +78,7 @@ export class TareaPasosPage {
     this.stepVideoValues = []; // Almacena los videos de los pasos
     this.videoPreviewUrl = null;
     this.previewUrl = null;
+    this.showToast = false;
   }
 
   goBackToAdmin() {
@@ -164,6 +169,27 @@ export class TareaPasosPage {
   }
   
 
+  async mostrarToast(mensaje: string, exito: boolean) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 2000,
+      position: 'top'
+    });
+    if(exito){
+      toast.style.setProperty('--background', '#4caf50');
+    }else{
+      toast.style.setProperty('--background', '#fa3333');
+    }
+    toast.style.setProperty('--color', '#ffffff');
+    toast.style.setProperty('font-weight', 'bold');
+    toast.style.setProperty('font-size', 'xx-large');
+    toast.style.setProperty('text-align', 'center');
+    toast.style.setProperty('box-shadow', '0px 0px 10px rgba(0, 0, 0, 0.7)');
+    toast.style.setProperty('border-radius', '10px');
+    toast.style.marginTop = '50px';
+    await toast.present();
+  }
+
   async guardarTarea() {
     const timestamp = new Date().getTime();
 
@@ -222,10 +248,27 @@ export class TareaPasosPage {
     }
 
     this.videoPreviewUrl = null;
+   
 
-    await this.firebaseService.guardarTareaPorPasos(dataToSave);
-    console.log('Datos guardados en Firestore con éxito');
+    if(this.taskDescription != '' && this.taskName != '' && this.taskPreview != null &&  (this.videoCompletoFile != null || this.audioCompletoFile != null 
+      || this.stepPicto.length != 0 || this.stepImg.length != 0 || this.stepVideo.length != 0 || this.stepText.length != 0)){
+      
+      const guardadoExitoso = await this.firebaseService.guardarTareaPorPasos(dataToSave);
+      console.log('Datos guardados en Firestore con éxito');  
+      
+      if (guardadoExitoso) {
+        this.mostrarToast('Guardado con éxito', true);
+        console.log('exito');
+      } else {
+        this.mostrarToast('Error al guardar', false);
+        console.log('error1');
 
+      }
+    }else{
+      this.mostrarToast('Error al guardar', false);
+      console.log('error2');
+
+    }
     
     this.initializeComponents();
 

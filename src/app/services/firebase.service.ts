@@ -55,15 +55,16 @@ export class FirebaseService {
     }
   }
 
-  async guardarTareaPorPasos(taskData: any): Promise<void> {
+  async guardarTareaPorPasos(taskData: any): Promise<boolean> {
     const tasksCollection = collection(this.db, 'tarea-por-pasos'); 
 
     try {
       await addDoc(tasksCollection, taskData); 
       console.log('Tarea guardada con éxito');
+      return true;
     } catch (error) {
       console.error('Error al guardar la tarea: ', error);
-      throw new Error('Error al guardar la tarea');
+      return false;
     }
   }
 
@@ -121,25 +122,30 @@ export class FirebaseService {
   }
 
 
-  async addTaskToStudent(studentName: string, asignacion: Asignacion): Promise<void> {
-    const querySnapshot = await getDocs(collection(this.db, 'alumnos'));
-  
-    for (const docSnapshot of querySnapshot.docs) {
-      const data = docSnapshot.data();
-      if (data['nombre'] == studentName) {
-        try {
+  async addTaskToStudent(studentName: string, asignacion: Asignacion): Promise<boolean> {
+    try {
+      const querySnapshot = await getDocs(collection(this.db, 'alumnos'));
+    
+      for (const docSnapshot of querySnapshot.docs) {
+        const data = docSnapshot.data();
+        if (data['nombre'] === studentName) {
           const studentDocRef = doc(this.db, 'alumnos', docSnapshot.id);
-          
           await updateDoc(studentDocRef, {
             tareasAsig: arrayUnion(asignacion)
           });
           console.log('Tarea agregada correctamente al estudiante');
-        } catch (error) {
-          console.error('Error al agregar la tarea:', error);
+          return true;  // Devuelve true si se agregó la tarea correctamente
         }
       }
+    
+      console.warn('No se encontró un estudiante con el nombre especificado');
+      return false;  // Devuelve false si no se encontró el estudiante
+    } catch (error) {
+      console.error('Error al agregar la tarea:', error);
+      return false;  // Devuelve false si ocurrió un error al actualizar el documento
     }
   }
+  
 
   //Tarea material
   async guardarTareaMaterial(taskData: any): Promise<void> {

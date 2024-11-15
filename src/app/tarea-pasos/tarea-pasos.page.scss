@@ -96,15 +96,30 @@ ion-button.save-button{
   font-size: 150%;
 }
 
-
-.custom-toast {
-  --background: #f5f5f5;
-  --color: #005682;
-  font-size: xx-large;
-  font-weight: bold;
-  text-align: center;
-  --box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7); 
-  --border-radius: 10px;
-  margin-top: 50px;
+:host {
+  .success-toast {
+    --background: #4caf50;
+    --color: #ffffff;
+    --font-weight: bold;
+    --font-size: xx-large;
+    --text-align: center;
+    --box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+    --border-radius: 10px;
+    position: top;
+    margin-top: 50px;
+    
+  }
+  .error-toast {
+    --background: #fa3333;
+    --color: #ffffff;
+    --font-weight: bold;
+    --font-size: xx-large;
+    --text-align: center;
+    --box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+    --border-radius: 10px;
+    position: top;
+    
+    margin-top: 50px;
+    
+  }
 }
-
