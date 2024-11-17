@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin-dentro"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Crear Tarea de Comanda</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item>
+    <ion-label>Nombre de la tarea</ion-label>
+    <ion-input type="text" label="Ingresa el nombre de la tarea" label-placement="floating"
+      [(ngModel)]="task.name"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Foto de la tarea</ion-label>
+    <div *ngIf="localImageURL">
+      <img [src]="localImageURL" alt="Vista previa de la tarea" style="width: 100px; height: auto;" />
+    </div>
+    <input type="file" accept="image/*" (change)="loadFile($event)" />
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Aula</ion-label>
+    <ion-input type="text" label="Ingresa la aula" label-placement="floating" [(ngModel)]="task.room"></ion-input>
+  </ion-item>
+
+</ion-content>
+
+<ion-footer>
+  <ion-button class="save-button" expand="full" (click)="saveTask()">Guardar</ion-button>
+</ion-footer>

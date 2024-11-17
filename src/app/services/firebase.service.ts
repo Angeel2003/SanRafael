@@ -5,8 +5,9 @@ import { getAnalytics } from "firebase/analytics";
 import { Auth, getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { from, map, Observable } from 'rxjs';
 import { Asignacion } from '../asignar-tarea/asignar-tarea.page';
-import { addDoc, arrayUnion, collection, deleteDoc, doc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
+import { addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Para Firebase Storage
+import { OrderTask } from '../crear-tarea-comanda/crear-tarea-comanda.page';
 @Injectable({
   providedIn: 'root'
 })
@@ -67,15 +68,28 @@ export class FirebaseService {
     }
   }
 
-  async guardarTareaPorPasos(taskData: any): Promise<void> {
-    const tasksCollection = collection(this.db, 'tarea-por-pasos');
+  async guardarTareaPorPasos(taskData: any): Promise<boolean> {
+    const tasksCollection = collection(this.db, 'tarea-por-pasos'); 
 
     try {
       await addDoc(tasksCollection, taskData);
       console.log('Tarea guardada con éxito');
+      return true;
     } catch (error) {
       console.error('Error al guardar la tarea: ', error);
-      throw new Error('Error al guardar la tarea');
+      return false;
+    }
+  }
+
+  async guardarPerfil(profileData: any): Promise<void> {
+    const usersCollection = collection(this.db, 'alumnos'); // Define la colección 'usuarios'
+  
+    try {
+      await addDoc(usersCollection, profileData);   
+      console.log('Perfil guardado con éxito en Firestore');
+    } catch (error) {
+      console.error('Error al guardar el perfil: ', error);
+      throw new Error('Error al guardar el perfil');
     }
   }
 
@@ -132,25 +146,31 @@ export class FirebaseService {
     return accesibilityLevels;
   }
 
-  async addTaskToStudent(studentName: string, asignacion: Asignacion): Promise<void> {
-    const querySnapshot = await getDocs(collection(this.db, 'alumnos'));
 
-    for (const docSnapshot of querySnapshot.docs) {
-      const data = docSnapshot.data();
-      if (data['nombre'] == studentName) {
-        try {
+  async addTaskToStudent(studentName: string, asignacion: Asignacion): Promise<boolean> {
+    try {
+      const querySnapshot = await getDocs(collection(this.db, 'alumnos'));
+    
+      for (const docSnapshot of querySnapshot.docs) {
+        const data = docSnapshot.data();
+        if (data['nombre'] === studentName) {
           const studentDocRef = doc(this.db, 'alumnos', docSnapshot.id);
-
           await updateDoc(studentDocRef, {
             tareasAsig: arrayUnion(asignacion)
           });
           console.log('Tarea agregada correctamente al estudiante');
-        } catch (error) {
-          console.error('Error al agregar la tarea:', error);
+          return true;  // Devuelve true si se agregó la tarea correctamente
         }
       }
+    
+      console.warn('No se encontró un estudiante con el nombre especificado');
+      return false;  // Devuelve false si no se encontró el estudiante
+    } catch (error) {
+      console.error('Error al agregar la tarea:', error);
+      return false;  // Devuelve false si ocurrió un error al actualizar el documento
     }
   }
+  
 
   //Tarea material
   async guardarTareaMaterial(taskData: any): Promise<void> {
@@ -200,5 +220,51 @@ export class FirebaseService {
       return false; // Login fallido
     }
   }
+
+  // Modificar tarea por pasos
+  getTareaPorPasos(nombreTarea: string): Observable<any[]> {
+    const tareaRef = collection(this.db, 'tarea-por-pasos');
+    
+    // Crear una consulta para filtrar por el campo nombreTarea
+    const tareaQuery = query(tareaRef, where('nombre', '==', nombreTarea));
+
+    return from(getDocs(tareaQuery)).pipe(
+      map((snapshot) =>
+        snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+      )
+    );
+  }
+
+  async actualizarTarea(id: string, data: any): Promise<boolean> {
+    try {
+      const docRef = doc(this.db, 'tarea-por-pasos', id);
+      const docSnapshot = await getDoc(docRef);
+  
+      if (docSnapshot.exists()) {
+        await updateDoc(docRef, data);
+        console.log('Tarea actualizada con éxito');
+        return true;
+      }else{
+        console.log('no existe tarea');
+        return false;
+      }
+    } catch (error) {
+      console.error('Error al actualizar la tarea:', error);
+      return false;
+    }
+  }
+  
+  //Crear tarea commanda
+  async guardarTareaComanda(taskData: OrderTask): Promise<void> {
+    const tasksCollection = collection(this.db, 'tarea-comanda');
+    try {
+      await addDoc(tasksCollection, taskData);
+      console.log('Tarea de comanda guardada con éxito');
+    } catch (error) {
+      console.error('Error al guardar la tarea de comanda: ', error);
+      throw new Error('Error al guardar la tarea de comanda');
+    }
+  }
+
 
 }

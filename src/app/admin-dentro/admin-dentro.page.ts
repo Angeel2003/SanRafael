@@ -20,7 +20,7 @@ export class AdminDentro {
   }
 
   goToMenuTask() {
-    this.router.navigate(['/tarea-comanda']);
+    this.router.navigate(['/crear-tarea-comanda']);
   }
 
   goToMaterialTask() {
@@ -35,5 +35,8 @@ export class AdminDentro {
   }
   goToEditMenu() {
     this.router.navigate(['/editar-menu']);
+  }
+  goToModificarTareaPasos() {
+    this.router.navigate(['/modificar-tarea-pasos']);
   }
 }
