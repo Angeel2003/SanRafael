@@ -53,10 +53,14 @@ export const routes: Routes = [
   {
     path: 'editar-menu',
     loadComponent: () => import('./editar-menu/editar-menu.page').then(m => m.EditarMenuPage)
+  },  {
+    path: 'modificar-tarea-pasos',
+    loadComponent: () => import('./modificar-tarea-pasos/modificar-tarea-pasos.page').then( m => m.ModificarTareaPasosPage)
   },
   {
     path: 'crear-tarea-comanda',
     loadComponent: () => import('./crear-tarea-comanda/crear-tarea-comanda.page').then(m => m.CrearTareaComandaPage)
   },
+
 
 ];

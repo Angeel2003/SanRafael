@@ -36,4 +36,7 @@ export class AdminDentro {
   goToEditMenu() {
     this.router.navigate(['/editar-menu']);
   }
+  goToModificarTareaPasos() {
+    this.router.navigate(['/modificar-tarea-pasos']);
+  }
 }

@@ -1,0 +1,196 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin-dentro"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Tarea por pasos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Nombre y descripción -->
+  <ion-item class="section-padding">
+    <ion-input 
+      type="text" 
+      label="Nombre de la tarea" 
+      label-placement="floating" 
+      placeholder="Escribe el nombre de la tarea"
+      [(ngModel)]="taskName">
+    </ion-input>
+  </ion-item>
+
+  <!-- Foto de la tarea -->
+  <ion-item class="section-padding">
+    <ion-label class="step-label" position="floating">Foto de la tarea</ion-label>
+    <div *ngIf="previewUrl" style="margin: 10px 0; text-align: center;">
+      <img [src]="previewUrl" alt="Vista previa de la tarea" style="width: 150px; height: auto; border-radius: 10px;" />
+    </div>
+    <input type="file" accept="image/*" (change)="imgPreview($event)" />
+  </ion-item>
+  
+  <ion-item>
+    <ion-label class="step-label" position="floating">Descripción</ion-label>
+    <ion-textarea 
+      auto-grow="true" 
+      placeholder="Describe la tarea" 
+      [(ngModel)]="taskDescription">
+    </ion-textarea>
+  </ion-item>
+
+  <!-- Tabs -->
+  <ion-grid class="section-padding">
+    <ion-row>
+      <ion-col>
+        <ion-button 
+          expand="block" 
+          [ngClass]="{'button-active': currentTab === 'video', 'button-inactive': currentTab !== 'video'}" 
+          (click)="selectTab('video')">
+          Video completo
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button 
+          expand="block" 
+          [ngClass]="{'button-active': currentTab === 'audio', 'button-inactive': currentTab !== 'audio'}" 
+          (click)="selectTab('audio')">
+          Audio completo
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button 
+          expand="block" 
+          [ngClass]="{'button-active': currentTab === 'texto', 'button-inactive': currentTab !== 'texto'}" 
+          (click)="selectTab('texto')">
+          Texto pasos
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button 
+          expand="block" 
+          [ngClass]="{'button-active': currentTab === 'picto', 'button-inactive': currentTab !== 'picto'}" 
+          (click)="selectTab('picto')">
+          Pictogramas pasos
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button 
+          expand="block" 
+          [ngClass]="{'button-active': currentTab === 'imagenes', 'button-inactive': currentTab !== 'imagenes'}" 
+          (click)="selectTab('imagenes')">
+          Imágenes pasos
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button 
+          expand="block" 
+          [ngClass]="{'button-active': currentTab === 'videoPasos', 'button-inactive': currentTab !== 'videoPasos'}" 
+          (click)="selectTab('videoPasos')">
+          Video pasos
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Contenido de cada tab -->
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ng-container *ngIf="currentTab === 'texto'">
+          <ion-list>
+            <ion-item *ngFor="let step of stepText; let i = index">
+              <ion-input 
+                label="Paso {{ i+1 }}" 
+                placeholder="Escribe el paso {{ i+1 }}" 
+                [(ngModel)]="stepTextValues[i]"
+                >
+              </ion-input>
+              <button (click)="eliminarPaso(i, 'texto')" class="btn-icon">
+                <ion-icon class="trash-icon" size="large" name="trash-outline"></ion-icon>
+              </button>
+            </ion-item>
+          </ion-list>
+        </ng-container>
+
+        <ng-container *ngIf="currentTab === 'picto'">
+          <ion-list>
+            <ion-item *ngFor="let step of stepPicto; let i = index">
+              <ion-label class="step-label">Paso {{ i+1 }}</ion-label>
+              <div *ngIf="stepPictoValues[i]" style="margin: 10px;">
+                <img [src]="stepPictoValues[i]" alt="Vista previa pictograma {{ i + 1 }}" style="width: 100px; height: auto;" />
+              </div>
+              <input type="file" accept="image/*" (change)="pictoStep($event, i)" />
+              <button (click)="eliminarPaso(i, 'picto')" class="btn-icon">
+                <ion-icon class="trash-icon" size="large" name="trash-outline"></ion-icon>
+              </button>
+            </ion-item>
+          </ion-list>
+        </ng-container>
+
+        <ng-container *ngIf="currentTab === 'imagenes'">
+          <ion-list>
+            <ion-item *ngFor="let step of stepImg; let i = index">
+              <ion-label class="step-label">Paso {{ i+1 }}</ion-label>
+              <div *ngIf="stepImgValues[i]" style="margin: 10px;">
+                <img [src]="stepImgValues[i]" alt="Vista previa imagen {{ i + 1 }}" style="width: 100px; height: auto;" />
+              </div>
+              <input type="file" accept="image/*" (change)="imgStep($event, i)" />
+              <button (click)="eliminarPaso(i, 'imagenes')" class="btn-icon">
+                <ion-icon class="trash-icon" size="large" name="trash-outline"></ion-icon>
+              </button>
+            </ion-item>
+          </ion-list>
+        </ng-container>
+
+        <ng-container *ngIf="currentTab === 'videoPasos'">
+          <ion-list>
+            <ion-item *ngFor="let step of stepVideo; let i = index">
+              <ion-label class="step-label">Paso {{ i+1 }}</ion-label>
+              <div *ngIf="stepVideoValues[i]" style="margin: 10px;">
+                <video [src]="stepVideoValues[i]" controls style="width: 100px; height: auto;"></video>
+              </div>
+              <input type="file" accept="video/*" (change)="videoStep($event, i)" />
+              <button (click)="eliminarPaso(i, 'videoPasos')" class="btn-icon">
+                <ion-icon class="trash-icon" size="large" name="trash-outline"></ion-icon>
+              </button>
+            </ion-item>
+          </ion-list>
+        </ng-container>
+
+        <ng-container *ngIf="currentTab === 'video'">
+          <ion-item>
+            <ion-label class="step-label">Selecciona un video</ion-label>
+            <input type="file" accept="video/*" (change)="videoCompleto($event)" />
+            <button (click)="eliminarPaso(0, 'video')" class="btn-icon">
+              <ion-icon class="trash-icon" size="large" name="trash-outline"></ion-icon>
+            </button>
+          </ion-item>
+          <div *ngIf="videoPreviewUrl" style="margin: 20px 0; text-align: center;">
+            <video [src]="videoPreviewUrl" controls style="width: 100%; max-height: 300px;"></video>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="currentTab === 'audio'">
+          <ion-item>
+            <ion-label class="step-label">Selecciona un audio</ion-label>
+            <input type="file" accept="audio/*" (change)="audioStep($event)" />
+            <button (click)="eliminarPaso(0, 'audio')" class="btn-icon">
+              <ion-icon class="trash-icon" size="large" name="trash-outline"></ion-icon>
+            </button>
+          </ion-item>
+        </ng-container>
+      </ion-col>
+
+      <!-- Botón para añadir pasos -->
+      <ion-col size="auto" *ngIf="!['video', 'audio'].includes(currentTab)">
+        <ion-button class="add-step-text-button" (click)="addStep()">
+          <ion-icon class="icon-add" size="large" name="add-outline"></ion-icon>
+          <ion-label>Añadir paso</ion-label>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-footer>
+  <ion-button class="modify-button"  expand="full" (click)="modificarTarea()">Modificar tarea</ion-button>
+</ion-footer>
