@@ -172,7 +172,7 @@ export class EditarMenuPage implements OnInit {
         return
       }
 
-      //save imgdeleteFile
+      //save image
       menu.image.path = `imagenes/menu_${timestamp}_${index}_image.png`;
       await this.firebaseService.uploadFile(menu.image.file, menu.image.path);
       menu.image.url = await this.firebaseService.getDownloadURL(menu.image.path);
@@ -182,7 +182,7 @@ export class EditarMenuPage implements OnInit {
       await this.firebaseService.uploadFile(menu.pictogram.file, menu.pictogram.path);
       menu.pictogram.url = await this.firebaseService.getDownloadURL(menu.pictogram.path);
 
-      //removing the file object before saving
+      //remove the file object
       const { image, pictogram, ...rest } = menu;
       const dataToSave: MenuItem = {
         ...rest,
@@ -190,6 +190,7 @@ export class EditarMenuPage implements OnInit {
         pictogram: { url: pictogram.url, path: pictogram.path }
       };
 
+      //save menu
       await this.menuService.saveMenu(dataToSave);
 
     }

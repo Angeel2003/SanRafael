@@ -57,6 +57,10 @@ export const routes: Routes = [
     path: 'modificar-tarea-pasos',
     loadComponent: () => import('./modificar-tarea-pasos/modificar-tarea-pasos.page').then( m => m.ModificarTareaPasosPage)
   },
+  {
+    path: 'crear-tarea-comanda',
+    loadComponent: () => import('./crear-tarea-comanda/crear-tarea-comanda.page').then(m => m.CrearTareaComandaPage)
+  },
 
 
 ];

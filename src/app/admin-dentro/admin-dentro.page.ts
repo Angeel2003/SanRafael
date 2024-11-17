@@ -20,7 +20,7 @@ export class AdminDentro {
   }
 
   goToMenuTask() {
-    this.router.navigate(['/tarea-comanda']);
+    this.router.navigate(['/crear-tarea-comanda']);
   }
 
   goToMaterialTask() {
