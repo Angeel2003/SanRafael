@@ -5,7 +5,7 @@ import { getAnalytics } from "firebase/analytics";
 import { Auth, getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { from, map, Observable } from 'rxjs';
 import { Asignacion } from '../asignar-tarea/asignar-tarea.page';
-import { addDoc, arrayUnion, collection, deleteDoc, doc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
+import { addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Para Firebase Storage
 @Injectable({
   providedIn: 'root'
@@ -220,4 +220,37 @@ export class FirebaseService {
     }
   }
 
+  // Modificar tarea por pasos
+  getTareaPorPasos(nombreTarea: string): Observable<any[]> {
+    const tareaRef = collection(this.db, 'tarea-por-pasos');
+    
+    // Crear una consulta para filtrar por el campo nombreTarea
+    const tareaQuery = query(tareaRef, where('nombre', '==', nombreTarea));
+
+    return from(getDocs(tareaQuery)).pipe(
+      map((snapshot) =>
+        snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+      )
+    );
+  }
+
+  async actualizarTarea(id: string, data: any): Promise<boolean> {
+    try {
+      const docRef = doc(this.db, 'tarea-por-pasos', id);
+      const docSnapshot = await getDoc(docRef);
+  
+      if (docSnapshot.exists()) {
+        await updateDoc(docRef, data);
+        console.log('Tarea actualizada con éxito');
+        return true;
+      }else{
+        console.log('no existe tarea');
+        return false;
+      }
+    } catch (error) {
+      console.error('Error al actualizar la tarea:', error);
+      return false;
+    }
+  }
+  
 }
