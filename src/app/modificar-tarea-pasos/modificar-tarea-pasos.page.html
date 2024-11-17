@@ -104,6 +104,9 @@
                 [(ngModel)]="stepTextValues[i]"
                 >
               </ion-input>
+              <button (click)="eliminarPaso(i, 'texto')" class="btn-icon">
+                <ion-icon class="trash-icon" size="large" name="trash-outline"></ion-icon>
+              </button>
             </ion-item>
           </ion-list>
         </ng-container>
@@ -116,6 +119,9 @@
                 <img [src]="stepPictoValues[i]" alt="Vista previa pictograma {{ i + 1 }}" style="width: 100px; height: auto;" />
               </div>
               <input type="file" accept="image/*" (change)="pictoStep($event, i)" />
+              <button (click)="eliminarPaso(i, 'picto')" class="btn-icon">
+                <ion-icon class="trash-icon" size="large" name="trash-outline"></ion-icon>
+              </button>
             </ion-item>
           </ion-list>
         </ng-container>
@@ -128,6 +134,9 @@
                 <img [src]="stepImgValues[i]" alt="Vista previa imagen {{ i + 1 }}" style="width: 100px; height: auto;" />
               </div>
               <input type="file" accept="image/*" (change)="imgStep($event, i)" />
+              <button (click)="eliminarPaso(i, 'imagenes')" class="btn-icon">
+                <ion-icon class="trash-icon" size="large" name="trash-outline"></ion-icon>
+              </button>
             </ion-item>
           </ion-list>
         </ng-container>
@@ -140,6 +149,9 @@
                 <video [src]="stepVideoValues[i]" controls style="width: 100px; height: auto;"></video>
               </div>
               <input type="file" accept="video/*" (change)="videoStep($event, i)" />
+              <button (click)="eliminarPaso(i, 'videoPasos')" class="btn-icon">
+                <ion-icon class="trash-icon" size="large" name="trash-outline"></ion-icon>
+              </button>
             </ion-item>
           </ion-list>
         </ng-container>
@@ -148,6 +160,9 @@
           <ion-item>
             <ion-label class="step-label">Selecciona un video</ion-label>
             <input type="file" accept="video/*" (change)="videoCompleto($event)" />
+            <button (click)="eliminarPaso(0, 'video')" class="btn-icon">
+              <ion-icon class="trash-icon" size="large" name="trash-outline"></ion-icon>
+            </button>
           </ion-item>
           <div *ngIf="videoPreviewUrl" style="margin: 20px 0; text-align: center;">
             <video [src]="videoPreviewUrl" controls style="width: 100%; max-height: 300px;"></video>
@@ -158,6 +173,9 @@
           <ion-item>
             <ion-label class="step-label">Selecciona un audio</ion-label>
             <input type="file" accept="audio/*" (change)="audioStep($event)" />
+            <button (click)="eliminarPaso(0, 'audio')" class="btn-icon">
+              <ion-icon class="trash-icon" size="large" name="trash-outline"></ion-icon>
+            </button>
           </ion-item>
         </ng-container>
       </ion-col>

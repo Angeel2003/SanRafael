@@ -1,7 +1,7 @@
 import { NgFor, NgIf, NgClass } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { addIcons } from 'ionicons';
-import { addOutline } from 'ionicons/icons';
+import { addOutline, trashOutline } from 'ionicons/icons';
 import { FormsModule } from '@angular/forms';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, 
@@ -45,6 +45,7 @@ export class ModificarTareaPasosPage implements OnInit {
   stepImgValues: (File | null | string)[] = [];
   stepVideoValues: (File | null | string)[] = [];
   videoPreviewUrl: string | null = null;
+  audioPreviewUrl: string | null = null;
   previewUrl: string | null = null;
   showToast: boolean = false;
   toastMessage: string = '';
@@ -55,7 +56,8 @@ export class ModificarTareaPasosPage implements OnInit {
   
   constructor(private firebaseService: FirebaseService, private router: Router, private toastController: ToastController) {
     addIcons({
-      addOutline
+      addOutline,
+      trashOutline
     });
   }
 
@@ -104,7 +106,7 @@ export class ModificarTareaPasosPage implements OnInit {
   
         // Maneja las URL de video y audio completo
         this.videoPreviewUrl = this.tarea.videoCompletoUrl || null;
-        this.audioCompletoFile = this.tarea.audioCompletoUrl || null;
+        this.audioPreviewUrl = this.tarea.audioCompletoUrl || null;
   
         console.log('Tarea cargada: ', this.tarea);
       } else {
@@ -121,31 +123,6 @@ export class ModificarTareaPasosPage implements OnInit {
       newArray.push(defaultValue);
     }
     return newArray;
-  }
-
-  initializeComponents(){
-    this.taskName = '';
-    this.taskDescription = '';
-    this.taskPreview = null;
-    this.currentTab = 'video';
-    this.stepText = [];
-    this.stepPicto = [];
-    this.stepImg = [];
-    this.stepVideo = [];
-    this.videoCompletoFile = null;
-    this.audioCompletoFile = null;
-    this.selectedText = [];
-    this.selectedPicto = [];
-    this.selectedImages = [];
-    this.selectedVideos = [];
-
-    this.stepTextValues = []; // Almacena los textos de cada paso en el tab 'texto'
-    this.stepPictoValues = []; // Almacena las imágenes de pictogramas
-    this.stepImgValues = []; // Almacena las imágenes
-    this.stepVideoValues = []; // Almacena los videos de los pasos
-    this.videoPreviewUrl = null;
-    this.previewUrl = null;
-    this.showToast = false;
   }
 
   goBackToAdmin() {
@@ -207,10 +184,10 @@ export class ModificarTareaPasosPage implements OnInit {
   }
 
   audioStep(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      const file = input.files[0];
-      this.audioCompletoFile = file;
+    const fileInput = event.target as HTMLInputElement;
+    if (fileInput.files && fileInput.files[0]) {
+      const audioFile = fileInput.files[0];
+      this.audioPreviewUrl = URL.createObjectURL(audioFile); // Crea una URL de vista previa
     }
   }
 
@@ -257,100 +234,153 @@ export class ModificarTareaPasosPage implements OnInit {
     await toast.present();
   }
 
+  eliminarPaso(index: number, tipo: string): void {
+    switch (tipo) {
+      case 'texto':
+        this.stepTextValues.splice(index, 1); // Elimina el texto en el índice dado
+        this.stepText.splice(index, 1);
+        this.tarea.pasosTexto.splice(index, 1);
+        break;
+  
+      case 'picto':
+        this.stepPictoValues.splice(index, 1); // Elimina el texto en el índice dado
+        this.stepPicto.splice(index, 1);
+        this.tarea.pasosPicto.splice(index, 1);
+        break;
+  
+      case 'imagenes':
+        this.stepImgValues.splice(index, 1); // Elimina el texto en el índice dado
+        this.stepImg.splice(index, 1);
+        this.tarea.pasosImagenes.splice(index, 1);
+        break;
+  
+      case 'videoPasos':
+        this.stepVideoValues.splice(index, 1); // Elimina el texto en el índice dado
+        this.stepVideo.splice(index, 1);
+        this.tarea.pasosVideos.splice(index, 1);
+        break;
+
+      case 'video':
+        this.videoCompletoFile = null;
+        this.videoPreviewUrl = '';
+        this.tarea.videoCompletoUrl = '';
+        break;
+
+      case 'audio':
+        this.audioCompletoFile = null;
+        this.audioPreviewUrl = '';
+        this.tarea.audioCompletoUrl = '';
+        break;
+  
+      default:
+        console.error('Tipo de paso no válido');
+      }
+  
+    // Asegurar que todas las listas tengan la misma longitud
+    const maxLength = Math.max(
+      this.tarea.pasosTexto?.length || 0,
+      this.tarea.pasosPicto?.length || 0,
+      this.tarea.pasosImagenes?.length || 0,
+      this.tarea.pasosVideos?.length || 0
+    );
+  
+    // Rellenar listas más cortas con valores vacíos
+    this.rellenarConVacios(this.tarea.pasosTexto, maxLength, '');
+    this.rellenarConVacios(this.tarea.pasosPicto, maxLength, null);
+    this.rellenarConVacios(this.tarea.pasosImagenes, maxLength, null);
+    this.rellenarConVacios(this.tarea.pasosVideos, maxLength, null);
+  }
+  
+  private rellenarConVacios(lista: any[], longitud: number, valor: any): void {
+    while (lista.length < longitud) {
+      lista.push(valor);
+    }
+  }
+  
+
   async modificarTarea() {
     const timestamp = new Date().getTime();
-  
+
+    // Cargar datos existentes, si los hay
     const dataToSave: any = {
       nombre: this.taskName,
-      previewUrl: this.previewUrl,
+      previewUrl: this.tarea?.previewUrl || '',
       description: this.taskDescription,
-      pasosTexto: this.stepTextValues,
-      pasosPicto: [],
-      pasosImagenes: [],
-      pasosVideos: [],
-      videoCompletoUrl: '',
-      audioCompletoUrl: ''
+      pasosTexto: this.stepText ? this.stepTextValues : this.tarea?.pasosTexto || [],
+      pasosPicto: this.stepPicto ? this.stepPictoValues : this.tarea?.pasosPicto || [],
+      pasosImagenes: this.stepImg ? this.stepImgValues : this.tarea?.pasosImagenes || [],
+      pasosVideos: this.stepVideo ? this.stepVideoValues : this.tarea?.pasosVideos || [],
+      videoCompletoUrl: this.videoCompletoFile ? this.videoPreviewUrl : this.tarea?.videoCompletoUrl || '',
+      audioCompletoUrl: this.audioPreviewUrl ? this.audioCompletoFile : this.tarea?.audioCompletoUrl || '',
     };
-  
-    // Subir archivo de previsualización
+
+    // Subir archivo de previsualización si se modificó
     if (this.taskPreview) {
       const path = `imagenes/preview_imagen_${timestamp}.mp4`;
       await this.firebaseService.uploadFile(this.taskPreview, path);
       const downloadUrl = await this.firebaseService.getDownloadURL(path);
       dataToSave.previewUrl = downloadUrl;
     }
-  
-    // Subir pictogramas
+
+    // Subir nuevos pictogramas
     for (const [index, file] of this.selectedPicto.entries()) {
       const path = `pictograma/picto_${index}_${timestamp}.png`;
       await this.firebaseService.uploadFile(file, path);
       const downloadUrl = await this.firebaseService.getDownloadURL(path);
       dataToSave.pasosPicto.push(downloadUrl);
     }
-  
-    // Subir imágenes
+
+    // Subir nuevas imágenes
     for (const [index, file] of this.selectedImages.entries()) {
       const path = `imagenes/imagen_${index}_${timestamp}.png`;
       await this.firebaseService.uploadFile(file, path);
       const downloadUrl = await this.firebaseService.getDownloadURL(path);
       dataToSave.pasosImagenes.push(downloadUrl);
     }
-  
-    // Subir videos
+
+    // Subir nuevos videos
     for (const [index, file] of this.selectedVideos.entries()) {
       const path = `videos/paso_video_${index}_${timestamp}.mp4`;
       await this.firebaseService.uploadFile(file, path);
       const downloadUrl = await this.firebaseService.getDownloadURL(path);
       dataToSave.pasosVideos.push(downloadUrl);
     }
-  
-    // Subir video completo
+
+    // Subir video completo si se modificó
     if (this.videoCompletoFile) {
       const path = `videos/video_completo_${timestamp}.mp4`;
       await this.firebaseService.uploadFile(this.videoCompletoFile, path);
       const downloadUrl = await this.firebaseService.getDownloadURL(path);
       dataToSave.videoCompletoUrl = downloadUrl;
     }
-  
-    // Subir audio completo
+
+    // Subir audio completo si se modificó
     if (this.audioCompletoFile) {
       const path = `audios/audio_completo_${timestamp}.mp3`;
       await this.firebaseService.uploadFile(this.audioCompletoFile, path);
       const downloadUrl = await this.firebaseService.getDownloadURL(path);
       dataToSave.audioCompletoUrl = downloadUrl;
     }
-  
-    this.videoPreviewUrl = null;
-    console.log({
-      taskDescription: this.taskDescription,
-      taskName: this.taskName,
-      previewUrl: this.previewUrl,
-      videoCompletoFile: this.videoCompletoFile,
-      audioCompletoFile: this.audioCompletoFile,
-      stepPicto: this.stepPicto,
-      stepImg: this.stepImg,
-      stepVideo: this.stepVideo,
-      stepText: this.stepText,
-    });
-    
-    // Validación de datos
+
+    // Validación de datos antes de guardar
     if (
       this.taskDescription != '' &&
       this.taskName != '' &&
-      (this.taskPreview != null || this.previewUrl != '') &&
-      (this.videoCompletoFile != null ||
-        this.audioCompletoFile != null ||
-        this.stepPicto.length != 0 ||
-        this.stepImg.length != 0 ||
-        this.stepVideo.length != 0 ||
-        this.stepText.length != 0)
+      (this.taskPreview != null || dataToSave.previewUrl != '') &&
+      (dataToSave.videoCompletoUrl != '' ||
+        dataToSave.audioCompletoUrl != '' ||
+        dataToSave.pasosPicto.length != 0 ||
+        dataToSave.pasosImagenes.length != 0 ||
+        dataToSave.pasosVideos.length != 0 ||
+        dataToSave.pasosTexto.length != 0)
     ) {
       let guardadoExitoso = false;
+
       if (this.tarea && this.tarea.id) {
         // Actualizar tarea existente
         guardadoExitoso = await this.firebaseService.actualizarTarea(this.tarea.id, dataToSave);
       }
-  
+
       if (guardadoExitoso) {
         this.mostrarToast('Guardado con éxito', true);
       } else {
@@ -359,8 +389,8 @@ export class ModificarTareaPasosPage implements OnInit {
     } else {
       this.mostrarToast('Error al guardar: Verifica los datos', false);
     }
-    
-    this.loadTask();
+
+    this.goBackToAdmin();
   }
   
 
