@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/admin-dentro"></ion-back-button> <!-- Ajusta la ruta si es necesario -->
+      <ion-back-button defaultHref="/perfil-admin-profe"></ion-back-button> <!-- Ajusta la ruta si es necesario -->
     </ion-buttons>
     <ion-title>Asignar tarea a alumno</ion-title>
   </ion-toolbar>
@@ -29,12 +29,26 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <ion-item>
-          <ion-label>Selecciona la tarea</ion-label>
-          <ion-select [(ngModel)]="selectedTask" interface="popover" (ionChange)="onItemChange($event)">
-            <ion-select-option *ngFor="let task of taskNames" [value]="task">{{ task }}</ion-select-option>
-          </ion-select>
-        </ion-item>
+        <ion-label>Selecciona la tarea</ion-label>
+        <ion-searchbar
+          [(ngModel)]="searchTerm"
+          (ionInput)="filterTasks($event)"
+          debounce="300"
+          placeholder="Buscar tarea"
+          show-clear-button="focus"
+          clear-input="true">
+        </ion-searchbar>
+
+        <ion-list>
+          <ion-item *ngFor="let task of filteredTasks">
+            <ion-checkbox 
+              justify="end" 
+              alignment="end" 
+              value="{{task}}" 
+              (ionChange)="onSelectTask($event)">{{ task }}
+            </ion-checkbox>
+          </ion-item>
+        </ion-list>
       </ion-col>
       <ion-col>
         <ion-item>
@@ -104,16 +118,8 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-toast
-    trigger="open-toast"
-    [duration]="3000"
-    message="Tarea asignada con éxito"
-    class="custom-toast"
-    position="top"
-  ></ion-toast>
 </ion-content>
 
 <ion-footer>
   <ion-button class="save-button" id="open-toast" expand="full" (click)="guardarAsignacion()">Guardar</ion-button>
-  
 </ion-footer>
