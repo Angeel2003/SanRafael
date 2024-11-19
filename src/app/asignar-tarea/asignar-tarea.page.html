@@ -53,7 +53,7 @@
       <ion-col>
         <ion-item>
           <ion-label>Selecciona la alumno</ion-label>
-          <ion-select [(ngModel)]="selectedStudent" interface="popover" (ionChange)="onSelectStudent($event)">
+          <ion-select [(ngModel)]="selectedStudent" interface="popover" (ionChange)="onSelectStudent($event)"  (ionBlur)="handleBlur()">
             <ion-select-option *ngFor="let student of studentNames" [value]="student">{{ student }}</ion-select-option>
           </ion-select>
         </ion-item>
@@ -113,7 +113,6 @@
             <ion-datetime presentation="date-time" [preferWheel]="true" [(ngModel)]="dateInit" (ionChange)="onDateInitChange($event)" local="es-ES"></ion-datetime>
             <ion-label>Fecha fin</ion-label>
             <ion-datetime presentation="date-time" [preferWheel]="true" [(ngModel)]="dateEnd" (ionChange)="onDateEndChange($event)" local="es-ES"></ion-datetime>
-            
           </div>
       </ion-col>
     </ion-row>

@@ -222,8 +222,8 @@ export class FirebaseService {
   }
 
   // Modificar tarea por pasos
-  getTareaPorPasos(nombreTarea: string): Observable<any[]> {
-    const tareaRef = collection(this.db, 'tarea-por-pasos');
+  getTarea(nombreTarea: string, tabla: string): Observable<any[]> {
+    const tareaRef = collection(this.db, tabla);
     
     // Crear una consulta para filtrar por el campo nombreTarea
     const tareaQuery = query(tareaRef, where('nombre', '==', nombreTarea));
@@ -235,9 +235,9 @@ export class FirebaseService {
     );
   }
 
-  async actualizarTarea(id: string, data: any): Promise<boolean> {
+  async actualizarTarea(id: string, data: any, tabla: string): Promise<boolean> {
     try {
-      const docRef = doc(this.db, 'tarea-por-pasos', id);
+      const docRef = doc(this.db, tabla, id);
       const docSnapshot = await getDoc(docRef);
   
       if (docSnapshot.exists()) {

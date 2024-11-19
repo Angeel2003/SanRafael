@@ -80,4 +80,8 @@ export class PerfilAdminProfesorPage implements OnInit {
     this.router.navigate(['/modificar-tarea-pasos']);
   }
 
+  modificarTareaMaterial() {
+    this.router.navigate(['/modificar-tarea-material']);
+  }
+
 }
