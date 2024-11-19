@@ -12,31 +12,15 @@ import { FirebaseService } from '../services/firebase.service';
   imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButtons, IonButton, IonBackButton],
 })
 export class AdminDentro {
-  constructor(private router: Router, private firebaseService: FirebaseService) {
+  constructor(private router: Router) {
   }
 
-  goToStepTask() {
-    this.router.navigate(['/tarea-pasos']);
-  }
-
-  goToMenuTask() {
-    this.router.navigate(['/crear-tarea-comanda']);
-  }
-
-  goToMaterialTask() {
-    this.router.navigate(['/tarea-material']);
-  }
-
-  goToCreateUser() {
-    this.router.navigate(['/crear-usuario']);
-  }
   goToAsignTask() {
     this.router.navigate(['/asignar-tarea']);
   }
-  goToEditMenu() {
-    this.router.navigate(['/editar-menu']);
-  }
+
   goToModificarTareaPasos() {
     this.router.navigate(['/modificar-tarea-pasos']);
   }
+
 }

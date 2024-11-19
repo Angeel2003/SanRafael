@@ -266,5 +266,22 @@ export class FirebaseService {
     }
   }
 
+  async getAdminByEmail(email: string): Promise<any | null> {
+    try {
+      const adminCollection = collection(this.db, 'administradores');
+      const q = query(adminCollection, where('correo', '==', email));
+      const querySnapshot = await getDocs(q);
+  
+      if (!querySnapshot.empty) {
+        // Devuelve el primer documento encontrado
+        return querySnapshot.docs[0].data();
+      }
+      return null; // Si no se encuentra el administrador
+    } catch (error) {
+      console.error("Error al buscar el administrador: ", error);
+      return null;
+    }
+  }
+
 
 }
