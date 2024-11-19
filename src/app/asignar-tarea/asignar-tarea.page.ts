@@ -111,6 +111,13 @@ export class AsignarTarea {
 
   }
 
+  handleBlur() {
+    const ionSelect = document.querySelector('ion-select');
+    if (ionSelect) {
+      ionSelect.blur(); // Forzar que el foco salga de manera segura
+    }
+  }
+
   async mostrarToast(mensaje: string, exito: boolean) {
     const toast = await this.toastController.create({
       message: mensaje,

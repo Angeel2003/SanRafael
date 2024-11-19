@@ -1,0 +1,129 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin-dentro"></ion-back-button> 
+    </ion-buttons>
+    <ion-title>Tarea de Material</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-input type="text" label="Ingresa el nombre de la tarea" label-placement="floating" [(ngModel)]="taskName"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Foto de la tarea</ion-label>
+    <div *ngIf="imgTarea">
+      <img [src]="imgTarea" alt="Vista previa de la tarea" style="width: 100px; height: auto;" />
+    </div>
+    <input type="file" accept="image/*" (change)="imgTareaPreview($event)" />
+  </ion-item>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="2" class="column-header">Material</ion-col>
+      <ion-col size="2" class="column-header">Características</ion-col>
+      <ion-col size="2" class="column-header">Imagen</ion-col>
+      <ion-col size="2" class="column-header">Aula</ion-col>
+      <ion-col size="2" class="column-header">Cantidad</ion-col>
+      <ion-col size="2" class="column-header">Acción</ion-col> <!-- Columna de acción para el botón de eliminar -->
+    </ion-row>
+
+    <ion-row *ngFor="let item of items; let i = index">
+      <!-- Columna para el material -->
+      <ion-col size="2">
+        <ion-item>
+          <ion-input [(ngModel)]="item.material" placeholder="Material {{i + 1}}"></ion-input>
+        </ion-item>
+      </ion-col>
+    
+      <!-- Columna para Tamaño y Color apilados -->
+      <ion-col size="2">
+        <ion-item>
+          <ion-radio-group [(ngModel)]="item.tamanio">
+            <ion-radio value="pequenio" labelPlacement="fixed">Pequeño</ion-radio>
+            <ion-radio value="mediano" labelPlacement="fixed">Mediano</ion-radio>
+            <ion-radio value="grande" labelPlacement="fixed">Grande</ion-radio>
+          </ion-radio-group>
+        </ion-item>
+        <ion-item>
+          <div *ngIf="item.imgTam">
+            <img [src]="item.imgTam" alt="Vista previa del tamaño del material" style="width: 100px; height: auto;" />
+          </div>
+          <input type="file" accept="image/*" (change)="imgTamanio($event, i)" class="small-file-input" />
+        </ion-item>
+        <ion-item>
+          <ion-select placeholder="Color" [(ngModel)]="item.color" (ionBlur)="handleBlur()">
+            <ion-select-option value="azul">Azul</ion-select-option>
+            <ion-select-option value="negro">Negro</ion-select-option>
+            <ion-select-option value="verde">Verde</ion-select-option>
+            <ion-select-option value="rojo">Rojo</ion-select-option>
+            <ion-select-option value="blanco">Blanco</ion-select-option>
+            <ion-select-option value="amarillo">Amarillo</ion-select-option>
+            <ion-select-option value="naranja">Naranja</ion-select-option>
+            <ion-select-option value="rosa">Rosa</ion-select-option>
+            <ion-select-option value="marron">Marrón</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <div *ngIf="item.imgColor">
+            <img [src]="item.imgColor" alt="Vista previa del color del material" style="width: 100px; height: auto;" />
+          </div>
+          <input type="file" accept="image/*" (change)="imgColor($event, i)" class="small-file-input" />
+        </ion-item>
+      </ion-col>
+    
+      <!-- Columna para la imagen -->
+      <ion-col size="2">
+        <ion-item>
+          <div *ngIf="item.imagen">
+            <img [src]="item.imagen" alt="Vista previa de material {{i + 1}}" style="width: 100px; height: auto;" />
+          </div>
+          <input type="file" accept="image/*" (change)="imagenPreview($event, i)" class="small-file-input" />
+        </ion-item>
+      </ion-col>
+    
+      <!-- Columna para el aula -->
+      <ion-col size="2">
+        <ion-item>
+          <ion-input [(ngModel)]="item.aula" placeholder="Aula"></ion-input>
+        </ion-item>
+      </ion-col>
+    
+      <!-- Columna para la cantidad -->
+      <ion-col size="2">
+        <ion-item>
+          <ion-input [(ngModel)]="item.cantidad" placeholder="Cantidad {{i + 1}}"></ion-input>
+        </ion-item>
+        <ion-item>
+          <div *ngIf="item.imgCantidad">
+            <img [src]="item.imgCantidad" alt="Vista previa de la cantidad del material" style="width: 100px; height: auto;" />
+          </div>
+          <input type="file" accept="image/*" (change)="imgCantidad($event, i)" class="small-file-input" />
+        </ion-item>
+      </ion-col>
+    
+      <!-- Botón de eliminar en cada fila -->
+      <ion-col size="2">
+        <ion-item>
+          <ion-button color="danger" (click)="eliminarMaterial(i)">
+            Eliminar
+          </ion-button>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    
+  </ion-grid>
+
+  <ion-col size="auto">
+    <ion-button class="add-material-button" (click)="addItem()">
+      <ion-icon class="icon-add" name="add-outline"></ion-icon>
+      <ion-label>Añadir material</ion-label>
+    </ion-button>
+  </ion-col>
+</ion-content>
+
+<ion-footer>
+  <ion-button class="save-button" expand="full" (click)="save()">Guardar</ion-button>
+</ion-footer>

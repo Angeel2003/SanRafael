@@ -39,4 +39,7 @@ export class AdminDentro {
   goToModificarTareaPasos() {
     this.router.navigate(['/modificar-tarea-pasos']);
   }
+  goToModificarTareaMaterial() {
+    this.router.navigate(['/modificar-tarea-material']);
+  }
 }
