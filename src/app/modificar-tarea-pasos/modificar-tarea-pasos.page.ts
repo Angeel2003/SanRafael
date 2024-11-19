@@ -25,7 +25,7 @@ import {ToastController} from '@ionic/angular';
 })
 
 export class ModificarTareaPasosPage implements OnInit {
-  taskName: string = 'hacer la cama';
+  taskName: string = 'Hacer la cama';
   taskPreview: File | null = null;
   taskDescription: string = '';
   currentTab: string = 'video';
@@ -69,7 +69,7 @@ export class ModificarTareaPasosPage implements OnInit {
   }
 
   loadTask() {
-    this.firebaseService.getTareaPorPasos(this.taskName).subscribe((data) => {
+    this.firebaseService.getTarea(this.taskName, 'tarea-por-pasos').subscribe((data) => {
       console.log('Datos recibidos de Firebase:', data); // Depuración
   
       if (data && Array.isArray(data) && data.length > 0) {
@@ -105,6 +105,8 @@ export class ModificarTareaPasosPage implements OnInit {
         this.stepVideoValues = [...this.stepVideo];
   
         // Maneja las URL de video y audio completo
+        this.videoCompletoFile = this.tarea.videoCompletoUrl || null;
+        this.audioCompletoFile = this.tarea.audioCompletoUrl || null;
         this.videoPreviewUrl = this.tarea.videoCompletoUrl || null;
         this.audioPreviewUrl = this.tarea.audioCompletoUrl || null;
   
@@ -378,7 +380,7 @@ export class ModificarTareaPasosPage implements OnInit {
 
       if (this.tarea && this.tarea.id) {
         // Actualizar tarea existente
-        guardadoExitoso = await this.firebaseService.actualizarTarea(this.tarea.id, dataToSave);
+        guardadoExitoso = await this.firebaseService.actualizarTarea(this.tarea.id, dataToSave, 'tarea-por-pasos');
       }
 
       if (guardadoExitoso) {

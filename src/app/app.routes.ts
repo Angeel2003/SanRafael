@@ -59,6 +59,10 @@ export const routes: Routes = [
     loadComponent: () => import('./crear-tarea-comanda/crear-tarea-comanda.page').then(m => m.CrearTareaComandaPage)
   },
   {
+    path: 'modificar-tarea-material',
+    loadComponent: () => import('./modificar-tarea-material/modificar-tarea-material.page').then( m => m.ModificarTareaMaterialPage)
+  },
+  {
     path: 'perfil-admin-profesor',
     loadComponent: () => import('./perfil-admin-profesor/perfil-admin-profesor.page').then( m => m.PerfilAdminProfesorPage)
   },

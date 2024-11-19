@@ -1,0 +1,114 @@
+/* Variables de color y fuente */
+:root {
+    --font-family: 'Helvetica';
+}
+
+* {
+    font-family: var(--font-family);
+}
+
+
+ion-toolbar {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
+}
+
+ion-title {
+    text-align: center; /* Asegura que el texto esté centrado */
+    width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
+    font-size: 24px;
+    color: #005682;
+}
+
+/* Estilo del título de las columnas */
+.column-header {
+    color: #005682;
+    font-size: 200%;
+}
+
+/* Fondo de contenido */
+ion-content {
+    background-color: #FFFFFF;
+    padding: 150%;
+}
+
+/* Input y etiquetas */
+ion-item {
+    background: #FFFFFF;
+    color: #005682;
+    font-size: 100%;
+}
+
+ion-input {
+    color: #005682;
+    font-size: 150%;
+}
+
+input { 
+    color: #005682;
+    font-size: 150%;
+}
+
+ion-icon.trash-icon {
+    color: #f32d2d;
+}
+
+.btn-trash{
+    --background: #FFFFFF;
+}
+
+/* tarea-material.page.scss */
+.small-file-input {
+    width: 90px;
+    height: 50px;
+    font-size: 12px;
+  }
+  
+/* Boton de añadir item */
+ion-button.add-material-button {
+    --background: #005682;
+    color: #FFFFFF;
+    border-radius: 10%;
+    align-items: center;
+}
+
+/* Boton de guardar */
+ion-button.save-button {
+    --background: #005682;
+    color: #FFFFFF;
+    border-radius: 30%;
+    align-items: right;
+}
+
+:host {
+    .success-toast {
+        --background: #4caf50;
+        --color: #ffffff;
+        --font-weight: bold;
+        --font-size: xx-large;
+        --text-align: center;
+        --box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+        --border-radius: 10px;
+        position: top;
+        margin-top: 50px;
+        
+      }
+      .error-toast {
+        --background: #fa3333;
+        --color: #ffffff;
+        --font-weight: bold;
+        --font-size: xx-large;
+        --text-align: center;
+        --box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+        --border-radius: 10px;
+        position: top;
+        
+        margin-top: 50px;
+        
+      }
+    }
+
+ion-icon {
+    padding: 4px;
+}
+
