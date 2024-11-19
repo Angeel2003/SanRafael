@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { saveOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+import { trashOutline } from 'ionicons/icons';
 import { arrowBackOutline, personCircleOutline, addOutline } from 'ionicons/icons';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonGrid, IonRow, IonButton, IonButtons, IonCol, IonIcon, IonItem, IonInput, IonLabel, IonList, IonBackButton, IonFooter, IonCheckbox, IonSelect, IonSelectOption, IonRadio, IonRadioGroup, IonToast } from '@ionic/angular/standalone';
 
@@ -54,7 +54,8 @@ export class ModificarTareaMaterialPage implements OnInit {
     addIcons({
       arrowBackOutline,
       personCircleOutline,
-      addOutline
+      addOutline,
+      trashOutline
     });
   }
 
@@ -271,7 +272,7 @@ export class ModificarTareaMaterialPage implements OnInit {
       // Guardar en Firebase
       await this.firebaseService.actualizarTarea(this.tarea.id, dataToSave, 'tarea-material');
       this.mostrarToast('Tarea material guardada', true);
-      this.router.navigate(['/admin-dentro']);
+      this.router.navigate(['/perfil-admin-profesor']);
     } else {
       this.mostrarToast('Por favor, completa todos los campos requeridos.', false);
     }

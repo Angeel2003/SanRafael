@@ -49,6 +49,14 @@ input {
     font-size: 150%;
 }
 
+ion-icon.trash-icon {
+    color: #f32d2d;
+}
+
+.btn-trash{
+    --background: #FFFFFF;
+}
+
 /* tarea-material.page.scss */
 .small-file-input {
     width: 90px;
