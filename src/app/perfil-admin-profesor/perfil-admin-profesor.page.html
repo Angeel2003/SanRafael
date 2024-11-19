@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/admin-login"></ion-back-button> <!-- Volver a la página anterior -->
+    </ion-buttons>
+    <ion-title>{{ adminProfe.nombre }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <!-- Sección del perfil -->
+    <ion-row class="profile-section">
+      <ion-col size="4" class="profile-picture">
+        <img [src]="adminProfe.foto" alt="Foto de perfil" />
+      </ion-col>
+      <ion-col size="8" class="profile-info">
+        <h2>{{ adminProfe.nombre }}</h2>
+        <p>{{ adminProfe.correo }}</p>
+        <p class="user-type">Tipo de usuario: {{ adminProfe.tipoUsuario }}</p>
+      </ion-col>
+    </ion-row>
+
+    <!-- Línea divisora -->
+    <ion-row class="divider"></ion-row>
+
+    <!-- Funciones del administrador -->
+    <ion-row class="admin-profe-functions" *ngIf="adminProfe.tipoUsuario == 'administrador'">
+      <ion-col class="users-buttons" size="3">
+        <ion-button (click)="crearUsuario()" expand="block">Crear Nuevo Usuario</ion-button>
+        <ion-button (click)="crearAdminProfe()" expand="block">Crear Nuevo Admin/Profesor</ion-button>
+        <ion-button (click)="gestionarUsuarios()" expand="block">Gestionar Usuarios</ion-button>
+      </ion-col>
+
+      <ion-col class="tasks-buttons" size="3">
+        <ion-button (click)="crearTareaPorPasos()" expand="block">Crear Tarea por Pasos</ion-button>
+        <ion-button (click)="crearTareaDeMaterial()" expand="block">Crear Tarea de Material</ion-button>
+        <ion-button (click)="crearTareaDeComedor()" expand="block">Crear Tarea de Comanda</ion-button>
+      </ion-col>
+
+      <ion-col class="options-buttons" size="3">
+        <ion-button (click)="modificarMenu()" expand="block">Modificar Menú Existentes</ion-button>
+        <ion-button (click)="gestionarTareas()" expand="block">Gestionar Tareas Existentes</ion-button>
+      </ion-col>
+    </ion-row>
+
+    <!-- Funciones del profesor -->
+    <ion-row class="admin-profe-functions" *ngIf="adminProfe.tipoUsuario == 'profesor'">
+      <ion-col class="tasks-buttons" size="3">
+        <!-- Aquí puedes añadir botones o enlaces -->
+        <ion-button (click)="solicitarMaterial()" expand="block">Solicitar Material</ion-button>
+      </ion-col>
+    </ion-row>
+
+
+
+
+    <h1>BOTONES SIN ASIGNAR</h1>
+
+    <!-- BOTONES SIN COLOCAR -->
+    <ion-row class="admin-profe-functions">
+      <ion-col class="sin-colocar" size="3">
+        <ion-button (click)="asignarTarea()" expand="block">Asignar tarea a alumno</ion-button>
+      </ion-col>
+
+      <ion-col class="sin-colocar" size="3">
+        <ion-button (click)="modificarTareaPorPasos()" expand="block">Modificar tarea por pasos</ion-button>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+</ion-content>

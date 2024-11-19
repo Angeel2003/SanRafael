@@ -8,7 +8,7 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton, IonBut
           IonInput, IonItem, IonLabel, IonBackButton } from '@ionic/angular/standalone';
 
 import { FirebaseService } from '../services/firebase.service';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-login',
@@ -50,11 +50,28 @@ export class AdminLoginPage implements OnInit {
   async onSubmit() {
     const email = (<HTMLInputElement>document.getElementById('emailLogin')).value;
     const password = (<HTMLInputElement>document.getElementById('password')).value;
+  
+    // Verificar credenciales
     const isAuthenticated = await this.firebaseService.loginUser(email, password);
-
+  
     if (isAuthenticated) {
       console.log("Inicio de sesión exitoso");
-      this.router.navigate(['/admin-dentro']);
+  
+      // Buscar al administrador en la base de datos
+      const adminProfe = await this.firebaseService.getAdminByEmail(email);
+      if (adminProfe) {
+        console.log("Administrador encontrado");
+  
+        // Enviar los datos del administrador al perfil
+        const navigationExtras: NavigationExtras = {
+          state: {
+            adminProfe: adminProfe // Pasa el documento del administrador
+          }
+        };
+        this.router.navigate(['/perfil-admin-profesor'], navigationExtras);
+      } else {
+        console.error("No se encontró ningún administrador con el correo proporcionado.");
+      }
     } else {
       console.log("Error en las credenciales. Inténtalo de nuevo.");
       // Muestra un mensaje de error en la interfaz

@@ -44,7 +44,7 @@ export class UserLoginPage implements OnInit {
   indicators = ['https://img.freepik.com/fotos-premium/fondo-gris-claro-pequenos-destellos-textura-enfoque-macro-microtextura_328295-112.jpg', 'https://img.freepik.com/fotos-premium/fondo-gris-claro-pequenos-destellos-textura-enfoque-macro-microtextura_328295-112.jpg', 'https://img.freepik.com/fotos-premium/fondo-gris-claro-pequenos-destellos-textura-enfoque-macro-microtextura_328295-112.jpg'];
 
 
-  constructor(private route: ActivatedRoute, private router: Router, private firebaseService: FirebaseService) {
+  constructor(private router: Router, private firebaseService: FirebaseService) {
     addIcons({
       lockClosedOutline,
       closeOutline,
