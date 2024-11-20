@@ -9,12 +9,15 @@
 
 ion-toolbar {
     display: flex;
-    justify-content: center; /* Centra horizontalmente el contenido */
+    justify-content: center;
+    /* Centra horizontalmente el contenido */
 }
 
 ion-title {
-    text-align: center; /* Asegura que el texto esté centrado */
-    width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
+    text-align: center;
+    /* Asegura que el texto esté centrado */
+    width: 100%;
+    /* Ocupa el 100% del ancho para centrarse correctamente */
     font-size: 24px;
     color: #005682;
 }
@@ -31,6 +34,44 @@ ion-content {
     padding: 150%;
 }
 
+ion-radio-group {
+    color: #005682;
+    font-size: 100%;
+    /* Ajusta el tamaño de la fuente según sea necesario */
+    --background: #005682;
+    --border-color: #005682;
+}
+
+ion-radio {
+    --color: #005682;
+    --background: #005682;
+    --border-color: #005682;
+}
+
+ion-radion.checked {
+    --border-color: #005682;
+    --color: #005682;
+}
+
+ion-radio-group ion-label {
+    color: #005682;
+}
+
+ion-select {
+    --placeholder-color: #005682;
+    --color: #005682;
+    font-size: 100%;
+    /* Ajusta el tamaño de la fuente si es necesario */
+    --icon-color: #005682;
+}
+
+ion-select-option {
+    --color: #005682;
+}
+
+ion-select::part(text) {
+    color: #005682;
+}
 
 
 /* Input y etiquetas */
@@ -45,7 +86,7 @@ ion-input {
     font-size: 150%;
 }
 
-input { 
+input {
     color: #005682;
     font-size: 150%;
 }
@@ -55,8 +96,8 @@ input {
     width: 90px;
     height: 50px;
     font-size: 12px;
-  }
-  
+}
+
 
 
 /* Boton de añadir item */
@@ -86,9 +127,10 @@ ion-button.save-button {
         --border-radius: 10px;
         position: top;
         margin-top: 50px;
-        
-      }
-      .error-toast {
+
+    }
+
+    .error-toast {
         --background: #fa3333;
         --color: #ffffff;
         --font-weight: bold;
@@ -97,11 +139,11 @@ ion-button.save-button {
         --box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
         --border-radius: 10px;
         position: top;
-        
+
         margin-top: 50px;
-        
-      }
+
     }
+}
 
 ion-icon {
     padding: 4px;

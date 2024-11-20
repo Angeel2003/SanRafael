@@ -9,12 +9,15 @@
 
 ion-toolbar {
     display: flex;
-    justify-content: center; /* Centra horizontalmente el contenido */
+    justify-content: center;
+    /* Centra horizontalmente el contenido */
 }
-  
+
 ion-title {
-    text-align: center; /* Asegura que el texto esté centrado */
-    width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
+    text-align: center;
+    /* Asegura que el texto esté centrado */
+    width: 100%;
+    /* Ocupa el 100% del ancho para centrarse correctamente */
     font-size: 24px;
     color: #005682;
 }
@@ -37,12 +40,36 @@ ion-item {
     font-size: 100%;
 }
 
-ion-input {
+.no-tareas {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    /* Ocupa toda la altura del contenido */
+    text-align: center;
+    font-size: 4rem;
+    /* Tamaño grande del texto */
+    font-weight: bold;
     color: #005682;
-    font-size: 150%;
+    /* Color suave para el texto */
 }
 
-input { 
-    color: #005682;
-    font-size: 150%;
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    /* Ocupa toda la pantalla */
+    text-align: center;
+
+    ion-spinner {
+        margin-bottom: 10px;
+        color: #005682;
+    }
+
+    p {
+        font-size: 4rem;
+        color: #005682;
+    }
 }

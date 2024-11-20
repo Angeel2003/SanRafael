@@ -8,6 +8,7 @@ import { Asignacion } from '../asignar-tarea/asignar-tarea.page';
 import { addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Para Firebase Storage
 import { OrderTask } from '../crear-tarea-comanda/crear-tarea-comanda.page';
+import { Tarea } from '../agenda/agenda.page';
 @Injectable({
   providedIn: 'root'
 })
@@ -69,7 +70,7 @@ export class FirebaseService {
   }
 
   async guardarTareaPorPasos(taskData: any): Promise<boolean> {
-    const tasksCollection = collection(this.db, 'tarea-por-pasos'); 
+    const tasksCollection = collection(this.db, 'tarea-por-pasos');
 
     try {
       await addDoc(tasksCollection, taskData);
@@ -83,9 +84,9 @@ export class FirebaseService {
 
   async guardarPerfil(profileData: any): Promise<void> {
     const usersCollection = collection(this.db, 'alumnos'); // Define la colección 'usuarios'
-  
+
     try {
-      await addDoc(usersCollection, profileData);   
+      await addDoc(usersCollection, profileData);
       console.log('Perfil guardado con éxito en Firestore');
     } catch (error) {
       console.error('Error al guardar el perfil: ', error);
@@ -150,7 +151,7 @@ export class FirebaseService {
   async addTaskToStudent(studentName: string, asignacion: Asignacion): Promise<boolean> {
     try {
       const querySnapshot = await getDocs(collection(this.db, 'alumnos'));
-    
+
       for (const docSnapshot of querySnapshot.docs) {
         const data = docSnapshot.data();
         if (data['nombre'] === studentName) {
@@ -162,7 +163,7 @@ export class FirebaseService {
           return true;  // Devuelve true si se agregó la tarea correctamente
         }
       }
-    
+
       console.warn('No se encontró un estudiante con el nombre especificado');
       return false;  // Devuelve false si no se encontró el estudiante
     } catch (error) {
@@ -170,7 +171,7 @@ export class FirebaseService {
       return false;  // Devuelve false si ocurrió un error al actualizar el documento
     }
   }
-  
+
 
   //Tarea material
   async guardarTareaMaterial(taskData: any): Promise<void> {
@@ -224,7 +225,7 @@ export class FirebaseService {
   // Modificar tarea por pasos
   getTarea(nombreTarea: string, tabla: string): Observable<any[]> {
     const tareaRef = collection(this.db, tabla);
-    
+
     // Crear una consulta para filtrar por el campo nombreTarea
     const tareaQuery = query(tareaRef, where('nombre', '==', nombreTarea));
 
@@ -239,12 +240,12 @@ export class FirebaseService {
     try {
       const docRef = doc(this.db, tabla, id);
       const docSnapshot = await getDoc(docRef);
-  
+
       if (docSnapshot.exists()) {
         await updateDoc(docRef, data);
         console.log('Tarea actualizada con éxito');
         return true;
-      }else{
+      } else {
         console.log('no existe tarea');
         return false;
       }
@@ -253,7 +254,7 @@ export class FirebaseService {
       return false;
     }
   }
-  
+
   //Crear tarea commanda
   async guardarTareaComanda(taskData: OrderTask): Promise<void> {
     const tasksCollection = collection(this.db, 'tarea-comanda');
@@ -271,7 +272,7 @@ export class FirebaseService {
       const adminCollection = collection(this.db, 'administradores');
       const q = query(adminCollection, where('correo', '==', email));
       const querySnapshot = await getDocs(q);
-  
+
       if (!querySnapshot.empty) {
         // Devuelve el primer documento encontrado
         return querySnapshot.docs[0].data();
@@ -282,6 +283,41 @@ export class FirebaseService {
       return null;
     }
   }
+
+  async getTareasForUser(userId: string): Promise<Tarea[]> {
+    const alumnoDocRef = doc(this.db, 'alumnos', userId); // Referencia al documento del alumno
+    try {
+      const alumnoDocSnapshot = await getDoc(alumnoDocRef); // Obtiene el documento del alumno
+
+      if (!alumnoDocSnapshot.exists()) {
+        console.warn("No se encontró el alumno con ID:", userId);
+        return [];
+      }
+
+      const alumnoData = alumnoDocSnapshot.data(); // Datos del alumno
+      console.log("Datos del alumno:", alumnoData);
+
+      const tareasAsignadas = alumnoData?.['tareasAsig'] || []; // Obtén las tareas asignadas, si existen
+      console.log("Tareas asignadas:", tareasAsignadas);
+
+      // Mapea las tareas a la estructura esperada
+      const mappedTareas: Tarea[] = tareasAsignadas.map((tarea: any) => ({
+        nombre: tarea.nombreTarea || '',
+        imagen: tarea.imagen || '',
+        horaIni: tarea.fechaInicio || '',
+        horaFin: tarea.fechaFin || ''
+      }));
+      console.log("Tareas mapeadas:", mappedTareas);
+
+      return mappedTareas;
+    } catch (error) {
+      console.error("Error al obtener las tareas del alumno:", error);
+      throw error;
+    }
+  }
+
+
+
 
 
 }
