@@ -44,9 +44,6 @@ export class TareaMaterialPage implements OnInit {
     });
   }
 
-  goBackToAdmin(){
-    this.router.navigate(['/admin-dentro']);
-  }
 
   ngOnInit() {}
 

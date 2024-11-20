@@ -156,6 +156,7 @@ export class UserLoginPage implements OnInit {
   }
 
   onSubmit() {
+    localStorage.setItem('userId', this.user.id);
     this.router.navigate(['/agenda']);
   }
 }
