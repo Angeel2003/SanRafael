@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonCol, IonButton, IonIcon, IonGrid, IonRow, IonItem, IonLabel, IonButtons, IonBackButton } from '@ionic/angular/standalone';
+import { IonSpinner, IonContent, IonHeader, IonTitle, IonToolbar, IonCol, IonButton, IonIcon, IonGrid, IonRow, IonItem, IonLabel, IonButtons, IonBackButton } from '@ionic/angular/standalone';
 
 import { FirebaseService } from '../services/firebase.service';
 
@@ -18,7 +18,7 @@ export interface Tarea {
   templateUrl: './agenda.page.html',
   styleUrls: ['./agenda.page.scss'],
   standalone: true,
-  imports: [IonLabel, IonItem, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonIcon, IonGrid, IonRow, IonButtons, IonBackButton]
+  imports: [IonSpinner, IonLabel, IonItem, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonIcon, IonGrid, IonRow, IonButtons, IonBackButton]
 })
 
 
@@ -38,6 +38,8 @@ export class AgendaPage implements OnInit {
     this.loadTareas();
   }
 
+  loading: boolean = true;
+
   async loadTareas() {
     const userId = localStorage.getItem('userId');
     if (!userId) {
@@ -45,27 +47,25 @@ export class AgendaPage implements OnInit {
       return;
     }
 
+    this.loading = true; // Activar indicador de carga
+
     try {
       const tareasFromFirebase = await this.firebaseService.getTareasForUser(userId);
       console.log("Tareas obtenidas desde Firebase: ", tareasFromFirebase);
-
-      // Filtrar tareas no válidas y asignar las propiedades necesarias
-      this.tareas = tareasFromFirebase
-        .filter((tarea: Tarea) => tarea.nombre || tarea.imagen || tarea.horaIni || tarea.horaFin) // Filtra tareas vacías
-        .map((tarea: Tarea) => ({
-          nombre: tarea.nombre || 'Sin nombre',
-          imagen: tarea.imagen || '', // Deja vacío si no hay imagen
-          horaIni: tarea.horaIni || 'Sin hora de inicio',
-          horaFin: tarea.horaFin || 'Sin hora de fin'
-        }));
-
-      console.log("Tareas cargadas (después de filtrar):", this.tareas);
+      this.tareas = tareasFromFirebase.map((tarea: Tarea) => ({
+        nombre: tarea.nombre || '',
+        imagen: tarea.imagen || '',
+        horaIni: tarea.horaIni || '',
+        horaFin: tarea.horaFin || ''
+      }));
+      console.log("Tareas cargadas:", this.tareas);
     } catch (error) {
       console.error("Error fetching tasks:", error);
+    } finally {
+      this.loading = false; // Desactivar indicador de carga
     }
   }
-
 }
-  
-  
-  
+
+
+

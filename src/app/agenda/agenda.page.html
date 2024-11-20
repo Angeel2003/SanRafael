@@ -1,46 +1,58 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/user-list"></ion-back-button> <!-- Ajusta la ruta si es necesario -->
+      <ion-back-button defaultHref="/user-list"></ion-back-button>
     </ion-buttons>
     <ion-title>Agenda</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-grid>
-    <!-- Verifica si hay tareas -->
+  <!-- Mostrar spinner mientras se cargan las tareas -->
+  <ng-container *ngIf="loading; else content">
+    <div class="loading-spinner">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando tareas...</p>
+    </div>
+  </ng-container>
+
+  <!-- Contenido principal -->
+  <ng-template #content>
     <ng-container *ngIf="tareas && tareas.length > 0; else noTareas">
-      <ion-row *ngFor="let tarea of tareas; let i = index">
-        <ion-col size="1">
-          <ion-label>Tarea {{i + 1}}</ion-label>
-        </ion-col>
-        <ion-col size="2">
-          <ion-label>{{tarea.nombre}}</ion-label>
-        </ion-col>
-        <ion-col size="4">
-          <!-- Verifica si hay imagen -->
-          <img *ngIf="tarea.imagen; else sinImagen" [src]="tarea.imagen" alt="{{tarea.nombre}}" style="width: 150px; height: auto;" />
-          <ng-template #sinImagen>
-            <ion-label>Sin imagen</ion-label>
-          </ng-template>
-        </ion-col>
-        <ion-col size="2">
-          <ion-label>Empieza a las {{tarea.horaIni}}</ion-label>
-        </ion-col>
-        <ion-col size="2">
-          <ion-label>Termina a las {{tarea.horaFin}}</ion-label>
-        </ion-col>
-      </ion-row>
+      <ion-grid>
+        <ion-row *ngFor="let tarea of tareas; let i = index">
+          <ion-col size="1">
+            <ion-label>Tarea {{ i + 1 }}</ion-label>
+          </ion-col>
+          <ion-col size="2">
+            <ion-label>{{ tarea.nombre }}</ion-label>
+          </ion-col>
+          <ion-col size="4">
+            <ng-container *ngIf="tarea.imagen; else noImagen">
+              <img 
+                [src]="tarea.imagen" 
+                alt="{{ tarea.nombre }}" 
+                style="width: 150px; height: auto;" 
+              />
+            </ng-container>
+            <ng-template #noImagen>
+              <ion-label style="font-style: italic; color: #005682;">Sin imagen</ion-label>
+            </ng-template>
+          </ion-col>
+          <ion-col size="2">
+            <ion-label>Empieza a las {{ tarea.horaIni }}</ion-label>
+          </ion-col>
+          <ion-col size="2">
+            <ion-label>Termina a las {{ tarea.horaFin }}</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ng-container>
 
-    <!-- Mensaje si no hay tareas -->
     <ng-template #noTareas>
-      <ion-row>
-        <ion-col>
-          <ion-label>No hay tareas asignadas</ion-label>
-        </ion-col>
-      </ion-row>
+      <div class="no-tareas">
+        No hay tareas asignadas
+      </div>
     </ng-template>
-  </ion-grid>
+  </ng-template>
 </ion-content>
