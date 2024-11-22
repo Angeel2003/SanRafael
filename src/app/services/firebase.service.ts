@@ -284,6 +284,7 @@ export class FirebaseService {
     }
   }
 
+  //Agenda
   async getTareasForUser(userId: string): Promise<Tarea[]> {
     const alumnoDocRef = doc(this.db, 'alumnos', userId); // Referencia al documento del alumno
     try {
@@ -295,10 +296,10 @@ export class FirebaseService {
       }
 
       const alumnoData = alumnoDocSnapshot.data(); // Datos del alumno
-      console.log("Datos del alumno:", alumnoData);
+      //console.log("Datos del alumno:", alumnoData);
 
       const tareasAsignadas = alumnoData?.['tareasAsig'] || []; // Obtén las tareas asignadas, si existen
-      console.log("Tareas asignadas:", tareasAsignadas);
+      //console.log("Tareas asignadas:", tareasAsignadas);
 
       // Mapea las tareas a la estructura esperada
       const mappedTareas: Tarea[] = tareasAsignadas.map((tarea: any) => ({
@@ -307,12 +308,25 @@ export class FirebaseService {
         horaIni: tarea.fechaInicio || '',
         horaFin: tarea.fechaFin || ''
       }));
-      console.log("Tareas mapeadas:", mappedTareas);
+      //console.log("Tareas mapeadas:", mappedTareas);
 
       return mappedTareas;
     } catch (error) {
       console.error("Error al obtener las tareas del alumno:", error);
       throw error;
+    }
+  }
+
+  // Bajar iamgen de Firebase
+  async getImageUrl(path: string): Promise<string>{
+    const storageRef = ref(this.storage, path);
+    try{
+      const url = await getDownloadURL(storageRef);
+      console.log('URL de la imagen obtenida: ', url);
+      return url;
+    } catch (error){
+      console.error('Error al obtener la URL de la imagen: ', error);
+      throw new Error('No se pudo obtener la imagen');
     }
   }
 

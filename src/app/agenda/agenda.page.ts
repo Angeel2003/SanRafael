@@ -8,9 +8,7 @@ import { FirebaseService } from '../services/firebase.service';
 
 export interface Tarea {
   nombre: string,
-  imagen: string,
-  horaIni: string,
-  horaFin: string
+  imagen: string
 }
 
 @Component({
@@ -20,22 +18,35 @@ export interface Tarea {
   standalone: true,
   imports: [IonSpinner, IonLabel, IonItem, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonIcon, IonGrid, IonRow, IonButtons, IonBackButton]
 })
-
-
 export class AgendaPage implements OnInit {
 
   tareas: Tarea[] = [];
+  imgAgenda: string = '';
 
   constructor(private firebaseService: FirebaseService) {
     addIcons({
     })
-
-    // this.tareas.push({nombre: "A", imagen: '', horaIni: "10:00", horaFin: "13:00"});
-    // this.tareas.push({nombre: "B", imagen: '', horaIni: "10:00", horaFin: "13:00"});
   }
 
   ngOnInit() {
+    const imagePath = 'pictogramas/agenda.png';
     this.loadTareas();
+    this.loadImagen(imagePath);
+  }
+
+  async loadImagen(imagePath: string) {
+    console.log(imagePath);
+
+    const urlImagen = 'gs://aplicacion-d5cbf.appspot.com/pictogramas/agenda.png';
+
+    console.log('URL de la imagen:', urlImagen);
+
+    try {
+      this.imgAgenda = await this.firebaseService.getImageUrl(imagePath);
+    } catch (error) {
+      console.error("Error al cargar la imagen: ", error);
+      this.imgAgenda = '';
+    }
   }
 
   loading: boolean = true;
@@ -54,9 +65,7 @@ export class AgendaPage implements OnInit {
       console.log("Tareas obtenidas desde Firebase: ", tareasFromFirebase);
       this.tareas = tareasFromFirebase.map((tarea: Tarea) => ({
         nombre: tarea.nombre || '',
-        imagen: tarea.imagen || '',
-        horaIni: tarea.horaIni || '',
-        horaFin: tarea.horaFin || ''
+        imagen: tarea.imagen || ''
       }));
       console.log("Tareas cargadas:", this.tareas);
     } catch (error) {
@@ -66,6 +75,3 @@ export class AgendaPage implements OnInit {
     }
   }
 }
-
-
-
