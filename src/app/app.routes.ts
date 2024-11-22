@@ -65,7 +65,15 @@ export const routes: Routes = [
   {
     path: 'perfil-admin-profesor',
     loadComponent: () => import('./perfil-admin-profesor/perfil-admin-profesor.page').then( m => m.PerfilAdminProfesorPage)
+  },  {
+    path: 'solicitar-material-profe',
+    loadComponent: () => import('./solicitar-material-profe/solicitar-material-profe.page').then( m => m.SolicitarMaterialProfePage)
   },
+  {
+    path: 'gestionar-material-admin',
+    loadComponent: () => import('./gestionar-material-admin/gestionar-material-admin.page').then( m => m.GestionarMaterialAdminPage)
+  },
+
 
 
 ];
