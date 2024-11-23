@@ -361,4 +361,21 @@ export class FirebaseService {
       return false;
     }
   }
+
+  //Obtener Peticiones Material
+  async getMaterialRequest(): Promise<any[]>{
+    try{
+      const requestCollection = collection(this.db, 'peticionesMaterial');
+      const snapshot = await getDocs(requestCollection);
+      const request = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...(doc.data())
+      }));
+      console.log("Peticion de material obtenido exitosamente");
+      return request
+    }catch(error){
+      console.error("Error al obtener las peticiones de materiales:", error);
+      return [];
+    }
+  }
 }

@@ -73,6 +73,10 @@ export const routes: Routes = [
     path: 'gestionar-material-admin',
     loadComponent: () => import('./gestionar-material-admin/gestionar-material-admin.page').then( m => m.GestionarMaterialAdminPage)
   },
+  {
+    path: 'peticion-material',
+    loadComponent: () => import('./peticion-material/peticion-material.page').then( m => m.PeticionMaterialPage)
+  },
 
 
 
