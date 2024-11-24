@@ -86,4 +86,7 @@ export class PerfilAdminProfesorPage implements OnInit {
     this.router.navigate(['/modificar-tarea-material']);
   }
 
+  peticionMaterial() {
+    this.router.navigate(['/peticion-material']);
+  }
 }
