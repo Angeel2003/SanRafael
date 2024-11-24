@@ -15,15 +15,15 @@
       label="Nombre de la tarea" 
       label-placement="floating" 
       placeholder="Escribe el nombre de la tarea"
-      [(ngModel)]="taskName">
+      [(ngModel)]="task.nombre">
     </ion-input>
   </ion-item>
 
   <!-- Foto de la tarea -->
   <ion-item class="section-padding">
     <ion-label class="step-label" position="floating">Foto de la tarea</ion-label>
-    <div *ngIf="previewUrl" style="margin: 10px 0; text-align: center;">
-      <img [src]="previewUrl" alt="Vista previa de la tarea" style="width: 150px; height: auto; border-radius: 10px;" />
+    <div *ngIf="task.previewUrl" style="margin: 10px 0; text-align: center;">
+      <img [src]="task.previewUrl" alt="Vista previa de la tarea" style="width: 150px; height: auto; border-radius: 10px;" />
     </div>
     <input type="file" accept="image/*" (change)="imgPreview($event)" />
   </ion-item>
@@ -33,7 +33,7 @@
     <ion-textarea 
       auto-grow="true" 
       placeholder="Describe la tarea" 
-      [(ngModel)]="taskDescription">
+      [(ngModel)]="task.description">
     </ion-textarea>
   </ion-item>
 
@@ -97,11 +97,11 @@
       <ion-col>
         <ng-container *ngIf="currentTab === 'texto'">
           <ion-list>
-            <ion-item *ngFor="let step of stepText; let i = index">
+            <ion-item *ngFor="let step of task.pasosTexto; let i = index">
               <ion-input 
                 label="Paso {{ i+1 }}" 
                 placeholder="Escribe el paso {{ i+1 }}" 
-                [(ngModel)]="stepTextValues[i]"
+                [(ngModel)]="task.pasosTexto[i]"
                 >
               </ion-input>
               <button (click)="eliminarPaso(i, 'texto')" class="btn-icon">
@@ -113,10 +113,10 @@
 
         <ng-container *ngIf="currentTab === 'picto'">
           <ion-list>
-            <ion-item *ngFor="let step of stepPicto; let i = index">
+            <ion-item *ngFor="let step of task.pasosPicto; let i = index">
               <ion-label class="step-label">Paso {{ i+1 }}</ion-label>
-              <div *ngIf="stepPictoValues[i]" style="margin: 10px;">
-                <img [src]="stepPictoValues[i]" alt="Vista previa pictograma {{ i + 1 }}" style="width: 100px; height: auto;" />
+              <div *ngIf="task.pasosPicto[i]" style="margin: 10px;">
+                <img [src]="task.pasosPicto[i]" alt="Vista previa pictograma {{ i + 1 }}" style="width: 100px; height: auto;" />
               </div>
               <input type="file" accept="image/*" (change)="pictoStep($event, i)" />
               <button (click)="eliminarPaso(i, 'picto')" class="btn-icon">
@@ -128,10 +128,10 @@
 
         <ng-container *ngIf="currentTab === 'imagenes'">
           <ion-list>
-            <ion-item *ngFor="let step of stepImg; let i = index">
+            <ion-item *ngFor="let step of task.pasosImagenes; let i = index">
               <ion-label class="step-label">Paso {{ i+1 }}</ion-label>
-              <div *ngIf="stepImgValues[i]" style="margin: 10px;">
-                <img [src]="stepImgValues[i]" alt="Vista previa imagen {{ i + 1 }}" style="width: 100px; height: auto;" />
+              <div *ngIf="task.pasosImagenes[i]" style="margin: 10px;">
+                <img [src]="task.pasosImagenes[i]" alt="Vista previa imagen {{ i + 1 }}" style="width: 100px; height: auto;" />
               </div>
               <input type="file" accept="image/*" (change)="imgStep($event, i)" />
               <button (click)="eliminarPaso(i, 'imagenes')" class="btn-icon">
@@ -143,10 +143,10 @@
 
         <ng-container *ngIf="currentTab === 'videoPasos'">
           <ion-list>
-            <ion-item *ngFor="let step of stepVideo; let i = index">
+            <ion-item *ngFor="let step of task.pasosVideos; let i = index">
               <ion-label class="step-label">Paso {{ i+1 }}</ion-label>
-              <div *ngIf="stepVideoValues[i]" style="margin: 10px;">
-                <video [src]="stepVideoValues[i]" controls style="width: 100px; height: auto;"></video>
+              <div *ngIf="task.pasosVideos[i]" style="margin: 10px;">
+                <video [src]="task.pasosVideos[i]" controls style="width: 100px; height: auto;"></video>
               </div>
               <input type="file" accept="video/*" (change)="videoStep($event, i)" />
               <button (click)="eliminarPaso(i, 'videoPasos')" class="btn-icon">
@@ -164,8 +164,8 @@
               <ion-icon class="trash-icon" size="large" name="trash-outline"></ion-icon>
             </button>
           </ion-item>
-          <div *ngIf="videoPreviewUrl" style="margin: 20px 0; text-align: center;">
-            <video [src]="videoPreviewUrl" controls style="width: 100%; max-height: 300px;"></video>
+          <div *ngIf="task.videoCompletoUrl" style="margin: 20px 0; text-align: center;">
+            <video [src]="task.videoCompletoUrl" controls style="width: 100%; max-height: 300px;"></video>
           </div>
         </ng-container>
 
