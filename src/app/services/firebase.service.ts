@@ -362,6 +362,17 @@ export class FirebaseService {
     }
   }
 
+  async getCollection(collectionName: string): Promise<any[]> {
+    const snapshot = await getDocs(collection(this.db, collectionName));
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async deleteDocument(collectionName: string, docId: string): Promise<void> {
+    const docRef = doc(this.db, collectionName, docId);
+    await deleteDoc(docRef);
+  }
+  
+
   //Obtener Peticiones Material
   async getMaterialRequest(): Promise<any[]>{
     try{

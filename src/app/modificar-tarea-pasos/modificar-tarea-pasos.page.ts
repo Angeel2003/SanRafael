@@ -25,14 +25,8 @@ import {ToastController} from '@ionic/angular';
 })
 
 export class ModificarTareaPasosPage implements OnInit {
-  taskName: string = 'Hacer la cama';
   taskPreview: File | null = null;
-  taskDescription: string = '';
   currentTab: string = 'video';
-  stepText: string[] = [];
-  stepPicto: string[] = [];
-  stepImg: string[] = [];
-  stepVideo: string[] = [];
   videoCompletoFile: File | null = null;
   audioCompletoFile: File | null = null;
   selectedText: string[] = [];
@@ -40,18 +34,11 @@ export class ModificarTareaPasosPage implements OnInit {
   selectedImages: File[] = [];
   selectedVideos: File[] = [];
 
-  stepTextValues: string[] = [];
-  stepPictoValues: (File | null | string)[] = [];
-  stepImgValues: (File | null | string)[] = [];
-  stepVideoValues: (File | null | string)[] = [];
-  videoPreviewUrl: string | null = null;
-  audioPreviewUrl: string | null = null;
-  previewUrl: string | null = null;
   showToast: boolean = false;
   toastMessage: string = '';
   toastClass: string = '';
 
-  tarea: any | null = null;
+  task: any;
 
   
   constructor(private firebaseService: FirebaseService, private router: Router, private toastController: ToastController) {
@@ -59,64 +46,27 @@ export class ModificarTareaPasosPage implements OnInit {
       addOutline,
       trashOutline
     });
+
+
+    const navigation = this.router.getCurrentNavigation();
+    this.task = navigation?.extras.state?.['task'];
   }
 
   
   ngOnInit() {
-    if (this.taskName) {
-      this.loadTask();
-    }
-  }
+    const maxSteps = Math.max(
+      this.task.pasosTexto.length,
+      this.task.pasosPicto.length,
+      this.task.pasosImagenes.length,
+      this.task.pasosVideos.length
+    );
 
-  loadTask() {
-    this.firebaseService.getTarea(this.taskName, 'tarea-por-pasos').subscribe((data) => {
-      console.log('Datos recibidos de Firebase:', data); // Depuración
-  
-      if (data && Array.isArray(data) && data.length > 0) {
-        this.tarea = data[0];
-  
-        this.previewUrl = this.tarea.previewUrl;
-        this.taskDescription = this.tarea.description;
-        this.taskName = this.tarea.nombre
-        // Verifica y asigna los pasos
-        this.stepText = Array.isArray(this.tarea.pasosTexto) ? this.tarea.pasosTexto : [];
-        this.stepPicto = Array.isArray(this.tarea.pasosPicto) ? this.tarea.pasosPicto : [];
-        this.stepImg = Array.isArray(this.tarea.pasosImagenes) ? this.tarea.pasosImagenes : [];
-        this.stepVideo = Array.isArray(this.tarea.pasosVideos) ? this.tarea.pasosVideos : [];
-  
-        // Encuentra el número máximo de pasos entre todas las categorías
-        const maxSteps = Math.max(
-          this.stepText.length,
-          this.stepPicto.length,
-          this.stepImg.length,
-          this.stepVideo.length
-        );
-  
-        // Rellena cada lista para que tenga la misma longitud
-        this.stepText = this.fillArray(this.stepText, maxSteps, '');
-        this.stepPicto = this.fillArray(this.stepPicto, maxSteps, null);
-        this.stepImg = this.fillArray(this.stepImg, maxSteps, null);
-        this.stepVideo = this.fillArray(this.stepVideo, maxSteps, null);
-  
-        // Almacena los valores
-        this.stepTextValues = [...this.stepText];
-        this.stepPictoValues = [...this.stepPicto];
-        this.stepImgValues = [...this.stepImg];
-        this.stepVideoValues = [...this.stepVideo];
-  
-        // Maneja las URL de video y audio completo
-        this.videoCompletoFile = this.tarea.videoCompletoUrl || null;
-        this.audioCompletoFile = this.tarea.audioCompletoUrl || null;
-        this.videoPreviewUrl = this.tarea.videoCompletoUrl || null;
-        this.audioPreviewUrl = this.tarea.audioCompletoUrl || null;
-  
-        console.log('Tarea cargada: ', this.tarea);
-      } else {
-        console.error("No se encontraron datos de tarea o el formato es incorrecto.");
-      }
-    }, (error) => {
-      console.error("Error al cargar tarea: ", error);
-    });
+    // Rellena cada lista para que tenga la misma longitud
+    this.task.pasosTexto = this.fillArray(this.task.pasosTexto, maxSteps, '');
+    this.task.pasosPicto = this.fillArray(this.task.pasosPicto, maxSteps, null);
+    this.task.pasosImagenes = this.fillArray(this.task.pasosImagenes, maxSteps, null);
+    this.task.pasosVideos = this.fillArray(this.task.pasosVideos, maxSteps, null);
+
   }
 
   fillArray(array: any[], length: number, defaultValue: any): any[] {
@@ -127,8 +77,8 @@ export class ModificarTareaPasosPage implements OnInit {
     return newArray;
   }
 
-  goBackToAdmin() {
-    this.router.navigate(['/admin-dentro']);
+  goBackToGestionarTareas() {
+    this.router.navigate(['/gestionar-tareas']);
   }
 
   imgPreview(event: Event) {
@@ -136,7 +86,7 @@ export class ModificarTareaPasosPage implements OnInit {
     if (input.files && input.files.length) {
       const file = input.files[0];
       this.taskPreview = file;
-      this.previewUrl = URL.createObjectURL(file);
+      this.task.previewUrl = URL.createObjectURL(file);
     }
   }
   
@@ -145,7 +95,7 @@ export class ModificarTareaPasosPage implements OnInit {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.selectedPicto[index] = file; // Almacena el archivo
-      this.stepPictoValues[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
+      this.task.pasosPicto[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
       console.log('Archivo seleccionado:', file); // Verifica que el archivo se ha seleccionado
     } else {
       console.log('No se seleccionó ningún archivo'); // Mensaje si no hay archivos
@@ -158,7 +108,7 @@ export class ModificarTareaPasosPage implements OnInit {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.selectedImages[index] = file; // Almacena el archivo
-      this.stepImgValues[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
+      this.task.pasosImagenes[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
       console.log('Archivo seleccionado:', file); // Verifica que el archivo se ha seleccionado
     } else {
       console.log('No se seleccionó ningún archivo'); // Mensaje si no hay archivos
@@ -170,7 +120,7 @@ export class ModificarTareaPasosPage implements OnInit {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.selectedVideos[index] = file; // Almacena el archivo
-      this.stepVideoValues[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
+      this.task.pasosVideos[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
       console.log('Archivo seleccionado:', file); // Verifica que el archivo se ha seleccionado
     } else {
       console.log('No se seleccionó ningún archivo'); // Mensaje si no hay archivos
@@ -180,16 +130,16 @@ export class ModificarTareaPasosPage implements OnInit {
   videoCompleto(event: Event) {
     const fileInput = event.target as HTMLInputElement;
     if (fileInput.files && fileInput.files[0]) {
-      const videoFile = fileInput.files[0];
-      this.videoPreviewUrl = URL.createObjectURL(videoFile); // Crea una URL de vista previa
+      this.videoCompletoFile = fileInput.files[0];
+      this.task.videoCompletoUrl = URL.createObjectURL(this.videoCompletoFile); // Crea una URL de vista previa
     }
   }
 
   audioStep(event: Event) {
     const fileInput = event.target as HTMLInputElement;
     if (fileInput.files && fileInput.files[0]) {
-      const audioFile = fileInput.files[0];
-      this.audioPreviewUrl = URL.createObjectURL(audioFile); // Crea una URL de vista previa
+      this.audioCompletoFile = fileInput.files[0];
+      this.task.audioCompletoUrl = URL.createObjectURL(this.audioCompletoFile); // Crea una URL de vista previa
     }
   }
 
@@ -199,18 +149,14 @@ export class ModificarTareaPasosPage implements OnInit {
   }
 
   addStep() {
-    const stepTextNumber = this.stepText.length + 1;
-    this.stepText.push(`${stepTextNumber}`);
-    this.stepTextValues.push('');
-    const stepPictoNumber = this.stepPicto.length + 1;
-    this.stepPicto.push(`${stepPictoNumber}`);
-    this.stepPictoValues.push(null);
-    const stepImgNumber = this.stepImg.length + 1;
-    this.stepImg.push(`${stepImgNumber}`);
-    this.stepImgValues.push(null);
-    const stepVideoNumber = this.stepVideo.length + 1;
-    this.stepVideo.push(`${stepVideoNumber}`);
-    this.stepVideoValues.push(null);
+    this.task.pasosTexto.length += 1;
+    this.task.pasosTexto.push('');
+    this.task.pasosPicto.length += 1;
+    this.task.pasosPicto.push(null);
+    this.task.pasosImagenes.length += 1;
+    this.task.pasosImagenes.push(null);
+    this.task.pasosVideos.length += 1;
+    this.task.pasosVideos.push(null);
 
   }
   
@@ -239,39 +185,27 @@ export class ModificarTareaPasosPage implements OnInit {
   eliminarPaso(index: number, tipo: string): void {
     switch (tipo) {
       case 'texto':
-        this.stepTextValues.splice(index, 1); // Elimina el texto en el índice dado
-        this.stepText.splice(index, 1);
-        this.tarea.pasosTexto.splice(index, 1);
+        this.task.pasosTexto.splice(index, 1);
         break;
   
       case 'picto':
-        this.stepPictoValues.splice(index, 1); // Elimina el texto en el índice dado
-        this.stepPicto.splice(index, 1);
-        this.tarea.pasosPicto.splice(index, 1);
+        this.task.pasosPicto.splice(index, 1);
         break;
   
       case 'imagenes':
-        this.stepImgValues.splice(index, 1); // Elimina el texto en el índice dado
-        this.stepImg.splice(index, 1);
-        this.tarea.pasosImagenes.splice(index, 1);
+        this.task.pasosImagenes.splice(index, 1);
         break;
   
       case 'videoPasos':
-        this.stepVideoValues.splice(index, 1); // Elimina el texto en el índice dado
-        this.stepVideo.splice(index, 1);
-        this.tarea.pasosVideos.splice(index, 1);
+        this.task.pasosVideos.splice(index, 1);
         break;
 
       case 'video':
-        this.videoCompletoFile = null;
-        this.videoPreviewUrl = '';
-        this.tarea.videoCompletoUrl = '';
+        this.task.videoCompletoUrl = '';
         break;
 
       case 'audio':
-        this.audioCompletoFile = null;
-        this.audioPreviewUrl = '';
-        this.tarea.audioCompletoUrl = '';
+        this.task.audioCompletoUrl = '';
         break;
   
       default:
@@ -280,17 +214,17 @@ export class ModificarTareaPasosPage implements OnInit {
   
     // Asegurar que todas las listas tengan la misma longitud
     const maxLength = Math.max(
-      this.tarea.pasosTexto?.length || 0,
-      this.tarea.pasosPicto?.length || 0,
-      this.tarea.pasosImagenes?.length || 0,
-      this.tarea.pasosVideos?.length || 0
+      this.task.pasosTexto?.length || 0,
+      this.task.pasosPicto?.length || 0,
+      this.task.pasosImagenes?.length || 0,
+      this.task.pasosVideos?.length || 0
     );
   
     // Rellenar listas más cortas con valores vacíos
-    this.rellenarConVacios(this.tarea.pasosTexto, maxLength, '');
-    this.rellenarConVacios(this.tarea.pasosPicto, maxLength, null);
-    this.rellenarConVacios(this.tarea.pasosImagenes, maxLength, null);
-    this.rellenarConVacios(this.tarea.pasosVideos, maxLength, null);
+    this.rellenarConVacios(this.task.pasosTexto, maxLength, '');
+    this.rellenarConVacios(this.task.pasosPicto, maxLength, null);
+    this.rellenarConVacios(this.task.pasosImagenes, maxLength, null);
+    this.rellenarConVacios(this.task.pasosVideos, maxLength, null);
   }
   
   private rellenarConVacios(lista: any[], longitud: number, valor: any): void {
@@ -305,15 +239,15 @@ export class ModificarTareaPasosPage implements OnInit {
 
     // Cargar datos existentes, si los hay
     const dataToSave: any = {
-      nombre: this.taskName,
-      previewUrl: this.tarea?.previewUrl || '',
-      description: this.taskDescription,
-      pasosTexto: this.stepText ? this.stepTextValues : this.tarea?.pasosTexto || [],
-      pasosPicto: this.stepPicto ? this.stepPictoValues : this.tarea?.pasosPicto || [],
-      pasosImagenes: this.stepImg ? this.stepImgValues : this.tarea?.pasosImagenes || [],
-      pasosVideos: this.stepVideo ? this.stepVideoValues : this.tarea?.pasosVideos || [],
-      videoCompletoUrl: this.videoCompletoFile ? this.videoPreviewUrl : this.tarea?.videoCompletoUrl || '',
-      audioCompletoUrl: this.audioPreviewUrl ? this.audioCompletoFile : this.tarea?.audioCompletoUrl || '',
+      nombre: this.task.nombre,
+      previewUrl: this.task?.previewUrl || '',
+      description: this.task.description,
+      pasosTexto: this.task?.pasosTexto || [],
+      pasosPicto: this.task?.pasosPicto || [],
+      pasosImagenes: this.task?.pasosImagenes || [],
+      pasosVideos: this.task?.pasosVideos || [],
+      videoCompletoUrl: this.task?.videoCompletoUrl || '',
+      audioCompletoUrl: this.task?.audioCompletoUrl || '',
     };
 
     // Subir archivo de previsualización si se modificó
@@ -366,9 +300,9 @@ export class ModificarTareaPasosPage implements OnInit {
 
     // Validación de datos antes de guardar
     if (
-      this.taskDescription != '' &&
-      this.taskName != '' &&
-      (this.taskPreview != null || dataToSave.previewUrl != '') &&
+      this.task.description != '' &&
+      this.task.nombre != '' &&
+      (this.task.previewUrl != null || dataToSave.previewUrl != '') &&
       (dataToSave.videoCompletoUrl != '' ||
         dataToSave.audioCompletoUrl != '' ||
         dataToSave.pasosPicto.length != 0 ||
@@ -378,21 +312,21 @@ export class ModificarTareaPasosPage implements OnInit {
     ) {
       let guardadoExitoso = false;
 
-      if (this.tarea && this.tarea.id) {
+      if (this.task && this.task.id) {
         // Actualizar tarea existente
-        guardadoExitoso = await this.firebaseService.actualizarTarea(this.tarea.id, dataToSave, 'tarea-por-pasos');
+        guardadoExitoso = await this.firebaseService.actualizarTarea(this.task.id, dataToSave, 'tarea-por-pasos');
       }
 
       if (guardadoExitoso) {
-        this.mostrarToast('Guardado con éxito', true);
+        this.mostrarToast('Modificado con éxito', true);
       } else {
-        this.mostrarToast('Error al guardar', false);
+        this.mostrarToast('Error al modificar', false);
       }
     } else {
-      this.mostrarToast('Error al guardar: Verifica los datos', false);
+      this.mostrarToast('Error al modificar: Verifica los datos', false);
     }
 
-    this.goBackToAdmin();
+    this.goBackToGestionarTareas();
   }
   
 
