@@ -52,6 +52,7 @@ export class ModificarTareaPasosPage implements OnInit {
   toastClass: string = '';
 
   tarea: any | null = null;
+  task: any;
 
   
   constructor(private firebaseService: FirebaseService, private router: Router, private toastController: ToastController) {
@@ -59,64 +60,14 @@ export class ModificarTareaPasosPage implements OnInit {
       addOutline,
       trashOutline
     });
+
+
+    const navigation = this.router.getCurrentNavigation();
+    this.task = navigation?.extras.state?.['task'];
   }
 
   
   ngOnInit() {
-    if (this.taskName) {
-      this.loadTask();
-    }
-  }
-
-  loadTask() {
-    this.firebaseService.getTarea(this.taskName, 'tarea-por-pasos').subscribe((data) => {
-      console.log('Datos recibidos de Firebase:', data); // Depuración
-  
-      if (data && Array.isArray(data) && data.length > 0) {
-        this.tarea = data[0];
-  
-        this.previewUrl = this.tarea.previewUrl;
-        this.taskDescription = this.tarea.description;
-        this.taskName = this.tarea.nombre
-        // Verifica y asigna los pasos
-        this.stepText = Array.isArray(this.tarea.pasosTexto) ? this.tarea.pasosTexto : [];
-        this.stepPicto = Array.isArray(this.tarea.pasosPicto) ? this.tarea.pasosPicto : [];
-        this.stepImg = Array.isArray(this.tarea.pasosImagenes) ? this.tarea.pasosImagenes : [];
-        this.stepVideo = Array.isArray(this.tarea.pasosVideos) ? this.tarea.pasosVideos : [];
-  
-        // Encuentra el número máximo de pasos entre todas las categorías
-        const maxSteps = Math.max(
-          this.stepText.length,
-          this.stepPicto.length,
-          this.stepImg.length,
-          this.stepVideo.length
-        );
-  
-        // Rellena cada lista para que tenga la misma longitud
-        this.stepText = this.fillArray(this.stepText, maxSteps, '');
-        this.stepPicto = this.fillArray(this.stepPicto, maxSteps, null);
-        this.stepImg = this.fillArray(this.stepImg, maxSteps, null);
-        this.stepVideo = this.fillArray(this.stepVideo, maxSteps, null);
-  
-        // Almacena los valores
-        this.stepTextValues = [...this.stepText];
-        this.stepPictoValues = [...this.stepPicto];
-        this.stepImgValues = [...this.stepImg];
-        this.stepVideoValues = [...this.stepVideo];
-  
-        // Maneja las URL de video y audio completo
-        this.videoCompletoFile = this.tarea.videoCompletoUrl || null;
-        this.audioCompletoFile = this.tarea.audioCompletoUrl || null;
-        this.videoPreviewUrl = this.tarea.videoCompletoUrl || null;
-        this.audioPreviewUrl = this.tarea.audioCompletoUrl || null;
-  
-        console.log('Tarea cargada: ', this.tarea);
-      } else {
-        console.error("No se encontraron datos de tarea o el formato es incorrecto.");
-      }
-    }, (error) => {
-      console.error("Error al cargar tarea: ", error);
-    });
   }
 
   fillArray(array: any[], length: number, defaultValue: any): any[] {

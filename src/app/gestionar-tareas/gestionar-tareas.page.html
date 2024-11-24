@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/perfil-admin-profesor"></ion-back-button> <!-- Volver a la página anterior -->
+    </ion-buttons>
+    <ion-title>Gestionar Tareas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-list *ngIf="tasks.length > 0">
+    <ion-item class="task-item" *ngFor="let task of tasks">
+      <ion-label>
+        <h2>{{ task.nombre }}</h2>
+        <p>{{ task.description }}</p>
+      </ion-label>
+      <ion-buttons slot="end">
+        <ion-button color="primary" (click)="modifyTask(task)">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button color="danger" (click)="deleteTask(task.id)">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+  <ion-text *ngIf="tasks.length === 0">No hay tareas disponibles.</ion-text>
+</ion-content>
