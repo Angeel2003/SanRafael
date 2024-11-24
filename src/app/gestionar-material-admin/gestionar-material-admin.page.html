@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/perfil-admin-profesor"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Gestionar materiales</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col offset="4" size="3">
+        <ion-label class="cabecera-label">Materiales</ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col offset="4" size="3">
+        <ion-item *ngFor="let material of materials; let i = index; trackBy: trackByIndex">
+          <ion-input type="text" placeholder="Material" [(ngModel)]="materials[i].nombreMaterial"></ion-input>
+          <button (click)="eliminarMaterial(i)" class="btn-icon">
+            <ion-icon class="trash-icon" size="large" name="trash-outline"></ion-icon>
+          </button>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-col size="auto">
+    <ion-button class="add-material-button" (click)="addMaterial()">
+      <ion-icon class="icon-add" name="add-outline"></ion-icon>
+      <ion-label>Añadir material</ion-label>
+    </ion-button>
+  </ion-col>
+</ion-content>
+
+<ion-footer>
+  <ion-button class="request-button" expand="full" (click)="save()">Guardar</ion-button>
+</ion-footer>

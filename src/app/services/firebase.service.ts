@@ -331,7 +331,48 @@ export class FirebaseService {
   }
 
 
+  //Gestionar material
+  async guardarMaterialesAlmacen(taskData: any): Promise<boolean> {
+    const tasksCollection = collection(this.db, 'materiales');
+    try {
+      await addDoc(tasksCollection, taskData);
+      console.log('Materiales guardados con éxito');
+      return true;
+    } catch (error) {
+      console.error('Error al guardar materiales: ', error);
+      return false;
+    }
+  }
 
+  async getNombreMaterialesAlmacen(): Promise<string[]>{
+    const collectionName = 'materiales';
+    let materialNames: string[] = [];
 
+    const querySnapshot = await getDocs(collection(this.db, collectionName));
 
+    querySnapshot.forEach(doc => {
+      const data = doc.data();
+      materialNames.push(data['nombreMaterial']);
+    });
+
+    return materialNames;
+  }
+
+  //Peticion material profesor
+  async saveMaterialRequest(aula: string, nombreProf: any, materialesPeticion: any[]): Promise<boolean> {
+    const collectionRef = collection(this.db, 'peticionesMaterial');
+    const solicitud = {
+      aula,
+      nombreProf,
+      materiales: materialesPeticion,
+    };
+    try {
+      await addDoc(collectionRef, solicitud);
+      console.log('Solicitud guardada con éxito:', solicitud);
+      return true;
+    } catch (error) {
+      console.error('Error al guardar la solicitud:', error);
+      return false;
+    }
+  }
 }
