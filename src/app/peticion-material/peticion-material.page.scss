@@ -3,5 +3,28 @@ ion-title{
     width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
     font-size: 34px;
     color: #005682;
-    padding: 2%;
+}
+ion-grid{
+    text-align: center;
+    width: 100%; 
+    font-size: 25px;
+    color: #005682;
+}
+
+.normal-button{
+    background-color: #005682;
+}
+span{
+    margin-right: 5%;
+    margin-top: 3%;
+}
+.material-container{
+    padding-left: 20%;
+    padding-right: 25%;
+}
+.align-correctly{
+    padding-top: 1%;
+}
+.create-task-button{
+    margin-left: 80%;
 }

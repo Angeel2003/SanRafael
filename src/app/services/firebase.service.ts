@@ -389,4 +389,16 @@ export class FirebaseService {
       return [];
     }
   }
+
+  //Crear tarea material
+  async addMaterialTask(materialTask: any): Promise<void>{
+    const tasksCollection = collection(this.db, 'tarea-material');
+    try {
+      await addDoc(tasksCollection, materialTask);
+      console.log('Tarea de Material guardada con éxito');
+    } catch (error) {
+      console.error('Error al guardar la tarea de Material: ', error);
+      throw new Error('Error al guardar la tarea de Material');
+    }
+  }
 }

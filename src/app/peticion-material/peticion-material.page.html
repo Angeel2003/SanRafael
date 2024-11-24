@@ -8,5 +8,23 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <p *ngFor="let peticion of this.peticionesMaterial">{{peticion.nombreProf}}</p>
+  <ion-grid>
+    <ion-row *ngFor="let peticion of this.peticionesMaterial; let i = index">
+      <ion-col><p class="align-correctly"><span><strong>Nombre: </strong>{{peticion.nombreProf}}</span><span><strong>Aula: </strong>{{peticion.aula}}</span></p></ion-col>
+      <ion-col>
+        <p>
+        <ion-button (click)="desplegarMaterial(i)" *ngIf="!desplegarMateriales[i]"><ion-icon name="chevron-down-outline"></ion-icon></ion-button> <!--Si es false que muestre la flecha para abajo-->
+        <ion-button (click)="desplegarMaterial(i)" *ngIf="desplegarMateriales[i]"><ion-icon name="chevron-up-outline"></ion-icon></ion-button>    <!--Si es true que muestre la flecha para arriba-->
+        </p>
+      </ion-col>
+      <ion-col size="12" class="material-container" *ngIf="desplegarMateriales[i]">
+        <ion-list>
+          <ion-item *ngFor="let material of peticion.materiales">
+            <ion-label>{{ material.nombreMaterial }}</ion-label><ion-label>{{ material.color }}</ion-label><ion-label>{{ material.tamanio }}</ion-label><ion-label>{{ material.cantidad }}</ion-label>
+          </ion-item>
+          <ion-button class="create-task-button" (click)="goToMaterialTask(i)">Crear Tarea Material</ion-button>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
