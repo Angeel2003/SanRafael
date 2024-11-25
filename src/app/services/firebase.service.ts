@@ -394,7 +394,8 @@ export class FirebaseService {
     try{
       const requestCollection = collection(this.db, 'peticionesMaterial');
       const snapshot = await getDocs(requestCollection);
-      const request = snapshot.docs.map(doc => ({
+      let request = [];
+      request = snapshot.docs.map(doc => ({
         id: doc.id,
         ...(doc.data())
       }));
@@ -406,15 +407,21 @@ export class FirebaseService {
     }
   }
 
-  //Crear tarea material
-  async addMaterialTask(materialTask: any): Promise<void>{
-    const tasksCollection = collection(this.db, 'tarea-material');
-    try {
-      await addDoc(tasksCollection, materialTask);
-      console.log('Tarea de Material guardada con éxito');
-    } catch (error) {
-      console.error('Error al guardar la tarea de Material: ', error);
-      throw new Error('Error al guardar la tarea de Material');
-    }
+  //Comprobar si una coleccion esta vacia o no
+   isCollectionEmpty(collectionName: string): Observable<boolean | null> {
+    const collectionRef = collection(this.db, collectionName);
+  
+    return new Observable(observer => {
+      getDocs(collectionRef)
+        .then(snapshot => {
+          observer.next(snapshot.empty); // Emite true si está vacía, false si no.
+          observer.complete();
+        })
+        .catch(error => {
+          console.error('Error al comprobar la colección:', error);
+          observer.next(null); // Emite null en caso de error.
+          observer.complete();
+        });
+    });
   }
 }
