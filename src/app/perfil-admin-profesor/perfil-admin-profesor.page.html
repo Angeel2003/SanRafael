@@ -34,10 +34,11 @@
 
       <ion-col class="tasks-buttons" size="3">
         <ion-button (click)="crearTareaPorPasos()" expand="block">Crear Tarea por Pasos</ion-button>
-        <ion-button (click)="crearTareaDeMaterial()" expand="block">Crear Tarea de Material</ion-button>
+        <ion-button *ngIf="!this.isEmpty" class="request-notification" (click)="peticionMaterial()" expand="block">Peticion Material</ion-button> <!--Si hay peticiones de material-->
+        <ion-button *ngIf="this.isEmpty" (click)="peticionMaterial()" expand="block">Peticion Material</ion-button> <!--Si no hay peticiones de material-->
         <ion-button (click)="crearTareaDeComedor()" expand="block">Crear Tarea de Comanda</ion-button>
       </ion-col>
-
+      
       <ion-col class="options-buttons" size="3">
         <ion-button (click)="modificarMenu()" expand="block">Modificar Menú Existentes</ion-button>
         <ion-button (click)="gestionarTareas()" expand="block">Gestionar Tareas Existentes</ion-button>
@@ -66,10 +67,6 @@
 
       <ion-col class="sin-colocar" size="3">
         <ion-button (click)="modificarTareaMaterial()" expand="block">Modificar material</ion-button>
-      </ion-col>
-
-      <ion-col class="sin-colocar" size="3">
-        <ion-button (click)="peticionMaterial()" expand="block">Peticion Material</ion-button>
       </ion-col>
     </ion-row>
 
