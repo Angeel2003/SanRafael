@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title>AGENDA</ion-title>
     <div style="text-align: center; width: 100%">
-      <img [src]="imgAgenda" alt="Imagen de agenda" style="max-width: 100px; height: auto; display: inline-block"/>
+      <img [src]="imgAgenda" alt="Imagen de agenda" style="max-width: 100px; height: auto; display: inline-block" />
     </div>
   </ion-toolbar>
 </ion-header>
@@ -21,7 +21,8 @@
 
   <!-- Contenido principal -->
   <ng-template #content>
-    <ng-container *ngIf="tareas && tareas.length > 0; else noTareas">
+    <!-- Mostrar tareas si existen -->
+    <ng-container *ngIf="tareas.length > 0; else noTareas">
       <ion-grid>
         <ion-row *ngFor="let tarea of tareas; let i = index">
           <ion-col size="2">
@@ -42,13 +43,13 @@
               <ion-label style="font-style: italic; color: #005682;">Sin imagen</ion-label>
             </ng-template>
           </ion-col>
-          
         </ion-row>
       </ion-grid>
     </ng-container>
 
+    <!-- Mostrar mensaje si no hay tareas -->
     <ng-template #noTareas>
-      <div class="no-tareas">
+      <div class="no-tareas" style="text-align: center; margin-top: 20px; font-style: italic;">
         NO HAY TAREAS ASIGNADAS
       </div>
     </ng-template>
