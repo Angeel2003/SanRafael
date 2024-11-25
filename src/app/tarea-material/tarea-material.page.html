@@ -14,8 +14,8 @@
 
   <ion-item>
     <ion-label>Foto de la tarea</ion-label>
-    <div *ngIf="imgTarea">
-      <img [src]="imgTarea" alt="Vista previa de la tarea" style="width: 100px; height: auto;" />
+    <div *ngIf="previewUrl">
+      <img [src]="previewUrl" alt="Vista previa de la tarea" style="width: 100px; height: auto;" />
     </div>
     <input type="file" accept="image/*" (change)="imgTareaPreview($event)" />
   </ion-item>

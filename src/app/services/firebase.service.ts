@@ -284,6 +284,7 @@ export class FirebaseService {
     }
   }
 
+  //Agenda
   async getTareasForUser(userId: string): Promise<Tarea[]> {
     const alumnoDocRef = doc(this.db, 'alumnos', userId); // Referencia al documento del alumno
     try {
@@ -303,7 +304,7 @@ export class FirebaseService {
       // Mapea las tareas a la estructura esperada
       const mappedTareas: Tarea[] = tareasAsignadas.map((tarea: any) => ({
         nombre: tarea.nombreTarea || '',
-        imagen: tarea.imagen || '',
+        imagen: '',
         horaIni: tarea.fechaInicio || '',
         horaFin: tarea.fechaFin || ''
       }));
@@ -314,6 +315,20 @@ export class FirebaseService {
       console.error("Error al obtener las tareas del alumno:", error);
       throw error;
     }
+  }
+
+  async getTareasDeColeccion(collectionName: string): Promise<any[]> {
+    const querySnapshot = await getDocs(collection(this.db, collectionName));
+    const tareas: any[] = [];
+  
+    querySnapshot.forEach(doc => {
+      tareas.push({
+        id: doc.id, // Guarda el ID del documento
+        ...doc.data() // Guarda todos los atributos del documento
+      });
+    });
+  
+    return tareas;
   }
 
 

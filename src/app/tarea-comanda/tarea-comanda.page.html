@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/admin-dentro"></ion-back-button> <!-- Ajusta la ruta si es necesario -->
+      <ion-back-button defaultHref="/perfil-admin-profesor"></ion-back-button> <!-- Ajusta la ruta si es necesario -->
     </ion-buttons>
     <ion-title>Tarea Comanda</ion-title>
   </ion-toolbar>
@@ -13,7 +13,7 @@
     <!--Estructura de columna: Menu-Pictograma-Cantidad -->
     <ion-row *ngFor="let menu of menus; let i = index">
       <ion-col><p style="font-size: 150%;">{{ menu.name }}</p></ion-col>
-      <ion-col><img [src]='menu.img' alt="Imagen de elemento {{menu.name}}"></ion-col>
+      <ion-col><img [src]='menu.previewUrl' alt="Imagen de elemento {{menu.name}}"></ion-col>
       <ion-col>
                 <p>
                     <button class="numButton" (click)="Decrementar(i)">-</button>

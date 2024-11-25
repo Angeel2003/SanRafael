@@ -25,20 +25,43 @@ export interface Tarea {
 export class AgendaPage implements OnInit {
 
   tareas: Tarea[] = [];
+  tareasCompletas: any[] = [];
+  loading: boolean = true;
 
   constructor(private firebaseService: FirebaseService) {
-    addIcons({
-    })
-
-    // this.tareas.push({nombre: "A", imagen: '', horaIni: "10:00", horaFin: "13:00"});
-    // this.tareas.push({nombre: "B", imagen: '', horaIni: "10:00", horaFin: "13:00"});
+    this.cargarTareasCompletas();
+  }
+  
+  async cargarTareasCompletas(): Promise<void> {
+    const collectionNames = ['tarea-por-pasos', 'tarea-material', 'tarea-comanda'];
+  
+    for (const collectionName of collectionNames) {
+      // Obtiene todas las tareas de la colección
+      const tareas = await this.firebaseService.getTareasDeColeccion(collectionName);
+  
+      // Combina las tareas obtenidas con las ya existentes
+      this.tareasCompletas = this.tareasCompletas.concat(tareas);
+    }
+  
+    console.log('Tareas completas:', this.tareasCompletas);
   }
 
   ngOnInit() {
     this.loadTareas();
   }
 
-  loading: boolean = true;
+
+  getPreviewFromTask(taskName: string){
+    let preview = '';
+
+    for(let i = 0; i < this.tareasCompletas.length; i++){
+      if(this.tareasCompletas[i].nombre == taskName){
+        preview = this.tareasCompletas[i].previewUrl;
+      }
+    }
+
+    return preview;
+  }
 
   async loadTareas() {
     const userId = localStorage.getItem('userId');
@@ -54,7 +77,7 @@ export class AgendaPage implements OnInit {
       console.log("Tareas obtenidas desde Firebase: ", tareasFromFirebase);
       this.tareas = tareasFromFirebase.map((tarea: Tarea) => ({
         nombre: tarea.nombre || '',
-        imagen: tarea.imagen || '',
+        imagen: this.getPreviewFromTask(tarea.nombre),
         horaIni: tarea.horaIni || '',
         horaFin: tarea.horaFin || ''
       }));
@@ -65,6 +88,8 @@ export class AgendaPage implements OnInit {
       this.loading = false; // Desactivar indicador de carga
     }
   }
+
+  
 }
 
 

@@ -32,7 +32,7 @@ interface MaterialItem {
 
 export class TareaMaterialPage implements OnInit {
   taskName: string = '';
-  imgTarea: string = '';
+  previewUrl: string = '';
   items: MaterialItem[] = [];
 
 
@@ -51,7 +51,7 @@ export class TareaMaterialPage implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length){
       const file = input.files[0];
-      this.imgTarea = URL.createObjectURL(file);
+      this.previewUrl = URL.createObjectURL(file);
     }
   }
 
@@ -203,24 +203,24 @@ export class TareaMaterialPage implements OnInit {
 
   canSave(): boolean {
     // Verifica que el nombre de la tarea esté completo y todos los campos de los materiales estén completos
-    return !!this.taskName && !!this.imgTarea && this.canAddItem();
+    return !!this.taskName && !!this.previewUrl && this.canAddItem();
   }
 
   async save() {
     if (this.canSave()){
       const dataToSave: any = {
         nombre: this.taskName,
-        img: '',
+        previewUrl: '',
         items: this.items,
       };
     
 
-      if (this.imgTarea){
+      if (this.previewUrl){
         const path = `imagenes/imagen_tarea_material_${this.taskName}.png`;
-        const fileBlob = await fetch(this.imgTarea).then(r => r.blob());
-        await this.firebaseService.uploadFile(new File([fileBlob], `${this.imgTarea}.png`), path); // Sube el archivo con el nombre del material
+        const fileBlob = await fetch(this.previewUrl).then(r => r.blob());
+        await this.firebaseService.uploadFile(new File([fileBlob], `${this.previewUrl}.png`), path); // Sube el archivo con el nombre del material
         const downloadUrl = await this.firebaseService.getDownloadURL(path);
-        dataToSave.img = downloadUrl; // Guarda la URL descargable
+        dataToSave.previewUrl = downloadUrl; // Guarda la URL descargable
       }
 
       // Subir las imágenes a Firebase antes de guardar
@@ -230,7 +230,7 @@ export class TareaMaterialPage implements OnInit {
 
       await this.firebaseService.guardarTareaMaterial(dataToSave);
       console.log('Datos guardados: ', this.items);
-      this.router.navigate(['/admin-dentro']);
+      this.router.navigate(['/perfil-admin-profesor']);
       this.mostrarToast('Tarea material guardada', true);
     } else {
       this.mostrarToast('Faltan campos por rellenar (debe haber nombre e imagen de la tarea y nombre, aula y cantidad de cada item)', false);
