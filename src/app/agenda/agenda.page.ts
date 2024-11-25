@@ -8,9 +8,7 @@ import { FirebaseService } from '../services/firebase.service';
 
 export interface Tarea {
   nombre: string,
-  imagen: string,
-  horaIni: string,
-  horaFin: string
+  imagen: string
 }
 
 @Component({
@@ -20,52 +18,64 @@ export interface Tarea {
   standalone: true,
   imports: [IonSpinner, IonLabel, IonItem, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonIcon, IonGrid, IonRow, IonButtons, IonBackButton]
 })
-
-
 export class AgendaPage implements OnInit {
 
   tareas: Tarea[] = [];
+  imgAgenda: string = '';
+  loading: boolean = true;
 
   constructor(private firebaseService: FirebaseService) {
     addIcons({
     })
-
-    // this.tareas.push({nombre: "A", imagen: '', horaIni: "10:00", horaFin: "13:00"});
-    // this.tareas.push({nombre: "B", imagen: '', horaIni: "10:00", horaFin: "13:00"});
   }
 
   ngOnInit() {
+    const imagePath = 'pictogramas/agenda.png';
     this.loadTareas();
+    this.loadImagen(imagePath);
   }
 
-  loading: boolean = true;
+  // Cargar imagen icono agenda
+  async loadImagen(imagePath: string) {
+    //console.log(imagePath);
 
+    try {
+      this.imgAgenda = await this.firebaseService.getImageUrl(imagePath);
+    } catch (error) {
+      console.error("Error al cargar la imagen: ", error);
+      this.imgAgenda = '';
+    }
+  }
+
+  // Cargar tareas de la base de datos
   async loadTareas() {
     const userId = localStorage.getItem('userId');
     if (!userId) {
       console.error("User ID not found in localStorage");
+      this.tareas = [];
+      this.loading = false;
       return;
     }
-
-    this.loading = true; // Activar indicador de carga
-
+  
     try {
       const tareasFromFirebase = await this.firebaseService.getTareasForUser(userId);
-      console.log("Tareas obtenidas desde Firebase: ", tareasFromFirebase);
-      this.tareas = tareasFromFirebase.map((tarea: Tarea) => ({
-        nombre: tarea.nombre || '',
-        imagen: tarea.imagen || '',
-        horaIni: tarea.horaIni || '',
-        horaFin: tarea.horaFin || ''
-      }));
-      console.log("Tareas cargadas:", this.tareas);
+      console.log("Datos obtenidos de Firebase:", tareasFromFirebase);
+  
+      this.tareas = tareasFromFirebase
+        .map((tarea: Tarea) => ({
+          nombre: tarea.nombre || 'Sin nombre',
+          imagen: tarea.imagen || ''
+        }))
+        .filter(tarea => tarea.nombre !== 'Sin nombre'); // Filtrar tareas no válidas
+  
+      console.log("Tareas válidas después del filtro:", this.tareas);
     } catch (error) {
-      console.error("Error fetching tasks:", error);
+      console.error("Error al obtener las tareas:", error);
+      this.tareas = [];
     } finally {
-      this.loading = false; // Desactivar indicador de carga
+      this.loading = false;
     }
   }
+  
+  
 }
-
-
-

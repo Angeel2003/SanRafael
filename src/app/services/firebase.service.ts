@@ -284,35 +284,51 @@ export class FirebaseService {
     }
   }
 
+  //Agenda
   async getTareasForUser(userId: string): Promise<Tarea[]> {
     const alumnoDocRef = doc(this.db, 'alumnos', userId); // Referencia al documento del alumno
+  
     try {
       const alumnoDocSnapshot = await getDoc(alumnoDocRef); // Obtiene el documento del alumno
-
+  
       if (!alumnoDocSnapshot.exists()) {
         console.warn("No se encontró el alumno con ID:", userId);
-        return [];
+        return []; // Devuelve un array vacío si el documento no existe
       }
-
+  
       const alumnoData = alumnoDocSnapshot.data(); // Datos del alumno
-      console.log("Datos del alumno:", alumnoData);
-
       const tareasAsignadas = alumnoData?.['tareasAsig'] || []; // Obtén las tareas asignadas, si existen
-      console.log("Tareas asignadas:", tareasAsignadas);
-
+  
+      if (!Array.isArray(tareasAsignadas) || tareasAsignadas.length === 0) {
+        console.log("El alumno no tiene tareas asignadas.");
+        return []; // Devuelve un array vacío si no hay tareas
+      }
+  
       // Mapea las tareas a la estructura esperada
       const mappedTareas: Tarea[] = tareasAsignadas.map((tarea: any) => ({
-        nombre: tarea.nombreTarea || '',
-        imagen: tarea.imagen || '',
-        horaIni: tarea.fechaInicio || '',
-        horaFin: tarea.fechaFin || ''
+        nombre: tarea.nombreTarea || 'Sin nombre',
+        imagen: tarea.imagen || '', // Si no hay imagen, devuelve un string vacío
       }));
+  
       console.log("Tareas mapeadas:", mappedTareas);
-
       return mappedTareas;
     } catch (error) {
       console.error("Error al obtener las tareas del alumno:", error);
-      throw error;
+      return []; // En caso de error, devuelve un array vacío
+    }
+  }
+  
+
+  // Bajar iamgen de Firebase
+  async getImageUrl(path: string): Promise<string>{
+    const storageRef = ref(this.storage, path);
+    try{
+      const url = await getDownloadURL(storageRef);
+      console.log('URL de la imagen obtenida: ', url);
+      return url;
+    } catch (error){
+      console.error('Error al obtener la URL de la imagen: ', error);
+      throw new Error('No se pudo obtener la imagen');
     }
   }
 

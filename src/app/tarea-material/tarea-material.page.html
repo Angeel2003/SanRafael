@@ -30,7 +30,7 @@
     <ion-row class="material" *ngFor="let item of items; let i = index">
       <ion-col size="2">
         <ion-item>
-          <ion-input [(ngModel)]="item.material" placeholder="Material {{i + 1}}"></ion-input>
+          <ion-input [(ngModel)]="item.material" placeholder="Material {{i + 1}}" (ngModelChange)="onMaterialChange(i)"></ion-input>
         </ion-item>
       </ion-col>
       <ion-col size="4">
@@ -81,7 +81,7 @@
           <ion-input [(ngModel)]="item.cantidad" placeholder="Cantidad {{i + 1}}"></ion-input>
         </ion-item>
         <ion-item>
-          <div *ngIf="item.imgCantidad">
+          <div *ngIf="item.imgCantidad" (ngModelChange)="onCantidadChange(i)">
             <img [src]="item.imgCantidad" alt="Vista previa de la cantidad del material" style="width: 100px; height: auto;" />
           </div>
           <input type="file" accept="image/*" (change)="imgCantidad($event, i)" class="small-file-input" />
