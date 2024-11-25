@@ -284,35 +284,51 @@ export class FirebaseService {
     }
   }
 
+  //Agenda
   async getTareasForUser(userId: string): Promise<Tarea[]> {
     const alumnoDocRef = doc(this.db, 'alumnos', userId); // Referencia al documento del alumno
+  
     try {
       const alumnoDocSnapshot = await getDoc(alumnoDocRef); // Obtiene el documento del alumno
-
+  
       if (!alumnoDocSnapshot.exists()) {
         console.warn("No se encontró el alumno con ID:", userId);
-        return [];
+        return []; // Devuelve un array vacío si el documento no existe
       }
-
+  
       const alumnoData = alumnoDocSnapshot.data(); // Datos del alumno
-      console.log("Datos del alumno:", alumnoData);
-
       const tareasAsignadas = alumnoData?.['tareasAsig'] || []; // Obtén las tareas asignadas, si existen
-      console.log("Tareas asignadas:", tareasAsignadas);
-
+  
+      if (!Array.isArray(tareasAsignadas) || tareasAsignadas.length === 0) {
+        console.log("El alumno no tiene tareas asignadas.");
+        return []; // Devuelve un array vacío si no hay tareas
+      }
+  
       // Mapea las tareas a la estructura esperada
       const mappedTareas: Tarea[] = tareasAsignadas.map((tarea: any) => ({
-        nombre: tarea.nombreTarea || '',
-        imagen: tarea.imagen || '',
-        horaIni: tarea.fechaInicio || '',
-        horaFin: tarea.fechaFin || ''
+        nombre: tarea.nombreTarea || 'Sin nombre',
+        imagen: tarea.imagen || '', // Si no hay imagen, devuelve un string vacío
       }));
+  
       console.log("Tareas mapeadas:", mappedTareas);
-
       return mappedTareas;
     } catch (error) {
       console.error("Error al obtener las tareas del alumno:", error);
-      throw error;
+      return []; // En caso de error, devuelve un array vacío
+    }
+  }
+  
+
+  // Bajar iamgen de Firebase
+  async getImageUrl(path: string): Promise<string>{
+    const storageRef = ref(this.storage, path);
+    try{
+      const url = await getDownloadURL(storageRef);
+      console.log('URL de la imagen obtenida: ', url);
+      return url;
+    } catch (error){
+      console.error('Error al obtener la URL de la imagen: ', error);
+      throw new Error('No se pudo obtener la imagen');
     }
   }
 
@@ -346,6 +362,90 @@ export class FirebaseService {
     } catch (error) {
       console.error('Error al obtener imágenes de Firebase Storage:');
       throw new Error('No se pudieron obtener las imágenes desde Storage.');
+    }
+  }
+  //Gestionar material
+  async guardarMaterialesAlmacen(taskData: any): Promise<boolean> {
+    const tasksCollection = collection(this.db, 'materiales');
+    try {
+      await addDoc(tasksCollection, taskData);
+      console.log('Materiales guardados con éxito');
+      return true;
+    } catch (error) {
+      console.error('Error al guardar materiales: ', error);
+      return false;
+    }
+  }
+
+  async getNombreMaterialesAlmacen(): Promise<string[]>{
+    const collectionName = 'materiales';
+    let materialNames: string[] = [];
+
+    const querySnapshot = await getDocs(collection(this.db, collectionName));
+
+    querySnapshot.forEach(doc => {
+      const data = doc.data();
+      materialNames.push(data['nombreMaterial']);
+    });
+
+    return materialNames;
+  }
+
+  //Peticion material profesor
+  async saveMaterialRequest(aula: string, nombreProf: any, materialesPeticion: any[]): Promise<boolean> {
+    const collectionRef = collection(this.db, 'peticionesMaterial');
+    const solicitud = {
+      aula,
+      nombreProf,
+      materiales: materialesPeticion,
+    };
+    try {
+      await addDoc(collectionRef, solicitud);
+      console.log('Solicitud guardada con éxito:', solicitud);
+      return true;
+    } catch (error) {
+      console.error('Error al guardar la solicitud:', error);
+      return false;
+    }
+  }
+
+  async getCollection(collectionName: string): Promise<any[]> {
+    const snapshot = await getDocs(collection(this.db, collectionName));
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async deleteDocument(collectionName: string, docId: string): Promise<void> {
+    const docRef = doc(this.db, collectionName, docId);
+    await deleteDoc(docRef);
+  }
+  
+
+  //Obtener Peticiones Material
+  async getMaterialRequest(): Promise<any[]>{
+    try{
+      const requestCollection = collection(this.db, 'peticionesMaterial');
+      const snapshot = await getDocs(requestCollection);
+      const request = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...(doc.data())
+      }));
+      console.log("Peticion de material obtenido exitosamente");
+      return request
+    }catch(error){
+      console.error("Error al obtener las peticiones de materiales:", error);
+      return [];
+    }
+  }
+
+  //Crear tarea material
+  async addMaterialTask(materialTask: any): Promise<void>{
+    const tasksCollection = collection(this.db, 'tarea-material');
+    try {
+      await addDoc(tasksCollection, materialTask);
+      console.log('Tarea de Material guardada con éxito');
+    } catch (error) {
+      console.error('Error al guardar la tarea de Material: ', error);
+      throw new Error('Error al guardar la tarea de Material');
     }
   }
 }

@@ -1,0 +1,95 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/perfil-admin-profesor"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Solicitar material</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label>{{nombreProf}}</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-input placeholder="Aula" [(ngModel)]="aula"></ion-input>
+  </ion-item>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="3" offset="1">
+        <ion-label class="cabecera-label">Material</ion-label>
+      </ion-col>
+      <ion-col size="5">
+        <ion-label class="cabecera-label">Características</ion-label>
+      </ion-col>
+      <ion-col size="2">
+        <ion-label class="cabecera-label">Cantidad</ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid>
+    <ion-row *ngFor="let materialPet of materialesPeticion; let i = index">
+      <ion-col size="3" offset="1">
+        <ion-item>
+          <ion-label>Material</ion-label>
+          <ion-select [(ngModel)]="selectedMaterial[i]" interface="popover" (ionChange)="onSelectMaterial($event, i)"  (ionBlur)="handleBlur()">
+            <ion-select-option *ngFor="let material of materialsAlmacen" [value]="material">{{ material }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+      <ion-col size="5">
+        <ion-row>
+          <!-- Tamaños -->
+          <ion-col size="5" class="sizes">
+            <ion-radio-group [(ngModel)]="materialPet.tamanio">
+              <ion-item>
+                <ion-radio value="pequenio" labelPlacement="fixed">Pequeño</ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-radio value="mediano" labelPlacement="fixed">Mediano</ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-radio value="grande" labelPlacement="fixed">Grande</ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          </ion-col>
+      
+          <!-- Colores -->
+          <ion-col size="5">
+            <ion-item>
+              <ion-select interface="popover" placeholder="Color" [(ngModel)]="materialPet.color">
+                <ion-select-option value="azul">Azul</ion-select-option>
+                <ion-select-option value="negro">Negro</ion-select-option>
+                <ion-select-option value="verde">Verde</ion-select-option>
+                <ion-select-option value="rojo">Rojo</ion-select-option>
+                <ion-select-option value="blanco">Blanco</ion-select-option>
+                <ion-select-option value="amarillo">Amarillo</ion-select-option>
+                <ion-select-option value="naranja">Naranja</ion-select-option>
+                <ion-select-option value="rosa">Rosa</ion-select-option>
+                <ion-select-option value="marron">Marrón</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+      <ion-col size="2">
+        <ion-item>
+          <ion-input placeholder="Cantidad" type="number" [(ngModel)]="materialPet.cantidad"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-col size="auto">
+    <ion-button class="add-material-button" (click)="addMaterialPet()">
+      <ion-icon class="icon-add" name="add-outline"></ion-icon>
+      <ion-label>Añadir material</ion-label>
+    </ion-button>
+  </ion-col>
+</ion-content>
+
+<ion-footer>
+  <ion-button class="request-button" expand="full" (click)="request()">Solicitar</ion-button>
+</ion-footer>

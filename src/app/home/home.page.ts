@@ -4,8 +4,6 @@ import { addIcons } from 'ionicons';
 import { Router } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton} from '@ionic/angular/standalone';
 
-import { FirebaseService } from '../services/firebase.service';
-
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -14,7 +12,7 @@ import { FirebaseService } from '../services/firebase.service';
   imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton], 
 })
 export class HomePage {
-  constructor(private router: Router, private firebaseService: FirebaseService){
+  constructor(private router: Router){
     addIcons({
       personOutline
     })

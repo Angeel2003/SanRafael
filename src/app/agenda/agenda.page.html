@@ -3,7 +3,10 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/user-list"></ion-back-button>
     </ion-buttons>
-    <ion-title>Agenda</ion-title>
+    <ion-title>AGENDA</ion-title>
+    <div style="text-align: center; width: 100%">
+      <img [src]="imgAgenda" alt="Imagen de agenda" style="max-width: 100px; height: auto; display: inline-block" />
+    </div>
   </ion-toolbar>
 </ion-header>
 
@@ -12,22 +15,23 @@
   <ng-container *ngIf="loading; else content">
     <div class="loading-spinner">
       <ion-spinner name="crescent"></ion-spinner>
-      <p>Cargando tareas...</p>
+      <p>CARGANDO TAREAS...</p>
     </div>
   </ng-container>
 
   <!-- Contenido principal -->
   <ng-template #content>
-    <ng-container *ngIf="tareas && tareas.length > 0; else noTareas">
+    <!-- Mostrar tareas si existen -->
+    <ng-container *ngIf="tareas.length > 0; else noTareas">
       <ion-grid>
         <ion-row *ngFor="let tarea of tareas; let i = index">
-          <ion-col size="1">
-            <ion-label>Tarea {{ i + 1 }}</ion-label>
-          </ion-col>
           <ion-col size="2">
+            <ion-label>TAREA {{ i + 1 }}</ion-label>
+          </ion-col>
+          <ion-col size="5">
             <ion-label>{{ tarea.nombre }}</ion-label>
           </ion-col>
-          <ion-col size="4">
+          <ion-col size="3">
             <ng-container *ngIf="tarea.imagen; else noImagen">
               <img 
                 [src]="tarea.imagen" 
@@ -39,19 +43,14 @@
               <ion-label style="font-style: italic; color: #005682;">Sin imagen</ion-label>
             </ng-template>
           </ion-col>
-          <ion-col size="2">
-            <ion-label>Empieza a las {{ tarea.horaIni }}</ion-label>
-          </ion-col>
-          <ion-col size="2">
-            <ion-label>Termina a las {{ tarea.horaFin }}</ion-label>
-          </ion-col>
         </ion-row>
       </ion-grid>
     </ng-container>
 
+    <!-- Mostrar mensaje si no hay tareas -->
     <ng-template #noTareas>
-      <div class="no-tareas">
-        No hay tareas asignadas
+      <div class="no-tareas" style="text-align: center; margin-top: 20px; font-style: italic;">
+        NO HAY TAREAS ASIGNADAS
       </div>
     </ng-template>
   </ng-template>

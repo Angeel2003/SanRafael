@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonGrid, IonRow, IonCol, IonButton } from '@ionic/angular/standalone';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 
 @Component({
   selector: 'app-perfil-admin-profesor',
@@ -57,18 +57,24 @@ export class PerfilAdminProfesorPage implements OnInit {
   }
 
   gestionarTareas() {
-    console.log("Solicitando material por parte del profesor");
-    console.log("Descomentar cuando este implementado");
-    // this.router.navigate(['/solicitar-material']);
+    this.router.navigate(['/gestionar-tareas']);
   }
 
-  solicitarMaterial() {
-    console.log("Solicitando material por parte del profesor");
-    console.log("Descomentar cuando este implementado");
-    // this.router.navigate(['/solicitar-material']);
+  gestionarMateriales() {
+    this.router.navigate(['/gestionar-material-admin']);
   }
 
+  solicitarMaterial(nombre: string) {
+    console.log('Nombre del profesor:', nombre);
+    const navigationExtras: NavigationExtras = {
+      state: {
+        nombre: nombre
+      }
+    };
+    this.router.navigate(['/solicitar-material-profe'], navigationExtras);
+  }
 
+  
 
 
   // BOTONES SIN COLOCAR
@@ -76,12 +82,11 @@ export class PerfilAdminProfesorPage implements OnInit {
     this.router.navigate(['/asignar-tarea']);
   }
 
-  modificarTareaPorPasos() {
-    this.router.navigate(['/modificar-tarea-pasos']);
-  }
-
   modificarTareaMaterial() {
     this.router.navigate(['/modificar-tarea-material']);
   }
 
+  peticionMaterial() {
+    this.router.navigate(['/peticion-material']);
+  }
 }
