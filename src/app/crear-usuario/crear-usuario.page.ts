@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController } from '@ionic/angular';
 import { QueryList, ViewChildren, ElementRef } from '@angular/core';
 import { FirebaseService } from '../services/firebase.service';
 import { Router } from '@angular/router';
-
-
+import { eyeOff, eye } from 'ionicons/icons';
+import { lockClosedOutline } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
 
 @Component({
   selector: 'app-crear-usuario',
@@ -28,7 +29,7 @@ export class CrearUsuarioPage implements OnInit {
   //   video: false,
   //   pictogramas: false
   // };
-  
+
   // // Lista de URLs de imágenes cargadas (máximo 6 imágenes)
   // selectedImages: (string | null)[] = [null, null, null, null, null, null];
 
@@ -50,42 +51,160 @@ export class CrearUsuarioPage implements OnInit {
   // Contraseña compuesta por los nombres de las imágenes seleccionadas
   password: string = '';
 
+  // Contraseña de tipo texto
+  textPassword: string = '';
+
+
+  passwordVisible: boolean = false;
+
+  maxSelections: number = 3; // Máximo número de imágenes seleccionables
+  currentSelections: number = 0;
+
+  selectedImagesOrder: string[] = []; // Array para almacenar las URLs de los pictogramas seleccionados
+
+  profileImageUrl: string | null = null; // Para almacenar la URL de la imagen de perfil
+  profileImageFile: File | null = null; // Variable para almacenar la imagen temporalmente
+
+  nombre: string = '';
+  usuario: string = '';
+
   // Referencia a los inputs de archivo
   @ViewChildren('fileInput') fileInputs!: QueryList<ElementRef<HTMLInputElement>>;
 
-  constructor(private firebaseService: FirebaseService, private router: Router) { }
+  constructor(private firebaseService: FirebaseService, private router: Router,
+    private toastController: ToastController) {
+    addIcons({
+      eyeOff,
+      eye,
+      lockClosedOutline
+    });
+  }
 
-  ngOnInit() { }
+  ngOnInit() {
+    console.log('ngOnInit ejecutado'); // Para verificar que el componente se inicializa
+    this.loadPictogramImages(); // Llama a la función para cargar imágenes
+  }
 
-  async guardarPerfil() {
-    const timestamp = new Date().getTime();
-    const perfilData: any = {
-      nombre: '', // Reemplazar con el valor correspondiente de nombre del usuario
-      accessLevel: this.accessibilityLevel,
-      passwordType: this.passwordType,
-      imagePasswordUrls: [],
-    };
 
-    // Subir imágenes de la contraseña y agregar URLs al perfilData
-    for (const [index, selected] of this.selectedForPassword.entries()) {
-      if (selected && this.selectedImages[index]) {
-        const path = `usuarios/${perfilData.nombre}/password_imagen_${index}_${timestamp}.png`;
-        await this.firebaseService.uploadFile(this.selectedImages[index] as File, path);
-        const downloadUrl = await this.firebaseService.getDownloadURL(path);
-        perfilData.imagePasswordUrls.push(downloadUrl);
-      }
-    }
-
-    // Guardar perfil en Firestore a través del servicio
+  async loadPictogramImages() {
+    console.log('Cargando imágenes desde Firebase Storage...');
     try {
-      await this.firebaseService.guardarPerfil(perfilData);
-      console.log('Perfil guardado con éxito en Firestore');
-    } catch (e) {
-      console.error('Error al guardar el perfil:', e);
+      // Llamar a la función que obtiene las primeras 6 imágenes
+      this.selectedImageUrls = await this.firebaseService.getPictogramImagesFromStorage();
+
+      console.log('Imágenes cargadas:', this.selectedImageUrls);
+
+      if (this.selectedImageUrls.length === 0) {
+        console.warn('No se cargaron imágenes.');
+      }
+
+      this.selectedForPassword = Array(this.selectedImageUrls.length).fill(false);
+    } catch (error) {
+      console.error('Error al cargar imágenes de pictogramas:');
     }
   }
 
-  // Función para abrir el input file correspondiente
+  onPasswordTypeChange() {
+    if (this.passwordType === 'pictogramas') {
+      this.loadPictogramImages(); // Carga imágenes si se seleccionan pictogramas
+    } else {
+      // Restablece los datos si se selecciona otro tipo de contraseña
+      this.selectedImageUrls.fill(null);
+      this.selectedImages.fill(null);
+      this.imageNames.fill(null);
+      this.selectedForPassword.fill(false);
+      this.selectedOrder = [];
+      this.password = '';
+    }
+  }
+  toggleTextPasswordVisibility() {
+    this.passwordVisible = !this.passwordVisible;
+
+    const passwordInput = document.getElementById('textPasswordInput') as HTMLInputElement;
+    const toggleIcon = document.getElementById('toggleTextPasswordIcon') as HTMLIonIconElement;
+
+    if (this.passwordVisible) {
+      passwordInput.type = 'text';
+      toggleIcon.name = 'eye';
+    } else {
+      passwordInput.type = 'password';
+      toggleIcon.name = 'eye-off';
+    }
+  }
+
+  async guardarPerfil() {
+    // Validar campos obligatorios
+    if (!this.nombre.trim()) {
+      await this.showToast('Por favor, ingresa un nombre.', 'danger');
+      return;
+    }
+  
+    if (!this.usuario.trim()) {
+      await this.showToast('Por favor, ingresa un usuario.', 'danger');
+      return;
+    }
+  
+    if (!this.passwordType) {
+      await this.showToast('Por favor, selecciona un tipo de contraseña.', 'danger');
+      return;
+    }
+  
+    if (this.passwordType === 'texto' && !this.textPassword.trim()) {
+      await this.showToast('Por favor, ingresa una contraseña de texto.', 'danger');
+      return;
+    }
+  
+    if (this.passwordType === 'pin' && (!this.textPassword.trim() || this.textPassword.length !== 4)) {
+      await this.showToast('Por favor, ingresa un PIN de 4 dígitos.', 'danger');
+      return;
+    }
+  
+    if (this.passwordType === 'pictogramas' && this.selectedImagesOrder.length < this.maxSelections) {
+      await this.showToast(`Por favor, selecciona ${this.maxSelections} pictogramas para la contraseña.`, 'danger');
+      return;
+    }
+  
+    // Construir el objeto de datos del perfil
+    const perfilData: any = {
+      nombre: this.nombre,
+      usuario: this.usuario,
+      accessLevel: this.accessibilityLevel,
+      passwordType: this.passwordType,
+      imagePasswordOrder: [],
+      textPassword: '',
+      profileImageUrl: this.profileImageUrl // Incluye la URL de la imagen de perfil
+    };
+  
+    if (this.passwordType === 'pictogramas') {
+      perfilData.imagePasswordOrder = this.selectedOrder.map(index => ({
+        position: index,
+        imageName: this.imageNames[index]
+      }));
+    } else if (this.passwordType === 'texto' || this.passwordType === 'pin') {
+      perfilData.textPassword = this.textPassword;
+    }
+  
+    try {
+      await this.firebaseService.guardarPerfil(perfilData); // Guarda el perfil en Firebase
+      await this.showToast('Perfil guardado con éxito.', 'success');
+      console.log('Perfil guardado con éxito en Firestore');
+    } catch (error) {
+      console.error('Error al guardar el perfil:', error);
+      await this.showToast('Error al guardar el perfil. Inténtalo de nuevo.', 'danger');
+    }
+  }
+  
+  // Método auxiliar para mostrar mensajes Toast
+  private async showToast(message: string, color: string = 'primary') {
+    const toast = await this.toastController.create({
+      message,
+      duration: 3000,
+      position: 'top',
+      color
+    });
+    await toast.present();
+  }
+  
   triggerFileInput(index: number) {
     const fileInput = this.fileInputs.toArray()[index];
     if (fileInput) {
@@ -96,52 +215,87 @@ export class CrearUsuarioPage implements OnInit {
   onFileSelected(event: any, index: number) {
     const file = event.target.files[0];
     if (file) {
-      // Almacena el archivo en selectedImages
       this.selectedImages[index] = file;
 
-      // Genera la URL de vista previa y almacénala en selectedImageUrls
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.selectedImageUrls[index] = e.target.result;
       };
       reader.readAsDataURL(file);
 
-      // Almacena el nombre del archivo sin la extensión
       const fileName = file.name.split('.').slice(0, -1).join('.');
       this.imageNames[index] = fileName;
     }
   }
 
-
-
-  // Función para actualizar la contraseña según las imágenes seleccionadas
   updatePassword() {
-    // Filtrar solo los primeros 3 elementos de selectedOrder y crear la contraseña usando los nombres de las imágenes
-    this.password = this.selectedOrder.slice(0, 3)
-      .map(index => this.imageNames[index] ?? '')
+    this.password = this.selectedOrder
+      .map(index => this.imageNames[index])
+      .filter(name => name !== null)
       .join(', ');
-    console.log('Contraseña actual:', this.password);
+    console.log('Contraseña actualizada:', this.password);
   }
 
-  // Evento al cambiar el estado del checkbox
-  onCheckboxChange(index: number) {
-    const isChecked = this.selectedForPassword[index];
+ onCheckboxChange(index: number) {
+  // Marca o desmarca el pictograma
+  this.selectedForPassword[index] = !this.selectedForPassword[index];
 
-    if (isChecked) {
-      // Agregar al array de orden si el checkbox está seleccionado
-      this.selectedOrder.push(index);
-    } else {
-      // Remover del array de orden si se deselecciona
-      this.selectedOrder = this.selectedOrder.filter(i => i !== index);
-    }
+  // Actualiza el número de selecciones actuales
+  this.currentSelections = this.selectedForPassword.filter(selected => selected).length;
 
-    // Llamamos a la función para actualizar la contraseña
-    this.updatePassword();
+  // Mantiene el orden de selección
+  const selectedImage = this.selectedImageUrls[index];
+
+  if (this.selectedForPassword[index] && selectedImage !== null) {
+    // Si se selecciona, añadir al array en el orden correspondiente (solo si no es null)
+    this.selectedImagesOrder.push(selectedImage);
+  } else if (selectedImage !== null) {
+    // Si se deselecciona, eliminar de la lista de seleccionados
+    this.selectedImagesOrder = this.selectedImagesOrder.filter(image => image !== selectedImage);
   }
 
-  // Función para deshabilitar checkbox cuando hay 3 imágenes seleccionadas
+  console.log('Pictogramas seleccionados (en orden):', this.selectedImagesOrder);
+}
+
   isCheckboxDisabled(index: number): boolean {
-    const selectedCount = this.selectedForPassword.filter(v => v).length;
-    return this.selectedImages[index] === null || (selectedCount >= 3 && !this.selectedForPassword[index]);
+    return (
+      this.currentSelections >= this.maxSelections &&
+      !this.selectedForPassword[index]
+    );
   }
+
+  // Dispara el input de carga de archivo para la imagen de perfil
+  triggerProfileImageInput() {
+    const profileImageInput = document.querySelector('#profileImageInput') as HTMLInputElement;
+    if (profileImageInput) {
+      profileImageInput.click();
+    }
+  }
+
+  onProfileImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.profileImageFile = input.files[0]; // Guarda el archivo seleccionado
+      const reader = new FileReader();
+  
+      reader.onload = () => {
+        this.profileImageUrl = reader.result as string; // Muestra la vista previa
+      };
+  
+      reader.readAsDataURL(this.profileImageFile);
+    }
+  }
+
+async uploadProfileImage(file: File) {
+  try {
+    const filePath = `profile_images/${file.name}`;
+    await this.firebaseService.uploadFile(file, filePath);
+    const downloadUrl = await this.firebaseService.getDownloadURL(filePath);
+    this.profileImageUrl = downloadUrl;
+    console.log('Imagen de perfil subida:', downloadUrl);
+  } catch (error) {
+    console.error('Error al subir la imagen de perfil:', error);
+  }
+}
+
 }

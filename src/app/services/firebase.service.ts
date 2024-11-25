@@ -6,7 +6,7 @@ import { Auth, getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { from, map, Observable } from 'rxjs';
 import { Asignacion } from '../asignar-tarea/asignar-tarea.page';
 import { addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
-import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Para Firebase Storage
+import { deleteObject, getDownloadURL, getStorage, ref, listAll, uploadBytes } from "firebase/storage"; // Para Firebase Storage
 import { OrderTask } from '../crear-tarea-comanda/crear-tarea-comanda.page';
 import { Tarea } from '../agenda/agenda.page';
 @Injectable({
@@ -82,10 +82,10 @@ export class FirebaseService {
     }
   }
 
-  async guardarPerfil(profileData: any): Promise<void> {
-    const usersCollection = collection(this.db, 'alumnos'); // Define la colección 'usuarios'
 
+  async guardarPerfil(profileData: any): Promise<void> {
     try {
+      const usersCollection = collection(this.db, 'alumnos');
       await addDoc(usersCollection, profileData);
       console.log('Perfil guardado con éxito en Firestore');
     } catch (error) {
@@ -317,7 +317,35 @@ export class FirebaseService {
   }
 
 
-
-
-
+  async getPictogramImagesFromStorage(): Promise<string[]> {
+    console.log('getPictogramImagesFromStorage ejecutada'); // Para verificar que la función se ejecuta
+  
+    try {
+      const folderPath = 'pictograma'; // Ruta de la carpeta en Firebase Storage
+      console.log('Obteniendo archivos de la carpeta:', folderPath);
+  
+      const folderRef = ref(this.storage, folderPath);
+      const listResult = await listAll(folderRef);
+  
+      console.log('Archivos encontrados:', listResult.items.map(item => item.name));
+  
+      // Limitar a las primeras 6 imágenes
+      const limitedItems = listResult.items.slice(0, 6); // Limitar a las primeras 6 imágenes
+  
+      if (limitedItems.length === 0) {
+        console.warn('No se encontraron imágenes en la carpeta.');
+        return [];
+      }
+  
+      const urls = await Promise.all(
+        limitedItems.map(item => getDownloadURL(item))
+      );
+  
+      console.log('URLs de imágenes obtenidas:', urls);
+      return urls; // Devuelve las URLs de las primeras 6 imágenes
+    } catch (error) {
+      console.error('Error al obtener imágenes de Firebase Storage:');
+      throw new Error('No se pudieron obtener las imágenes desde Storage.');
+    }
+  }
 }

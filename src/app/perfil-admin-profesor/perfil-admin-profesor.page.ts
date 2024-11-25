@@ -30,13 +30,13 @@ export class PerfilAdminProfesorPage implements OnInit {
   crearAdminProfe() {
     console.log("Solicitando material por parte del profesor");
     console.log("Descomentar cuando este implementado");
-    // this.router.navigate(['/crear-admin-profe']);
+    this.router.navigate(['/crear-profe-admin']);
   }
 
   gestionarUsuarios() {
     console.log("Solicitando material por parte del profesor");
     console.log("Descomentar cuando este implementado");
-    // this.router.navigate(['/gestionar-usuarios']);
+     this.router.navigate(['/modificar-usuario-principal']);
   }
 
   crearTareaPorPasos() {
