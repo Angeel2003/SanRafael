@@ -57,9 +57,7 @@ export class PerfilAdminProfesorPage implements OnInit {
   }
 
   gestionarTareas() {
-    console.log("Solicitando material por parte del profesor");
-    console.log("Descomentar cuando este implementado");
-    // this.router.navigate(['/solicitar-material']);
+    this.router.navigate(['/gestionar-tareas']);
   }
 
   gestionarMateriales() {
@@ -75,9 +73,8 @@ export class PerfilAdminProfesorPage implements OnInit {
     };
     this.router.navigate(['/solicitar-material-profe'], navigationExtras);
   }
+
   
-
-
 
 
   // BOTONES SIN COLOCAR
@@ -85,12 +82,11 @@ export class PerfilAdminProfesorPage implements OnInit {
     this.router.navigate(['/asignar-tarea']);
   }
 
-  modificarTareaPorPasos() {
-    this.router.navigate(['/modificar-tarea-pasos']);
-  }
-
   modificarTareaMaterial() {
     this.router.navigate(['/modificar-tarea-material']);
   }
 
+  peticionMaterial() {
+    this.router.navigate(['/peticion-material']);
+  }
 }

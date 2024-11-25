@@ -375,4 +375,44 @@ export class FirebaseService {
       return false;
     }
   }
+
+  async getCollection(collectionName: string): Promise<any[]> {
+    const snapshot = await getDocs(collection(this.db, collectionName));
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async deleteDocument(collectionName: string, docId: string): Promise<void> {
+    const docRef = doc(this.db, collectionName, docId);
+    await deleteDoc(docRef);
+  }
+  
+
+  //Obtener Peticiones Material
+  async getMaterialRequest(): Promise<any[]>{
+    try{
+      const requestCollection = collection(this.db, 'peticionesMaterial');
+      const snapshot = await getDocs(requestCollection);
+      const request = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...(doc.data())
+      }));
+      console.log("Peticion de material obtenido exitosamente");
+      return request
+    }catch(error){
+      console.error("Error al obtener las peticiones de materiales:", error);
+      return [];
+    }
+  }
+
+  //Crear tarea material
+  async addMaterialTask(materialTask: any): Promise<void>{
+    const tasksCollection = collection(this.db, 'tarea-material');
+    try {
+      await addDoc(tasksCollection, materialTask);
+      console.log('Tarea de Material guardada con éxito');
+    } catch (error) {
+      console.error('Error al guardar la tarea de Material: ', error);
+      throw new Error('Error al guardar la tarea de Material');
+    }
+  }
 }

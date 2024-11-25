@@ -65,13 +65,22 @@ export const routes: Routes = [
   {
     path: 'perfil-admin-profesor',
     loadComponent: () => import('./perfil-admin-profesor/perfil-admin-profesor.page').then( m => m.PerfilAdminProfesorPage)
-  },  {
+  },
+  {
     path: 'solicitar-material-profe',
     loadComponent: () => import('./solicitar-material-profe/solicitar-material-profe.page').then( m => m.SolicitarMaterialProfePage)
   },
   {
     path: 'gestionar-material-admin',
     loadComponent: () => import('./gestionar-material-admin/gestionar-material-admin.page').then( m => m.GestionarMaterialAdminPage)
+  },
+  {
+    path: 'peticion-material',
+    loadComponent: () => import('./peticion-material/peticion-material.page').then( m => m.PeticionMaterialPage)
+  },
+  {
+    path: 'gestionar-tareas',
+    loadComponent: () => import('./gestionar-tareas/gestionar-tareas.page').then( m => m.GestionarTareasPage)
   },
 
 
