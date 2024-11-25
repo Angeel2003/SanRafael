@@ -62,6 +62,6 @@ export class CrearTareaComandaPage implements OnInit {
     this.task.imageURL = await this.firebaseService.getDownloadURL(path);
 
     this.firebaseService.guardarTareaComanda(this.task);
-    this.router.navigate(['/admin-dentro']);
+    this.router.navigate(['/perfil-admin-profesor']);
   }
 }
