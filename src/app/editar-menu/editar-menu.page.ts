@@ -24,6 +24,7 @@ export interface MenuItem {
     path: string,
     file?: File
   };
+  edited?: boolean;
 }
 
 @Component({
@@ -34,30 +35,6 @@ export interface MenuItem {
   imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButtons, IonBackButton, IonCol, IonGrid, IonRow, IonItem, IonLabel, IonIcon, IonButton, IonInput, IonFooter]
 })
 
-/*
-Behavior 
-
-retrieve menus
-show all names, pictograms and images
-no edit possible
-just create/delete 
-
-create:
-put title
-import pictogram/image files
-push button save
-
-for each menu:
-removed:
-  delete old images and picto (only those deleted)
-    if done: delete menu
-
-new:
-  save new imported images
-  retrieve urls, create menu objects to be created
-  save menu objects
-*/
-
 export class EditarMenuPage implements OnInit {
 
   taskPreview: File | null = null;
@@ -66,6 +43,7 @@ export class EditarMenuPage implements OnInit {
   menus: MenuItem[] = [
     // Example of a menu item
     // {
+    //   id: '1173419Y7',
     //   name: 'Vegetariano',
     //   pictogram: {
     //     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Soy-whey-protein-diet.jpg/1024px-Soy-whey-protein-diet.jpg",
@@ -76,15 +54,15 @@ export class EditarMenuPage implements OnInit {
     //     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Soy-whey-protein-diet.jpg/1024px-Soy-whey-protein-diet.jpg",
     //     path: "",
     //     file: undefined
-    //   }
+    //   },
+    //   edited: undefined
     // }
   ];
 
-  newMenus: MenuItem[] = [];
   removedMenus: MenuItem[] = [];
 
   addMenu() {
-    this.newMenus.push(
+    this.menus.push(
       {
         name: '',
         pictogram: {
@@ -129,12 +107,18 @@ export class EditarMenuPage implements OnInit {
   }
 
 
-  loadFile(event: Event, newMenuIndex: number, isImage: boolean) {
+  loadFile(event: Event, editedMenuIndex: number, isImage: boolean) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
       const file = input.files[0];
-      this.newMenus[newMenuIndex][isImage ? 'image' : 'pictogram'].file = file;
-      this.newMenus[newMenuIndex][isImage ? 'image' : 'pictogram'].url = URL.createObjectURL(file);
+      const subMenu = this.menus[editedMenuIndex][isImage ? 'image' : 'pictogram'];
+      // if the menu already had a file, mark it as edited
+      // we could also check the menu.id, it might makes more sense
+      if (subMenu.path) {
+        this.menus[editedMenuIndex].edited = true;
+      }
+      subMenu.file = file;
+      subMenu.url = URL.createObjectURL(file);
     }
   }
 
@@ -159,30 +143,57 @@ export class EditarMenuPage implements OnInit {
       } catch (error) {
         console.error('Error deleting menu:', error);
       }
-
-
     }
 
-    // Loop to save new menus 
-    for (const [index, menu] of this.newMenus.entries()) {
+    // Loop to save edited/new menus
+    for (const [index, menu] of this.menus.filter(m => m.edited).entries()) {
 
-      //check that the menus are correctly filled before starting saving
-      if (!menu.name || !menu.image.file || !menu.pictogram.file) {
-        //TODO notify user, forms are not correctly filled
+      if (!menu.name) {
+        this.errorFormNotFilled();
         return
       }
 
+      if (menu.id) {
+        //remove the old image if edited
+        if (menu.pictogram.file) {
+          await this.firebaseService.deleteFile(menu.pictogram.path);
+        }
+        if (menu.image.file) {
+          await this.firebaseService.deleteFile(menu.image.path);
+        }
+      } else {
+        // check if the new menu has all the required fields
+        if (!menu.pictogram.file || !menu.image.file) {
+          this.errorFormNotFilled();
+          return
+        }
+      }
+
       //save image
-      menu.image.path = `imagenes/menu_${timestamp}_${index}_image.png`;
-      await this.firebaseService.uploadFile(menu.image.file, menu.image.path);
-      menu.image.url = await this.firebaseService.getDownloadURL(menu.image.path);
+      if (menu.image.file) {
+        menu.image.path = `imagenes/menu_${timestamp}_${index}_image.png`;
+        await this.firebaseService.uploadFile(menu.image.file, menu.image.path);
+        menu.image.url = await this.firebaseService.getDownloadURL(menu.image.path);
+      } else {
+        if (!menu.id) {
+          console.error("this error shouldn't happen, because we checked that the menu had all the required fields, before starting to save any elements");
+          return
+        }
+      }
 
       //save picto
-      menu.pictogram.path = `imagenes/menu_${timestamp}_${index}_pictogram.png`;
-      await this.firebaseService.uploadFile(menu.pictogram.file, menu.pictogram.path);
-      menu.pictogram.url = await this.firebaseService.getDownloadURL(menu.pictogram.path);
+      if (menu.pictogram.file) {
+        menu.pictogram.path = `imagenes/menu_${timestamp}_${index}_pictogram.png`;
+        await this.firebaseService.uploadFile(menu.pictogram.file, menu.pictogram.path);
+        menu.pictogram.url = await this.firebaseService.getDownloadURL(menu.pictogram.path);
+      } else {
+        if (!menu.id) {
+          console.error("this error shouldn't happen, because we checked that the menu had all the required fields, before starting to save any elements");
+          return
+        }
+      }
 
-      //remove the file object
+      //remove the file object if any
       const { image, pictogram, ...rest } = menu;
       const dataToSave: MenuItem = {
         ...rest,
@@ -191,16 +202,24 @@ export class EditarMenuPage implements OnInit {
       };
 
       //save menu
-      await this.menuService.saveMenu(dataToSave);
-
+      if (menu.id) {
+        await this.menuService.updateMenu(menu.id, dataToSave);
+      } else {
+        await this.menuService.saveMenu(dataToSave);
+      }
     }
 
     console.log('Datos guardados en Firestore con éxito');
-    window.location.reload()
+    this.goBackToAdmin();
   }
 
   goBackToAdmin() {
-    this.router.navigate(['/admin-dentro']);
+    this.router.navigate(['/perfil-admin-profesor']);
+  }
+
+  errorFormNotFilled() {
+    //TODO notify user, forms are not correctly filled
+    console.log('Formulario no rellenado correctamente');
   }
 
 }
