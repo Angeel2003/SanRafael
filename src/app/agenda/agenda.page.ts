@@ -1,16 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { addIcons } from 'ionicons';
 import { IonSpinner, IonContent, IonHeader, IonTitle, IonToolbar, IonCol, IonButton, IonIcon, IonGrid, IonRow, IonItem, IonLabel, IonButtons, IonBackButton } from '@ionic/angular/standalone';
 
 import { FirebaseService } from '../services/firebase.service';
 
 export interface Tarea {
   nombre: string,
-  imagen: string,
-  horaIni: string,
-  horaFin: string
+  imagen: string
 }
 
 @Component({
@@ -20,8 +17,6 @@ export interface Tarea {
   standalone: true,
   imports: [IonSpinner, IonLabel, IonItem, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonIcon, IonGrid, IonRow, IonButtons, IonBackButton]
 })
-
-
 export class AgendaPage implements OnInit {
 
   tareas: Tarea[] = [];
@@ -47,9 +42,9 @@ export class AgendaPage implements OnInit {
   }
 
   ngOnInit() {
+    const imagePath = 'pictogramas/agenda.png';
     this.loadTareas();
   }
-
 
   getPreviewFromTask(taskName: string){
     let preview = '';
@@ -63,34 +58,31 @@ export class AgendaPage implements OnInit {
     return preview;
   }
 
+  // Cargar tareas de la base de datos
   async loadTareas() {
     const userId = localStorage.getItem('userId');
     if (!userId) {
       console.error("User ID not found in localStorage");
+      this.tareas = [];
+      this.loading = false;
       return;
     }
-
-    this.loading = true; // Activar indicador de carga
-
+  
     try {
       const tareasFromFirebase = await this.firebaseService.getTareasForUser(userId);
       console.log("Tareas obtenidas desde Firebase: ", tareasFromFirebase);
       this.tareas = tareasFromFirebase.map((tarea: Tarea) => ({
         nombre: tarea.nombre || '',
-        imagen: this.getPreviewFromTask(tarea.nombre),
-        horaIni: tarea.horaIni || '',
-        horaFin: tarea.horaFin || ''
-      }));
+        imagen: this.getPreviewFromTask(tarea.nombre)
+      }))
+      .filter(tarea => tarea.nombre !== 'Sin nombre');
       console.log("Tareas cargadas:", this.tareas);
+
     } catch (error) {
-      console.error("Error fetching tasks:", error);
+      console.error("Error al obtener las tareas:", error);
+      this.tareas = [];
     } finally {
-      this.loading = false; // Desactivar indicador de carga
+      this.loading = false;
     }
   }
-
-  
 }
-
-
-

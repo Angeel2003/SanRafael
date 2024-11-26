@@ -45,53 +45,53 @@ export class TareaMaterialPage implements OnInit {
   }
 
 
-  ngOnInit() {}
+  ngOnInit() { }
 
-  imgTareaPreview(event: Event){
+  imgTareaPreview(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length){
+    if (input.files && input.files.length) {
       const file = input.files[0];
       this.previewUrl = URL.createObjectURL(file);
     }
   }
 
-  imgTamanioPreview(event: Event, index: number){
+  imgTamanioPreview(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length){
+    if (input.files && input.files.length) {
       const file = input.files[0];
       this.items[index].tamanio = URL.createObjectURL(file);
     }
   }
 
-  imgColorPreview(event: Event, index: number){
+  imgColorPreview(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length){
+    if (input.files && input.files.length) {
       const file = input.files[0];
       this.items[index].color = URL.createObjectURL(file);
       console.log(this.items[index].color);
     }
   }
 
-  imgColor(event: Event, index: number){
+  imgColor(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length){
+    if (input.files && input.files.length) {
       const file = input.files[0];
       this.items[index].imgColor = URL.createObjectURL(file);
     }
   }
 
 
-  imgTamanio(event: Event, index: number){
+  imgTamanio(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length){
+    if (input.files && input.files.length) {
       const file = input.files[0];
       this.items[index].imgTam = URL.createObjectURL(file);
     }
   }
 
-  imgCantidad(event: Event, index: number){
+  imgCantidad(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length){
+    if (input.files && input.files.length) {
       const file = input.files[0];
       this.items[index].imgCantidad = URL.createObjectURL(file);
     }
@@ -105,16 +105,66 @@ export class TareaMaterialPage implements OnInit {
     }
   }
 
-  
+
+  // Método para cargar imágenes desde Firebase basado en las selecciones
+  async updateImageBasedOnSelection(index: number) {
+    const item = this.items[index];
+
+    // Obtener imágenes predeterminadas según tamaño
+    if (item.tamanio) {
+      const pathTamanio = `pictogramas/${item.tamanio}.png`;
+      item.imgTam = await this.firebaseService.getDownloadURL(pathTamanio);
+    }
+
+    // Obtener imágenes predeterminadas según color
+    if (item.color) {
+      const pathColor = `pictogramas/colores/${item.color}.png`;
+      item.imgColor = await this.firebaseService.getDownloadURL(pathColor);
+    }
+
+    // Obtener imágenes predeterminadas según material
+    if (item.material) {
+      const pathMaterial = `materiales/${item.material}.png`;
+      item.imagen = await this.firebaseService.getDownloadURL(pathMaterial);
+    }
+
+    if (item.cantidad && item.cantidad < 10){
+      const pathCantidad = `pictogramas/numeros/${item.cantidad}.png`;
+      console.log(pathCantidad);
+      item.imgCantidad = await this.firebaseService.getDownloadURL(pathCantidad);
+    }
+  }
+
+  // Método para manejar cambios en el tamaño
+  onSizeChange(index: number) {
+    this.updateImageBasedOnSelection(index);
+  }
+
+  // Método para manejar cambios en el color
+  onColorChange(index: number) {
+    this.updateImageBasedOnSelection(index);
+  }
+
+  // Método para manejar cambios en el material
+  onMaterialChange(index: number) {
+    this.updateImageBasedOnSelection(index);
+  }
+
+  // Metodo para manejar cambios en la cantidad
+  onCantidadChange(index: number){
+    this.updateImageBasedOnSelection(index);
+  }
+
+
   canAddItem(): boolean {
     // Verifica que todos los campos actuales estén completos
     return !!this.taskName && this.items.every(item =>
-      item.material && item.imagen && item.aula && item.cantidad  > 0
+      item.material && item.imagen && item.aula && item.cantidad > 0
     );
   }
 
   addItem() {
-    if(this.canAddItem()){
+    if (this.canAddItem()) {
       this.items.push({
         material: '',
         tamanio: '',
@@ -145,13 +195,13 @@ export class TareaMaterialPage implements OnInit {
     return new Blob([byteArray], { type: mimeString });
   }
 
-  async mostrarToast(mensaje: string, exito: boolean){
+  async mostrarToast(mensaje: string, exito: boolean) {
     const toast = await this.toastController.create({
       message: mensaje,
       duration: 2000,
       position: 'middle'
     });
-    if (exito){
+    if (exito) {
       toast.style.setProperty('--background', '#4caf50');
     } else {
       toast.style.setProperty('--background', '#fa3333');
@@ -172,27 +222,27 @@ export class TareaMaterialPage implements OnInit {
     const pathTamanio = `pictogramas/${item.tamanio}.png`; // Usar el nombre del material como el nombre del archivo
     const pathColor = `pictogramas/colores/${item.color}.png`; // Usar el nombre del material como el nombre del archivo
     const pathCantidad = `pictogramas/numeros/${item.cantidad}.png`; // Usar el nombre del material como el nombre del archivo
-    
 
-    if (item.imagen){
+
+    if (item.imagen) {
       const fileBlob = await fetch(item.imagen).then(r => r.blob());
       await this.firebaseService.uploadFile(new File([fileBlob], `${item.material}.png`), pathImagen);
       const downloadUrl = await this.firebaseService.getDownloadURL(pathImagen);
       this.items[index].imagen = downloadUrl;
     }
-    if (item.imgTam){
+    if (item.imgTam) {
       const fileBlob = await fetch(item.imgTam).then(r => r.blob());
       await this.firebaseService.uploadFile(new File([fileBlob], `${item.imgTam}.png`), pathTamanio);
       const downloadUrl = await this.firebaseService.getDownloadURL(pathTamanio);
       this.items[index].imgTam = downloadUrl;
     }
-    if (item.imgColor){
+    if (item.imgColor) {
       const fileBlob = await fetch(item.imgColor).then(r => r.blob());
       await this.firebaseService.uploadFile(new File([fileBlob], `${item.imgColor}.png`), pathColor);
       const downloadUrl = await this.firebaseService.getDownloadURL(pathColor);
       this.items[index].imgColor = downloadUrl;
     }
-    if (item.imgCantidad){
+    if (item.imgCantidad) {
       const fileBlob = await fetch(item.imgCantidad).then(r => r.blob());
       await this.firebaseService.uploadFile(new File([fileBlob], `${item.imgCantidad}.png`), pathCantidad);
       const downloadUrl = await this.firebaseService.getDownloadURL(pathCantidad);
@@ -207,13 +257,13 @@ export class TareaMaterialPage implements OnInit {
   }
 
   async save() {
-    if (this.canSave()){
+    if (this.canSave()) {
       const dataToSave: any = {
         nombre: this.taskName,
         previewUrl: '',
         items: this.items,
       };
-    
+
 
       if (this.previewUrl){
         const path = `imagenes/imagen_tarea_material_${this.taskName}.png`;
