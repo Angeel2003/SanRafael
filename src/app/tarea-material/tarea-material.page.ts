@@ -31,7 +31,7 @@ interface MaterialItem {
 
 export class TareaMaterialPage implements OnInit {
   taskName: string = '';
-  imgTarea: string = '';
+  previewUrl: string = '';
   aula: string = '';
   items: MaterialItem[] = [];
   task: any = [];
@@ -335,7 +335,7 @@ export class TareaMaterialPage implements OnInit {
 
   canSave(): boolean {
     // Verifica que el nombre de la tarea esté completo y todos los campos de los materiales estén completos
-    return !!this.taskName && !!this.aula && !!this.imgTarea && this.canAddItem();
+    return !!this.taskName && !!this.aula && !!this.previewUrl && this.canAddItem();
   }
 
   async save() {
