@@ -3,6 +3,7 @@ import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonGrid, IonRow, IonCol, IonButton } from '@ionic/angular/standalone';
 import { NavigationExtras, Router } from '@angular/router';
+import { FirebaseService } from '../services/firebase.service';
 
 @Component({
   selector: 'app-perfil-admin-profesor',
@@ -14,13 +15,45 @@ import { NavigationExtras, Router } from '@angular/router';
 
 export class PerfilAdminProfesorPage implements OnInit {
   adminProfe: any;
+  private intervalId: any; 
+  isEmpty: boolean | null = null;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private firebaseService: FirebaseService) {
     const navigation = this.router.getCurrentNavigation();
     this.adminProfe = navigation?.extras.state?.['adminProfe'];
   }
 
+  //Crea un intervalo para saber si le ha llegado alguna peticion de material
   ngOnInit() {
+    if(this.adminProfe.tipoUsuario == 'administrador'){
+      this.intervalId = setInterval(() => {
+        this.checkCollectionStatus();
+      }, 2000);
+    }
+  }
+
+  checkCollectionStatus() {
+    this.firebaseService.isCollectionEmpty("peticionesMaterial").subscribe({
+      next: isEmpty => {
+        this.isEmpty = isEmpty;
+        console.log(
+          isEmpty === null
+            ? 'Error al comprobar la colección.'
+            : isEmpty
+            ? 'La colección está vacía.'
+            : 'La colección tiene documentos.'
+        );
+      },
+      error: error => {
+        console.error('Error en el observable:', error);
+      },
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.intervalId && this.adminProfe.tipoUsuario == 'administrador') {
+      clearInterval(this.intervalId);
+    }
   }
 
   crearUsuario() {

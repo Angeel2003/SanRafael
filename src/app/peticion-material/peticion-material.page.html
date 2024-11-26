@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/perfil-admin-profesor"></ion-back-button> <!-- Volver a la página anterior -->
+      <ion-back-button (click)="goBack()" ></ion-back-button> <!-- Volver a la página anterior -->
     </ion-buttons>
     <ion-title>Peticion Material</ion-title>
   </ion-toolbar>
