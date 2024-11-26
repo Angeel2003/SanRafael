@@ -9,3 +9,11 @@ ion-title {
     font-size: 24px;
     color: #005682;
 }
+
+.profile-image-preview {
+    width: 100px; /* Ajusta el tamaño de la imagen */
+    height: 100px;
+    object-fit: cover; /* Hace que la imagen cubra el área sin distorsionarse */
+    border-radius: 50%; /* Redondea los bordes para una apariencia de círculo */
+  }
+  

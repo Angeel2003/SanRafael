@@ -65,7 +65,8 @@ export const routes: Routes = [
   {
     path: 'perfil-admin-profesor',
     loadComponent: () => import('./perfil-admin-profesor/perfil-admin-profesor.page').then( m => m.PerfilAdminProfesorPage)
-  },  {
+  },
+  {
     path: 'modificar-usuario-principal',
     loadComponent: () => import('./modificar-usuario-principal/modificar-usuario-principal.page').then( m => m.ModificarUsuarioPrincipalPage)
   },
@@ -92,6 +93,10 @@ export const routes: Routes = [
   {
     path: 'gestionar-tareas',
     loadComponent: () => import('./gestionar-tareas/gestionar-tareas.page').then( m => m.GestionarTareasPage)
+  },
+  {
+    path: 'modificar-usuario/:id',
+    loadComponent: () => import('./modificar-usuario/modificar-usuario.page').then(m => m.ModificarUsuarioPage)
   },
 
 

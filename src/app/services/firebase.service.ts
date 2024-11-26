@@ -448,4 +448,50 @@ export class FirebaseService {
       throw new Error('Error al guardar la tarea de Material');
     }
   }
+
+  async obtenerUsuario(id: string): Promise<any | null> {
+    try {
+      // Referencia al documento del alumno
+      const alumnoDocRef = doc(this.db, 'alumnos', id);
+      
+      // Obtiene el documento del alumno
+      const alumnoDocSnapshot = await getDoc(alumnoDocRef);
+  
+      // Verifica si el documento existe
+      if (alumnoDocSnapshot.exists()) {
+        console.log('Alumno obtenido con éxito:', alumnoDocSnapshot.data());
+        
+        // Retorna todos los campos del alumno junto con su ID
+        return { id: alumnoDocSnapshot.id, ...alumnoDocSnapshot.data() };
+      } else {
+        console.warn('No se encontró un alumno con el ID especificado:', id);
+        return null; // Retorna null si no existe el documento
+      }
+    } catch (error) {
+      console.error('Error al obtener el alumno:', error);
+      throw new Error('No se pudo obtener el alumno'); // Lanza un error si ocurre algún problema
+    }
+  }
+
+
+  async actualizarAlumno(id: string, data: any): Promise<boolean> {
+    try {
+      const alumnoDocRef = doc(this.db, 'alumnos', id); // Referencia al documento del alumno
+      const alumnoDocSnapshot = await getDoc(alumnoDocRef); // Verifica si el documento existe
+  
+      if (alumnoDocSnapshot.exists()) {
+        await updateDoc(alumnoDocRef, data); // Actualiza el documento con los datos proporcionados
+        console.log('Alumno actualizado con éxito:', id);
+        return true; // Retorna true si la actualización fue exitosa
+      } else {
+        console.warn('No se encontró un alumno con el ID especificado para actualizar:', id);
+        return false; // Retorna false si no existe el documento
+      }
+    } catch (error) {
+      console.error('Error al actualizar el alumno:', error);
+      throw new Error('No se pudo actualizar el alumno'); // Lanza un error si ocurre algún problema
+    }
+  }
+
+
 }

@@ -24,20 +24,28 @@ import { addIcons } from 'ionicons';
 })
 
 export class ModificarUsuarioPrincipalPage implements OnInit {
-  usuarios = [
-    { id: 1, nombre: 'Usuario 1', imagen: 'assets/default-profile.jpg' },
-    { id: 2, nombre: 'Usuario 2', imagen: 'assets/default-profile.jpg' },
-    { id: 3, nombre: 'Usuario 3', imagen: 'assets/default-profile.jpg' },
-    // Agrega más usuarios según sea necesario
-  ];
+  // usuarios = [
+  //   { id: 1, nombre: 'Usuario 1', imagen: 'assets/default-profile.jpg' },
+  //   { id: 2, nombre: 'Usuario 2', imagen: 'assets/default-profile.jpg' },
+  //   { id: 3, nombre: 'Usuario 3', imagen: 'assets/default-profile.jpg' },
+  //   // Agrega más usuarios según sea necesario
+  // ];
+  usuarios: any[] = []; // Usuarios cargados de Firebase
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private firebaseService: FirebaseService) {}
 
-  ngOnInit() {}
+  ngOnInit() { this.cargarUsuarios(); }
 
-  modificarUsuario(id: number) {
+  async cargarUsuarios() {
+    try {
+      this.usuarios = await this.firebaseService.getCollection('alumnos');
+    } catch (error) {
+      console.error('Error al cargar los usuarios:', error);
+    }
+  }
+
+  modificarUsuario(id: string) {
     console.log('Modificar usuario con ID:', id);
-       this.router.navigate(['/modificar-usuario']);
-    // Aquí puedes agregar lógica para redirigir a otra página o abrir un modal para modificar al usuario
+    this.router.navigate(['/modificar-usuario', id]); // Correctamente pasa el parámetro dinámico
   }
 }
