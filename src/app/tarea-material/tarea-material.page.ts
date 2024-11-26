@@ -357,7 +357,7 @@ export class TareaMaterialPage implements OnInit {
       }
       // Subir las imágenes a Firebase antes de guardar
       for (let i = 0; i < this.items.length; i++) {
-        //await this.uploadMaterialImage(i); // Sube cada imagen y actualiza su URL en `this.items`
+        await this.uploadMaterialImage(i); // Sube cada imagen y actualiza su URL en `this.items`
       }
 
       await this.firebaseService.guardarTareaMaterial(dataToSave);
