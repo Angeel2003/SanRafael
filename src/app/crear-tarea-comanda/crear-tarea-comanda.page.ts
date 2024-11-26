@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 
 export interface OrderTask {
   name: string;
-  imageURL: string;
+  previewUrl: string;
   room: string;
 }
 
@@ -24,7 +24,7 @@ export interface OrderTask {
 export class CrearTareaComandaPage implements OnInit {
   task: OrderTask = {
     name: '',
-    imageURL: '',
+    previewUrl: '',
     room: ''
   };
   imageFile: File | undefined;
@@ -59,9 +59,9 @@ export class CrearTareaComandaPage implements OnInit {
 
     const path = `imagenes/tarea-comanda_${timestamp}.png`;
     await this.firebaseService.uploadFile(this.imageFile, path);
-    this.task.imageURL = await this.firebaseService.getDownloadURL(path);
+    this.task.previewUrl = await this.firebaseService.getDownloadURL(path);
 
     this.firebaseService.guardarTareaComanda(this.task);
-    this.router.navigate(['/admin-dentro']);
+    this.router.navigate(['/perfil-admin-profesor']);
   }
 }

@@ -22,7 +22,7 @@ import {ToastController} from '@ionic/angular';
     IonToast , IonSelectOption, IonSelect, IonRadio, IonRadioGroup]
 })
 export class PeticionMaterialPage implements OnInit {
-
+  
   peticionesMaterial: any[] = [];
   desplegarMateriales:boolean[] = [];
 
@@ -39,6 +39,10 @@ export class PeticionMaterialPage implements OnInit {
       this.desplegarMateriales.push(false);
     }
     console.log("Peticiones: " + this.peticionesMaterial.length + "  Booleanos: " + this.desplegarMateriales.length);
+  }
+
+  goBack(){
+    this.router.navigate(['/perfil-admin-profesor']);
   }
 
   desplegarMaterial(index: number){
@@ -58,7 +62,10 @@ export class PeticionMaterialPage implements OnInit {
       }
     };
     this.router.navigate(['/tarea-material'], navigationExtras);
-    //Eliminamos peticion de esa tarea
-
+    //Eliminamos peticion de esa tarea de la base de datos
+    this.firebaseService.deleteDocument('peticionesMaterial',this.peticionesMaterial[index].id);
+    //Eliminamos peticion de al tarea de la vista
+    this.peticionesMaterial.splice(index,1);
+    
   }
 }

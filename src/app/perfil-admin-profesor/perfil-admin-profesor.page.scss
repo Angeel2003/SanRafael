@@ -101,3 +101,10 @@ h1 {
     --background: #b90000; // Cambia el color de fondo
     --color: #fff; // Cambia el color del texto
 }
+
+.tasks-buttons ion-button.request-notification {
+    margin-bottom: 30px;
+    font-size: 18px;
+    --background: green; // Cambia el color de fondo
+    --color: #fff; // Cambia el color del texto
+}

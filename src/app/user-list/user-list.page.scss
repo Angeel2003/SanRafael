@@ -61,3 +61,23 @@ ion-icon {
     --background: #cccccc; /* Color de fondo para el botón deshabilitado */
     --color: #666666;      /* Color del texto e icono para el botón deshabilitado */
 }
+
+.header-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .title {
+    margin-right: 10px; /* Ajusta el espacio entre el título y la imagen */
+  }
+  
+  .image-col {
+    display: flex;
+    justify-content: center; /* Centra la imagen dentro de su columna */
+  }
+  
+  .user-preview-image {
+    max-height: 60px; /* Ajusta el tamaño de la imagen según sea necesario */
+    max-width: auto;
+  }

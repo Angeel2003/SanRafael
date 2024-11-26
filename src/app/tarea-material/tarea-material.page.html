@@ -1,21 +1,20 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/perfil-admin-profesor"></ion-back-button> <!-- Ajusta la ruta si es necesario -->
-    </ion-buttons>
     <ion-title>Tarea de Material</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-item>
+  <ion-item class="top-element">
     <ion-input type="text" label="Ingresa el nombre de la tarea" label-placement="floating" [(ngModel)]="taskName"></ion-input>
   </ion-item>
-
-  <ion-item>
+  <ion-item class="top-element">
+    <ion-input type="text" label="Ingresa el aula " label-placement="floating" [(ngModel)]="aula"></ion-input>
+  </ion-item>
+  <ion-item class="top-element">
     <ion-label>Foto de la tarea</ion-label>
-    <div *ngIf="imgTarea">
-      <img [src]="imgTarea" alt="Vista previa de la tarea" style="width: 100px; height: auto;" />
+    <div *ngIf="previewUrl">
+      <img [src]="previewUrl" alt="Vista previa de la tarea" style="width: 100px; height: auto;" />
     </div>
     <input type="file" accept="image/*" (change)="imgTareaPreview($event)" />
   </ion-item>
@@ -23,50 +22,49 @@
   <ion-grid>
     <ion-row>
       <ion-col size="2" class="column-header">Material</ion-col>
-      <ion-col size="3" class="column-header">Características</ion-col>
+      <ion-col size="4" class="column-header">Características</ion-col>
       <ion-col size="3" class="column-header">Imagen</ion-col>
-      <ion-col size="1" class="column-header">Aula</ion-col>
       <ion-col size="2" class="column-header">Cantidad</ion-col>
     </ion-row>
     
-    <ion-row *ngFor="let item of items; let i = index">
+    <ion-row class="material" *ngFor="let item of items; let i = index">
       <ion-col size="2">
         <ion-item>
-          <ion-input [(ngModel)]="item.material" placeholder="Material {{i + 1}}" (ngModelChange)="onMaterialChange(i)"></ion-input>
+          <p>{{item.material}}</p>
         </ion-item>
       </ion-col>
-      <ion-col size="3">
-        <ion-col size="1.5">
-          <ion-radio-group [(ngModel)]="item.tamanio" (ngModelChange)="onSizeChange(i)">
-            <ion-radio value="pequenio" labelPlacement="fixed">Pequeño</ion-radio>
-            <ion-radio value="mediano" labelPlacement="fixed">Mediano</ion-radio>
-            <ion-radio value="grande" labelPlacement="fixed">Grande</ion-radio>
-          </ion-radio-group>
+      <ion-col size="4">
+        <ion-col size="2">
+          <ion-item><strong>Tamaño: </strong></ion-item>
+          <ion-item>
+            <p *ngIf="item.tamanio == 'pequenio'">Pequeño</p>
+            <p *ngIf="item.tamanio == 'mediano'">Mediano</p>
+            <p *ngIf="item.tamanio == 'grande'">Grande</p>
+          </ion-item>
           <ion-item>
             <div *ngIf="item.imgTam">
               <img [src]="item.imgTam" alt="Vista previa del tamanio del material" style="width: 100px; height: auto;" />
             </div>
-            <input type="file" accept="image/*" (change)="imgTamanio($event, i)" class="small-file-input" />
           </ion-item>
-
         </ion-col>
-        <ion-col size="1.5">
-          <ion-select interface="popover" placeholder="Color" [(ngModel)]="item.color" (ngModelChange)="onColorChange(i)">
-            <ion-select-option value="azul">Azul</ion-select-option>
-            <ion-select-option value="negro">Negro</ion-select-option>
-            <ion-select-option value="verde">Verde</ion-select-option>
-            <ion-select-option value="rojo">Rojo</ion-select-option>
-            <ion-select-option value="blanco">Blanco</ion-select-option>
-            <ion-select-option value="amarillo">Amarillo</ion-select-option>
-            <ion-select-option value="naranja">Naranja</ion-select-option>
-            <ion-select-option value="rosa">Rosa</ion-select-option>
-            <ion-select-option value="marron">Marrón</ion-select-option>
-          </ion-select>
+        <ion-col size="2">
+          <ion-item><strong>Color: </strong></ion-item>
+          <ion-item>
+            <p *ngIf="item.color == 'azul'">Azul</p>
+            <p *ngIf="item.color == 'verde'">Verde</p>
+            <p *ngIf="item.color == 'negro'">Negro</p>
+            <p *ngIf="item.color == 'rojo'">Rojo</p>
+            <p *ngIf="item.color == 'blanco'">Blanco</p>
+            <p *ngIf="item.color == 'amarillo'">Amarillo</p>
+            <p *ngIf="item.color == 'naranja'">Naranja</p>
+            <p *ngIf="item.color == 'rosa'">Rosa</p>
+            <p *ngIf="item.color == 'marron'">Marron</p>
+            <p *ngIf="item.color == ''">Ningun color seleccionado</p>
+          </ion-item>
           <ion-item>
             <div *ngIf="item.imgColor">
               <img [src]="item.imgColor" alt="Vista previa del color del material" style="width: 100px; height: auto;" />
             </div>
-            <input type="file" accept="image/*" (change)="imgColor($event, i)" class="small-file-input" />
           </ion-item>
         </ion-col>
       </ion-col>
@@ -78,34 +76,18 @@
           <input type="file" accept="image/*" (change)="imagenPreview($event, i)" class="small-file-input"/>
         </ion-item>
       </ion-col>
-      <ion-col size="1">
-        <ion-item>
-          <ion-input [(ngModel)]="item.aula" placeholder="Aula"></ion-input>
-        </ion-item>
-      </ion-col>
       <ion-col size="2">
         <ion-item>
-          <ion-input [(ngModel)]="item.cantidad" placeholder="Cantidad {{i + 1}}"></ion-input>
+          <p>{{item.cantidad}}</p>
         </ion-item>
         <ion-item>
           <div *ngIf="item.imgCantidad" (ngModelChange)="onCantidadChange(i)">
             <img [src]="item.imgCantidad" alt="Vista previa de la cantidad del material" style="width: 100px; height: auto;" />
           </div>
-          <input type="file" accept="image/*" (change)="imgCantidad($event, i)" class="small-file-input" />
         </ion-item>
       </ion-col>
     </ion-row>
-
- 
   </ion-grid>
-
-  <ion-col size="auto">
-    <ion-button class="add-material-button" (click)="addItem()">
-      <ion-icon class="icon-add" name="add-outline"></ion-icon>
-      <ion-label>Añadir material</ion-label>
-    </ion-button>
-  </ion-col>
-
 </ion-content>
 
 <ion-footer>

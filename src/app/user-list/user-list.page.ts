@@ -20,6 +20,8 @@ export class UserListPage implements OnInit {
   users: any[] = [];
   currentPage = 0;
   usersPerPage = 4; // Muestra 5 usuarios por página
+  previewUserGirl: string = '';
+  previewUserBoy: string = '';
 
   constructor(private router: Router, private firebaseService: FirebaseService) {
     addIcons({
@@ -28,10 +30,12 @@ export class UserListPage implements OnInit {
     })
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.firebaseService.getAlumnos().subscribe(data => {
       this.users = data;
     });
+    this.previewUserGirl = await this.firebaseService.getImageUrl('pictogramas/niña.png');
+    this.previewUserBoy = await this.firebaseService.getImageUrl('pictogramas/niño.png');
   }
 
   get paginatedUsers() {

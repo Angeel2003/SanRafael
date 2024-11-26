@@ -34,7 +34,7 @@ interface MaterialItem {
 
 export class ModificarTareaMaterialPage implements OnInit {
   taskName: string = 'material 1'; // Inicializado con un valor predeterminado
-  imgTarea: string = '';
+  previewUrl: string = '';
   items: MaterialItem[] = [];
   tarea: any = null; // Para almacenar los datos de la tarea cargada
   taskPreview: File | null = null;
@@ -71,7 +71,7 @@ export class ModificarTareaMaterialPage implements OnInit {
       if (data && data.length > 0) {
         this.tarea = data[0];
         this.taskName = this.tarea.nombre;
-        this.imgTarea = this.tarea.img || '';
+        this.previewUrl = this.tarea.previewUrl || '';
         this.items = this.tarea.items || [];
         this.originalItems = JSON.parse(JSON.stringify(this.items)); // Copia profunda
       }
@@ -86,7 +86,7 @@ export class ModificarTareaMaterialPage implements OnInit {
     if (input.files && input.files.length) {
       const file = input.files[0];
       this.taskPreview = file;
-      this.imgTarea = URL.createObjectURL(file);
+      this.previewUrl = URL.createObjectURL(file);
     }
   }
   
@@ -193,7 +193,7 @@ export class ModificarTareaMaterialPage implements OnInit {
   
 
   canSave(): boolean {
-    return !!this.taskName && !!this.imgTarea && this.items.every(item =>
+    return !!this.taskName && !!this.previewUrl && this.items.every(item =>
       item.material && item.imagen && item.aula && item.cantidad > 0
     );
   }

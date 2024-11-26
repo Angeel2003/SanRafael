@@ -110,12 +110,14 @@ export class FirebaseService {
   }
 
   async getAllTaskNames(): Promise<string[]> {
-    const collectionNames = ['tarea-por-pasos', 'tarea-comedor', 'tarea-material'];
+    const collectionNames = ['tarea-por-pasos', 'tarea-comanda', 'tarea-material'];
     let allNames: string[] = [];
 
     for (const collectionName of collectionNames) {
       const names = await this.getCollectionDocId(collectionName, 'nombre');
+      const namescomanda = await this.getCollectionDocId(collectionName, 'name');
       allNames = allNames.concat(names);
+      allNames = allNames.concat(namescomanda);
     }
 
     return allNames;
@@ -298,25 +300,65 @@ export class FirebaseService {
   
       const alumnoData = alumnoDocSnapshot.data(); // Datos del alumno
       const tareasAsignadas = alumnoData?.['tareasAsig'] || []; // Obtén las tareas asignadas, si existen
+      console.log("Tareas asignadas:", tareasAsignadas);
   
       if (!Array.isArray(tareasAsignadas) || tareasAsignadas.length === 0) {
         console.log("El alumno no tiene tareas asignadas.");
         return []; // Devuelve un array vacío si no hay tareas
       }
   
-      // Mapea las tareas a la estructura esperada
-      const mappedTareas: Tarea[] = tareasAsignadas.map((tarea: any) => ({
-        nombre: tarea.nombreTarea || 'Sin nombre',
-        imagen: tarea.imagen || '', // Si no hay imagen, devuelve un string vacío
-      }));
+      // Obtener la fecha actual
+      const today = new Date();
   
-      console.log("Tareas mapeadas:", mappedTareas);
-      return mappedTareas;
+      // Filtrar las tareas para las que la fecha actual está dentro del intervalo
+      const tareasFiltradas: Tarea[] = tareasAsignadas
+        .filter((tarea: any) => {
+          const fechaInicio = new Date(tarea.fechaInicio); // Convertir fechaInicio a objeto Date
+          const fechaFin = new Date(tarea.fechaFin);       // Convertir fechaFin a objeto Date
+          console.log('Fechafin',fechaFin);
+          return today >= fechaInicio && today <= fechaFin; // Verificar si hoy está dentro del rango
+        })
+        .map((tarea: any) => ({
+          nombre: tarea.nombreTarea || 'Sin nombre',
+          imagen: tarea.preview || '', // Añadir la imagen si existe
+        }));
+  
+      console.log("Tareas filtradas:", tareasFiltradas);
+      return tareasFiltradas;
     } catch (error) {
       console.error("Error al obtener las tareas del alumno:", error);
       return []; // En caso de error, devuelve un array vacío
     }
   }
+  
+  async getStudentDoc(userId: string): Promise<string> {  // Retornamos un string
+    const docRef = doc(this.db, 'alumnos', userId); // Referencia al documento del alumno
+    
+    try {
+      const docSnapshot = await getDoc(docRef); // Obtén el documento del alumno
+      
+      if (docSnapshot.exists()) {
+        const data = docSnapshot.data();
+        const accesibilityLevel = data['nivelAccesibilidad']; // Suponiendo que es un string
+        
+        if (accesibilityLevel) {
+          return accesibilityLevel; // Devuelve el string
+        } else {
+          console.warn("El campo 'nivelesAccesibilidad' está vacío o no existe");
+          return ''; // Si no existe o está vacío, devuelve un string vacío
+        }
+        
+      } else {
+        console.warn(`No se encontró el alumno con ID: ${userId}`);
+        return ''; // Si no existe el documento, devuelve un string vacío
+      }
+    } catch (error) {
+      console.error("Error al obtener los niveles de accesibilidad:", error);
+      return ''; // Devuelve un string vacío en caso de error
+    }
+  }
+
+  
   
 
   // Bajar iamgen de Firebase
@@ -330,6 +372,20 @@ export class FirebaseService {
       console.error('Error al obtener la URL de la imagen: ', error);
       throw new Error('No se pudo obtener la imagen');
     }
+  }
+
+  async getTareasDeColeccion(collectionName: string): Promise<any[]> {
+    const querySnapshot = await getDocs(collection(this.db, collectionName));
+    const tareas: any[] = [];
+  
+    querySnapshot.forEach(doc => {
+      tareas.push({
+        id: doc.id, // Guarda el ID del documento
+        ...doc.data() // Guarda todos los atributos del documento
+      });
+    });
+  
+    return tareas;
   }
 
 
@@ -425,7 +481,8 @@ export class FirebaseService {
     try{
       const requestCollection = collection(this.db, 'peticionesMaterial');
       const snapshot = await getDocs(requestCollection);
-      const request = snapshot.docs.map(doc => ({
+      let request = [];
+      request = snapshot.docs.map(doc => ({
         id: doc.id,
         ...(doc.data())
       }));
@@ -437,16 +494,22 @@ export class FirebaseService {
     }
   }
 
-  //Crear tarea material
-  async addMaterialTask(materialTask: any): Promise<void>{
-    const tasksCollection = collection(this.db, 'tarea-material');
-    try {
-      await addDoc(tasksCollection, materialTask);
-      console.log('Tarea de Material guardada con éxito');
-    } catch (error) {
-      console.error('Error al guardar la tarea de Material: ', error);
-      throw new Error('Error al guardar la tarea de Material');
-    }
+  //Comprobar si una coleccion esta vacia o no
+   isCollectionEmpty(collectionName: string): Observable<boolean | null> {
+    const collectionRef = collection(this.db, collectionName);
+  
+    return new Observable(observer => {
+      getDocs(collectionRef)
+        .then(snapshot => {
+          observer.next(snapshot.empty); // Emite true si está vacía, false si no.
+          observer.complete();
+        })
+        .catch(error => {
+          console.error('Error al comprobar la colección:', error);
+          observer.next(null); // Emite null en caso de error.
+          observer.complete();
+        });
+    });
   }
 
   async obtenerUsuario(id: string): Promise<any | null> {

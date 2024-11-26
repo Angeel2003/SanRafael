@@ -41,6 +41,7 @@ export class AsignarTarea {
   newAsignation: Asignacion = { nombreTarea: '', fechaInicio: '', fechaFin: '' };
   filteredTasks: string[] = [];
   searchTerm: string = '';
+  today = new Date();
 
   constructor(private firebaseService: FirebaseService, private toastController: ToastController) { }
 
@@ -82,6 +83,7 @@ export class AsignarTarea {
     this.selectedValueAcces = [];
     this.dateInit = '';
     this.dateEnd = '';
+    this.today = new Date();
   }
 
   onCheckboxChange(event: any) {
@@ -140,31 +142,45 @@ export class AsignarTarea {
   }
 
 
-  async guardarAsignacion(){
+  async guardarAsignacion() {
     this.newAsignation.nombreTarea = this.selectedTask;
     this.newAsignation.fechaInicio = this.dateInit;
     this.newAsignation.fechaFin = this.dateEnd;
-
-    if(this.selectedTask != '' && this.selectedStudent != '' && this.dateInit != '' && this.dateEnd != ''){
+  
+    const fechaIni = new Date(this.dateInit);
+    const fechaEnd = new Date(this.dateEnd);
+    
+    // Validar que las fechas sean correctas
+    if (!this.selectedTask || !this.selectedStudent || !this.dateInit || !this.dateEnd) {
+      this.mostrarToast('Faltan datos para guardar la asignación', false);
+      return;
+    }
+  
+    // Comprobamos que la fecha de inicio no esté en el pasado y que la fecha de fin sea posterior a la de inicio
+    if (fechaIni < this.today) {
+      this.mostrarToast('La fecha de inicio no puede ser anterior al día de hoy', false);
+      return;
+    }
+  
+    if (fechaEnd.getDate() < fechaIni.getDate()) {
+      this.mostrarToast('La fecha de fin no puede ser anterior a la de inicio', false);
+      return;
+    }
+  
+    try {
+      // Guardar la asignación en Firestore
       const guardadoExitoso = await this.firebaseService.addTaskToStudent(this.selectedStudent, this.newAsignation);
-      console.log('Datos guardados en Firestore con éxito');  
-      
+  
       if (guardadoExitoso) {
         this.mostrarToast('Guardado con éxito', true);
-        console.log('exito');
+        this.initializeComponents(); // Reinicia los campos tras un guardado exitoso
       } else {
-        this.mostrarToast('Error al guardar', false);
-        console.log('error1');
-
+        this.mostrarToast('Error al guardar los datos', false);
       }
-    }else{
-      this.mostrarToast('Error al guardar', false);
-      console.log('error2');
-
+    } catch (error) {
+      console.error('Error al guardar la asignación:', error);
+      this.mostrarToast('Error inesperado al guardar', false);
     }
-    
-    this.initializeComponents();
-    
   }
-
+  
 }
