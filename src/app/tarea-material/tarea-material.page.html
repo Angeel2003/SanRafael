@@ -30,41 +30,41 @@
     <ion-row class="material" *ngFor="let item of items; let i = index">
       <ion-col size="2">
         <ion-item>
-          <ion-input [(ngModel)]="item.material" placeholder="Material {{i + 1}}" (ngModelChange)="onMaterialChange(i)"></ion-input>
+          <p>{{item.material}}</p>
         </ion-item>
       </ion-col>
       <ion-col size="4">
         <ion-col size="2">
-          <ion-radio-group [(ngModel)]="item.tamanio">
-            <ion-radio value="pequenio" labelPlacement="fixed">Pequeño</ion-radio>
-            <ion-radio value="mediano" labelPlacement="fixed">Mediano</ion-radio>
-            <ion-radio value="grande" labelPlacement="fixed">Grande</ion-radio>
-          </ion-radio-group>
+          <ion-item><strong>Tamaño: </strong></ion-item>
+          <ion-item>
+            <p *ngIf="item.tamanio == 'pequenio'">Pequeño</p>
+            <p *ngIf="item.tamanio == 'mediano'">Mediano</p>
+            <p *ngIf="item.tamanio == 'grande'">Grande</p>
+          </ion-item>
           <ion-item>
             <div *ngIf="item.imgTam">
               <img [src]="item.imgTam" alt="Vista previa del tamanio del material" style="width: 100px; height: auto;" />
             </div>
-            <input type="file" accept="image/*" (change)="imgTamanio($event, i)" class="small-file-input" />
           </ion-item>
-
         </ion-col>
         <ion-col size="2">
-          <ion-select interface="popover" placeholder="Color" [(ngModel)]="item.color">
-            <ion-select-option value="azul">Azul</ion-select-option>
-            <ion-select-option value="negro">Negro</ion-select-option>
-            <ion-select-option value="verde">Verde</ion-select-option>
-            <ion-select-option value="rojo">Rojo</ion-select-option>
-            <ion-select-option value="blanco">Blanco</ion-select-option>
-            <ion-select-option value="amarillo">Amarillo</ion-select-option>
-            <ion-select-option value="naranja">Naranja</ion-select-option>
-            <ion-select-option value="rosa">Rosa</ion-select-option>
-            <ion-select-option value="marron">Marrón</ion-select-option>
-          </ion-select>
+          <ion-item><strong>Color: </strong></ion-item>
+          <ion-item>
+            <p *ngIf="item.color == 'azul'">Azul</p>
+            <p *ngIf="item.color == 'verde'">Verde</p>
+            <p *ngIf="item.color == 'negro'">Negro</p>
+            <p *ngIf="item.color == 'rojo'">Rojo</p>
+            <p *ngIf="item.color == 'blanco'">Blanco</p>
+            <p *ngIf="item.color == 'amarillo'">Amarillo</p>
+            <p *ngIf="item.color == 'naranja'">Naranja</p>
+            <p *ngIf="item.color == 'rosa'">Rosa</p>
+            <p *ngIf="item.color == 'marron'">Marron</p>
+            <p *ngIf="item.color == ''">Ningun color seleccionado</p>
+          </ion-item>
           <ion-item>
             <div *ngIf="item.imgColor">
               <img [src]="item.imgColor" alt="Vista previa del color del material" style="width: 100px; height: auto;" />
             </div>
-            <input type="file" accept="image/*" (change)="imgColor($event, i)" class="small-file-input" />
           </ion-item>
         </ion-col>
       </ion-col>
@@ -78,13 +78,12 @@
       </ion-col>
       <ion-col size="2">
         <ion-item>
-          <ion-input [(ngModel)]="item.cantidad" placeholder="Cantidad {{i + 1}}"></ion-input>
+          <p>{{item.cantidad}}</p>
         </ion-item>
         <ion-item>
           <div *ngIf="item.imgCantidad" (ngModelChange)="onCantidadChange(i)">
             <img [src]="item.imgCantidad" alt="Vista previa de la cantidad del material" style="width: 100px; height: auto;" />
           </div>
-          <input type="file" accept="image/*" (change)="imgCantidad($event, i)" class="small-file-input" />
         </ion-item>
       </ion-col>
     </ion-row>
