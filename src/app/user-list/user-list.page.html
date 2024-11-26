@@ -1,9 +1,27 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
-    <ion-title>Usuarios</ion-title>
+    <ion-row class="header-row">
+      <ion-col size="auto">
+        <ion-title class="title">Usuarios</ion-title>
+      </ion-col>
+      <ion-col size="auto" class="image-col">
+        <img 
+          [src]="previewUserGirl" 
+          alt="Pictograma de usuario niña" 
+          class="user-preview-image" 
+        />
+      </ion-col>
+      <ion-col size="auto" class="image-col">
+        <img 
+          [src]="previewUserBoy" 
+          alt="Pictograma de usuario niño" 
+          class="user-preview-image" 
+        />
+      </ion-col>
+    </ion-row>
   </ion-toolbar>
 </ion-header>
 

@@ -7,7 +7,7 @@ import { FirebaseService } from '../services/firebase.service';
 
 export interface Tarea {
   nombre: string,
-  imagen: string
+  imagen: string,
 }
 
 @Component({
@@ -17,11 +17,14 @@ export interface Tarea {
   standalone: true,
   imports: [IonSpinner, IonLabel, IonItem, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonIcon, IonGrid, IonRow, IonButtons, IonBackButton]
 })
-export class AgendaPage implements OnInit {
 
+
+export class AgendaPage implements OnInit {
   tareas: Tarea[] = [];
-  tareasCompletas: any[] = [];
+  nivelesAccesibilidad: string = 'texto';
   loading: boolean = true;
+  tareasCompletas: any[] = [];
+  previewAgenda: any;
 
   constructor(private firebaseService: FirebaseService) {
     this.cargarTareasCompletas();
@@ -41,9 +44,12 @@ export class AgendaPage implements OnInit {
     console.log('Tareas completas:', this.tareasCompletas);
   }
 
-  ngOnInit() {
-    const imagePath = 'pictogramas/agenda.png';
-    this.loadTareas();
+
+  async ngOnInit() {
+    this.previewAgenda = await this.firebaseService.getImageUrl('pictogramas/agenda.png');
+
+    await this.loadAccesibilityLevels();
+    await this.loadTareas();
   }
 
   getPreviewFromTask(taskName: string){
@@ -58,29 +64,41 @@ export class AgendaPage implements OnInit {
     return preview;
   }
 
-  // Cargar tareas de la base de datos
+  // Carga los niveles de accesibilidad del usuario actual
+  async loadAccesibilityLevels() {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      console.error('User ID not found in localStorage');
+      return;
+    }
+
+    try {
+      this.nivelesAccesibilidad = await this.firebaseService.getStudentDoc(userId);
+    } catch (error) {
+      console.error('Error al cargar los niveles de accesibilidad:', error);
+    }
+  }
+
+  // Carga las tareas asignadas al usuario actual
   async loadTareas() {
     const userId = localStorage.getItem('userId');
     if (!userId) {
-      console.error("User ID not found in localStorage");
-      this.tareas = [];
-      this.loading = false;
+      console.error('User ID not found in localStorage');
       return;
     }
-  
+
+    this.loading = true;
+
     try {
       const tareasFromFirebase = await this.firebaseService.getTareasForUser(userId);
       console.log("Tareas obtenidas desde Firebase: ", tareasFromFirebase);
       this.tareas = tareasFromFirebase.map((tarea: Tarea) => ({
         nombre: tarea.nombre || '',
-        imagen: this.getPreviewFromTask(tarea.nombre)
-      }))
-      .filter(tarea => tarea.nombre !== 'Sin nombre');
+        imagen: this.getPreviewFromTask(tarea.nombre),
+      }));
       console.log("Tareas cargadas:", this.tareas);
-
     } catch (error) {
-      console.error("Error al obtener las tareas:", error);
-      this.tareas = [];
+      console.error('Error al cargar las tareas:', error);
     } finally {
       this.loading = false;
     }
