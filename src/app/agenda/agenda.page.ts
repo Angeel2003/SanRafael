@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { addIcons } from 'ionicons';
 import { IonSpinner, IonContent, IonHeader, IonTitle, IonToolbar, IonCol, IonButton, IonIcon, IonGrid, IonRow, IonItem, IonLabel, IonButtons, IonBackButton } from '@ionic/angular/standalone';
 
 import { FirebaseService } from '../services/firebase.service';
 
 export interface Tarea {
   nombre: string,
-  imagen: string
+  imagen: string,
 }
 
 @Component({
@@ -18,64 +17,90 @@ export interface Tarea {
   standalone: true,
   imports: [IonSpinner, IonLabel, IonItem, IonCol, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonIcon, IonGrid, IonRow, IonButtons, IonBackButton]
 })
-export class AgendaPage implements OnInit {
 
+
+export class AgendaPage implements OnInit {
   tareas: Tarea[] = [];
-  imgAgenda: string = '';
+  nivelesAccesibilidad: string = 'texto';
   loading: boolean = true;
+  tareasCompletas: any[] = [];
+  previewAgenda: any;
 
   constructor(private firebaseService: FirebaseService) {
-    addIcons({
-    })
+    this.cargarTareasCompletas();
+  }
+  
+  async cargarTareasCompletas(): Promise<void> {
+    const collectionNames = ['tarea-por-pasos', 'tarea-material', 'tarea-comanda'];
+  
+    for (const collectionName of collectionNames) {
+      // Obtiene todas las tareas de la colección
+      const tareas = await this.firebaseService.getTareasDeColeccion(collectionName);
+  
+      // Combina las tareas obtenidas con las ya existentes
+      this.tareasCompletas = this.tareasCompletas.concat(tareas);
+    }
+  
+    console.log('Tareas completas:', this.tareasCompletas);
   }
 
-  ngOnInit() {
-    const imagePath = 'pictogramas/agenda.png';
-    this.loadTareas();
-    this.loadImagen(imagePath);
+
+  async ngOnInit() {
+    this.previewAgenda = await this.firebaseService.getImageUrl('pictogramas/agenda.png');
+
+    await this.loadAccesibilityLevels();
+    await this.loadTareas();
   }
 
-  // Cargar imagen icono agenda
-  async loadImagen(imagePath: string) {
-    //console.log(imagePath);
+  getPreviewFromTask(taskName: string){
+    let preview = '';
+
+    for(let i = 0; i < this.tareasCompletas.length; i++){
+      if(this.tareasCompletas[i].nombre == taskName){
+        preview = this.tareasCompletas[i].previewUrl;
+      }
+    }
+
+    return preview;
+  }
+
+  // Carga los niveles de accesibilidad del usuario actual
+  async loadAccesibilityLevels() {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      console.error('User ID not found in localStorage');
+      return;
+    }
 
     try {
-      this.imgAgenda = await this.firebaseService.getImageUrl(imagePath);
+      this.nivelesAccesibilidad = await this.firebaseService.getStudentDoc(userId);
     } catch (error) {
-      console.error("Error al cargar la imagen: ", error);
-      this.imgAgenda = '';
+      console.error('Error al cargar los niveles de accesibilidad:', error);
     }
   }
 
-  // Cargar tareas de la base de datos
+  // Carga las tareas asignadas al usuario actual
   async loadTareas() {
     const userId = localStorage.getItem('userId');
     if (!userId) {
-      console.error("User ID not found in localStorage");
-      this.tareas = [];
-      this.loading = false;
+      console.error('User ID not found in localStorage');
       return;
     }
-  
+
+    this.loading = true;
+
     try {
       const tareasFromFirebase = await this.firebaseService.getTareasForUser(userId);
-      console.log("Datos obtenidos de Firebase:", tareasFromFirebase);
-  
-      this.tareas = tareasFromFirebase
-        .map((tarea: Tarea) => ({
-          nombre: tarea.nombre || 'Sin nombre',
-          imagen: tarea.imagen || ''
-        }))
-        .filter(tarea => tarea.nombre !== 'Sin nombre'); // Filtrar tareas no válidas
-  
-      console.log("Tareas válidas después del filtro:", this.tareas);
+      console.log("Tareas obtenidas desde Firebase: ", tareasFromFirebase);
+      this.tareas = tareasFromFirebase.map((tarea: Tarea) => ({
+        nombre: tarea.nombre || '',
+        imagen: this.getPreviewFromTask(tarea.nombre),
+      }));
+      console.log("Tareas cargadas:", this.tareas);
     } catch (error) {
-      console.error("Error al obtener las tareas:", error);
-      this.tareas = [];
+      console.error('Error al cargar las tareas:', error);
     } finally {
       this.loading = false;
     }
   }
-  
-  
 }

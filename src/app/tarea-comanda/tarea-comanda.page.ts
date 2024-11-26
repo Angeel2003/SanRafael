@@ -13,8 +13,8 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, Ion
 export class TareaComandaPage implements OnInit {
   nombreTarea: string = "Nombe de la tarea/aula";
   menus: any[] = [
-    {name: 'Menu1', img: 'https://e7.pngegg.com/pngimages/478/821/png-clipart-restaurant-pictogram-buffet-diner-food-logo.png', num: 0},
-    {name: 'Menu2', img: 'https://e7.pngegg.com/pngimages/478/821/png-clipart-restaurant-pictogram-buffet-diner-food-logo.png', num: 0}
+    {name: 'Menu1', previewUrl: 'https://e7.pngegg.com/pngimages/478/821/png-clipart-restaurant-pictogram-buffet-diner-food-logo.png', num: 0},
+    {name: 'Menu2', previewUrl: 'https://e7.pngegg.com/pngimages/478/821/png-clipart-restaurant-pictogram-buffet-diner-food-logo.png', num: 0}
   ]
   constructor() { }
 

@@ -40,36 +40,93 @@ ion-item {
     font-size: 100%;
 }
 
-.no-tareas {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    /* Ocupa toda la altura del contenido */
-    text-align: center;
-    font-size: 4rem;
-    /* Tamaño grande del texto */
-    font-weight: bold;
-    color: #005682;
-    /* Color suave para el texto */
-}
 
-.loading-spinner {
+  .tareas-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    gap: 15px; /* Espaciado entre tarjetas */
+    padding: 15px;
+  }
+  
+  .tarea-card {
+    display: flex;
+    flex-direction: row; /* Alinear elementos en fila */
     align-items: center;
-    height: 100%;
-    /* Ocupa toda la pantalla */
+    background-color: white;
+    border: 1px solid #ddd; /* Borde sutil */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    padding: 10px;
+    width: 200%; /* Ocupa el ancho del contenedor */
+    max-width: 600px; /* Ancho máximo */
+    margin: 0 auto; /* Centrar la tarjeta horizontalmente */
+  }
+  
+  .tarea-info {
+    flex: 2; /* La sección de texto ocupa más espacio */
+    text-align: left;
+    padding-right: 10px;
+  }
+  
+  .tarea-title {
+    font-size: 25px;
+    font-weight: bold;
+    color: #005682;
+    margin: 0;
+  }
+  
+  .tarea-image {
+    flex: 1; /* La sección de imagen ocupa menos espacio */
     text-align: center;
-
-    ion-spinner {
-        margin-bottom: 10px;
-        color: #005682;
-    }
-
-    p {
-        font-size: 4rem;
-        color: #005682;
-    }
-}
+  }
+  
+  .tarea-preview-image {
+    width: 100px; /* Tamaño fijo de la imagen */
+    height: auto;
+    border-radius: 5px;
+  }
+  
+  .no-image {
+    font-style: italic;
+    color: #005682;
+  }
+  
+  .no-tareas {
+    text-align: center;
+    color: #005682;
+    font-size: 25px;
+    margin-top: 20px;
+  }
+  
+  .loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #005682;
+  }
+  
+  .loading-spinner p {
+    margin-top: 10px;
+  }
+  
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .title {
+    margin-right: 10px; /* Ajusta el espacio entre el título y la imagen */
+  }
+  
+  .image-col {
+    display: flex;
+    justify-content: center; /* Centra la imagen dentro de su columna */
+  }
+  
+  .agenda-preview-image {
+    max-height: 30px; /* Ajusta el tamaño de la imagen según sea necesario */
+    max-width: auto;
+  }
