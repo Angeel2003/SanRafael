@@ -17,31 +17,34 @@
     </ion-row>
 
     <ion-row *ngFor="let menu of menus; let i = index">
-
       <ion-col>
         <ion-item>
           <div>
-            {{ menu.name }}
+            <ion-input [(ngModel)]="menu.name" (ngModelChange)="menu.edited=true"
+              placeholder="Nombre del menú {{i + 1}}"></ion-input>
           </div>
         </ion-item>
-
       </ion-col>
 
       <ion-col size="4">
         <ion-item>
-          <!-- <ion-label>Foto del menu</ion-label> -->
           <div *ngIf="menu.image.url">
             <img [src]="menu.image.url" style="width: 200px; height: auto;" alt="Vista previa del menu" />
           </div>
         </ion-item>
+        <ion-item>
+          <input type="file" accept="image/*" (change)="loadFile($event, i, true)" />
+        </ion-item>
       </ion-col>
 
       <ion-col size="4">
         <ion-item>
-          <!-- <ion-label>Pictograma del menu</ion-label> -->
           <div *ngIf="menu.pictogram.url">
-            <img [src]="menu.pictogram.url" alt="Vista previa del menu" style="width: 200px; height: auto;" />
+            <img [src]="menu.pictogram.url" alt="Vista previa del pictograma" style="width: 200px; height: auto;" />
           </div>
+        </ion-item>
+        <ion-item>
+          <input type="file" accept="image/*" (change)="loadFile($event, i, false)" />
         </ion-item>
       </ion-col>
 
@@ -52,37 +55,6 @@
           </ion-button>
         </ion-item>
       </ion-col>
-
-    </ion-row>
-
-
-    <ion-row *ngFor="let menu of newMenus; let i = index">
-
-      <ion-col>
-        <ion-item>
-          <ion-input [(ngModel)]="menu.name" placeholder="Nombre del menú {{i + 1}}"></ion-input>
-        </ion-item>
-      </ion-col>
-
-      <ion-col size="4">
-        <ion-item>
-          <ion-label>Foto del menu</ion-label>
-          <img *ngIf="menu.image.url" [src]="menu.image.url" alt="Vista previa del menu"
-            style="width: 100px; height: auto;" />
-
-          <input type="file" accept="image/*" (change)="loadFile($event,i,true)" />
-        </ion-item>
-      </ion-col>
-
-      <ion-col>
-        <ion-item>
-          <ion-label>Pictograma del menu</ion-label>
-          <img *ngIf="menu.pictogram.url" [src]="menu.pictogram.url" alt="Vista previa del menu"
-            style="width: 100px; height: auto;" />
-          <input type="file" accept="image/*" (change)="loadFile($event,i,false)" />
-        </ion-item>
-      </ion-col>
-
     </ion-row>
 
 
@@ -94,18 +66,6 @@
         </ion-button>
       </ion-col>
     </ion-row>
-
-
-    <!-- <ion-row>
-      <ion-col size="auto">
-        <ion-button (click)="saveMenus()">
-          <ion-icon name="save-outline"></ion-icon>
-          <ion-label>Guardar</ion-label>
-        </ion-button>
-      </ion-col>
-    </ion-row> -->
-
-
   </ion-grid>
 </ion-content>
 

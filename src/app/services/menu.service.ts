@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, DocumentData, getDocs } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, DocumentData, getDocs, updateDoc } from "firebase/firestore";
 import { FirebaseService } from "./firebase.service";
 import { Injectable } from "@angular/core";
 import { MenuItem } from "../editar-menu/editar-menu.page";
@@ -19,6 +19,17 @@ export class MenuService {
 
         try {
             await addDoc(menusCollection, menuData);
+            console.log('Menu guardado con éxito');
+        } catch (error) {
+            console.error('Error al guardar el menu: ', error);
+            throw new Error('Error al guardar el menu');
+        }
+    }
+
+    async updateMenu(menuId: any, menuData: any): Promise<void> {
+        try {
+            const menuDoc = doc(this.firebaseService.db, 'menus', menuId);
+            await updateDoc(menuDoc, menuData);
             console.log('Menu guardado con éxito');
         } catch (error) {
             console.error('Error al guardar el menu: ', error);
