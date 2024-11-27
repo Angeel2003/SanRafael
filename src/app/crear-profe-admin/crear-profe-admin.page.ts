@@ -26,15 +26,14 @@ export class CrearProfeAdminPage implements OnInit {
   // Variables para almacenar datos del formulario
   nombre: string = '';
   correo: string = '';
-  rol: string = 'admin'; // Valor predeterminado
-  contrasena: string = '';
+  tipoUsuario: string = ''; // Valor predeterminado
 
   adminProfe = {
     nombre: '',
     correo: '',
-    rol: 'admin',
-    contrasena: '',
-    foto: '' // URL de la foto de perfil
+    tipoUsuario: '',
+    foto: '', // URL de la foto de perfil
+    contrasena: ''
   };
   
   passwordVisible: boolean = false; // Para alternar visibilidad de la contraseña
@@ -49,13 +48,13 @@ export class CrearProfeAdminPage implements OnInit {
 
   ngOnInit() {}
 
-    // Abre el selector de archivos
-    triggerImageInput() {
-      const input = document.getElementById('imageInput') as HTMLInputElement;
-      input.click();
-    }
+  // Abre el selector de archivos
+  triggerImageInput() {
+    const input = document.getElementById('imageInput') as HTMLInputElement;
+    input.click();
+  }
 
-      // Maneja la selección de imagen
+  // Maneja la selección de imagen
   onImageSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -81,9 +80,9 @@ export class CrearProfeAdminPage implements OnInit {
     this.adminProfe = {
       nombre: '',
       correo: '',
-      rol: 'admin',
-      contrasena: '',
-      foto: ''
+      tipoUsuario: 'admin',
+      foto: '',
+      contrasena: ''
     };
   }
   togglePasswordVisibility() {

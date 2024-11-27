@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonGrid, IonRow, IonCol, IonButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonGrid, IonRow, IonCol, IonButton, IonBadge } from '@ionic/angular/standalone';
 import { NavigationExtras, Router } from '@angular/router';
 import { FirebaseService } from '../services/firebase.service';
 
@@ -10,13 +10,13 @@ import { FirebaseService } from '../services/firebase.service';
   templateUrl: './perfil-admin-profesor.page.html',
   styleUrls: ['./perfil-admin-profesor.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButtons, IonBackButton, IonGrid, IonRow, IonCol, IonButton, NgIf]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButtons, IonBackButton, IonGrid, IonRow, IonCol, IonButton, NgIf, IonBadge]
 })
 
 export class PerfilAdminProfesorPage implements OnInit {
   adminProfe: any;
-  private intervalId: any; 
-  isEmpty: boolean | null = null;
+  private intervalId: any;
+  peticiones: number | null = 0;
 
   constructor(private router: Router, private firebaseService: FirebaseService) {
     const navigation = this.router.getCurrentNavigation();
@@ -28,21 +28,14 @@ export class PerfilAdminProfesorPage implements OnInit {
     if(this.adminProfe.tipoUsuario == 'administrador'){
       this.intervalId = setInterval(() => {
         this.checkCollectionStatus();
-      }, 2000);
+      }, 100);
     }
   }
 
   checkCollectionStatus() {
     this.firebaseService.isCollectionEmpty("peticionesMaterial").subscribe({
-      next: isEmpty => {
-        this.isEmpty = isEmpty;
-        console.log(
-          isEmpty === null
-            ? 'Error al comprobar la colección.'
-            : isEmpty
-            ? 'La colección está vacía.'
-            : 'La colección tiene documentos.'
-        );
+      next: peticiones => {
+        this.peticiones = peticiones;
       },
       error: error => {
         console.error('Error en el observable:', error);
@@ -61,15 +54,11 @@ export class PerfilAdminProfesorPage implements OnInit {
   }
 
   crearAdminProfe() {
-    console.log("Solicitando material por parte del profesor");
-    console.log("Descomentar cuando este implementado");
     this.router.navigate(['/crear-profe-admin']);
   }
 
   gestionarUsuarios() {
-    console.log("Solicitando material por parte del profesor");
-    console.log("Descomentar cuando este implementado");
-     this.router.navigate(['/modificar-usuario-principal']);
+    this.router.navigate(['/modificar-usuario-principal']);
   }
 
   crearTareaPorPasos() {
@@ -98,25 +87,12 @@ export class PerfilAdminProfesorPage implements OnInit {
   }
 
   solicitarMaterial(nombre: string) {
-    console.log('Nombre del profesor:', nombre);
     const navigationExtras: NavigationExtras = {
       state: {
         nombre: nombre
       }
     };
     this.router.navigate(['/solicitar-material-profe'], navigationExtras);
-  }
-
-  
-
-
-  // BOTONES SIN COLOCAR
-  asignarTarea() {
-    this.router.navigate(['/asignar-tarea']);
-  }
-
-  modificarTareaMaterial() {
-    this.router.navigate(['/modificar-tarea-material']);
   }
 
   peticionMaterial() {

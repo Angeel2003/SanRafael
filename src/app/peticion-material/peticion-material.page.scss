@@ -1,9 +1,15 @@
-ion-title{
+ion-toolbar {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
+}
+  
+ion-title {
     text-align: center; /* Asegura que el texto esté centrado */
     width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
-    font-size: 34px;
+    font-size: 24px;
     color: #005682;
 }
+
 ion-grid{
     text-align: center;
     width: 100%; 
@@ -11,20 +17,18 @@ ion-grid{
     color: #005682;
 }
 
-.normal-button{
-    background-color: #005682;
+ion-button {
+    --background: #005682; // Cambia el color de fondo
+    --color: #fff; // Cambia el color del texto
 }
-span{
-    margin-right: 5%;
-    margin-top: 3%;
+
+ion-item {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
-.material-container{
-    padding-left: 20%;
-    padding-right: 25%;
-}
-.align-correctly{
-    padding-top: 1%;
-}
-.create-task-button{
-    margin-left: 80%;
+
+.create-task-button {
+    width: 200px;
+    margin-top: 50px;
 }

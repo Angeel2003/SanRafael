@@ -41,10 +41,6 @@ export class PeticionMaterialPage implements OnInit {
     console.log("Peticiones: " + this.peticionesMaterial.length + "  Booleanos: " + this.desplegarMateriales.length);
   }
 
-  goBack(){
-    this.router.navigate(['/perfil-admin-profesor']);
-  }
-
   desplegarMaterial(index: number){
     if(this.desplegarMateriales[index]){
       console.log("Guardando material " + index);

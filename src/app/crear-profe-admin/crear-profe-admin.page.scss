@@ -22,12 +22,21 @@ ion-title {
     display: flex;
     justify-content: center;
     margin: 10px 0;
-  }
-  
-  .profile-image-preview {
+}
+
+.profile-image-preview {
     width: 100px;
     height: 100px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #ccc;
-  }
+}
+
+ion-button {
+    --background: #005682; // Cambia el color de fondo
+    --color: #fff; // Cambia el color del texto
+}
+
+ion-grid {
+    padding: 20px;
+}

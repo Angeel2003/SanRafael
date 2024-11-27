@@ -50,9 +50,11 @@ ion-title {
   transform: scale(1.05); // Aumenta el tamaño ligeramente al pasar el mouse
 }
 
-ion-icon {
-  font-size: 225px;
-  margin-bottom: 5px; // Añade un espacio entre el ícono y el texto
+.imagen-estudiante {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%; /* Hace que la imagen sea redonda */
+  object-fit: cover; /* Asegura que la imagen se ajuste dentro del contenedor */
 }
 
 p {

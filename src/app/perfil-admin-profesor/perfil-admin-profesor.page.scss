@@ -62,21 +62,21 @@ ion-title {
 
 .users-buttons ion-button {
     margin-bottom: 30px;
-    font-size: 18px;
+    font-size: 16px;
     --background: #606a6e; // Cambia el color de fondo
     --color: #fff; // Cambia el color del texto
 }
 
 .tasks-buttons ion-button {
     margin-bottom: 30px;
-    font-size: 18px;
+    font-size: 16px;
     --background: #406679; // Cambia el color de fondo
     --color: #fff; // Cambia el color del texto
 }
 
 .options-buttons ion-button {
     margin-bottom: 30px;
-    font-size: 18px;
+    font-size: 16px;
     --background: #005682; // Cambia el color de fondo
     --color: #fff; // Cambia el color del texto
 }
@@ -86,25 +86,8 @@ ion-title {
     flex: 0 0 auto; /* Asegura que las columnas no se expandan automáticamente */
 }
 
-
-// BOTONES SIN COLOCAR
-h1 {
-    margin-top: 100px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 36px;
-}
-
-.sin-colocar ion-button {
-    margin-bottom: 30px;
-    font-size: 18px;
-    --background: #b90000; // Cambia el color de fondo
-    --color: #fff; // Cambia el color del texto
-}
-
-.tasks-buttons ion-button.request-notification {
-    margin-bottom: 30px;
-    font-size: 18px;
-    --background: green; // Cambia el color de fondo
-    --color: #fff; // Cambia el color del texto
+ion-badge {
+    --background: #ff4c4c;
+    --color: #ffffff;
+    margin-left: 10px;
 }

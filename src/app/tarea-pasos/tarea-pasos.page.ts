@@ -100,9 +100,6 @@ export class TareaPasosPage {
       const file = input.files[0];
       this.selectedPicto[index] = file; // Almacena el archivo
       this.stepPictoValues[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
-      console.log('Archivo seleccionado:', file); // Verifica que el archivo se ha seleccionado
-    } else {
-      console.log('No se seleccionó ningún archivo'); // Mensaje si no hay archivos
     }
   }
   
@@ -113,9 +110,6 @@ export class TareaPasosPage {
       const file = input.files[0];
       this.selectedImages[index] = file; // Almacena el archivo
       this.stepImgValues[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
-      console.log('Archivo seleccionado:', file); // Verifica que el archivo se ha seleccionado
-    } else {
-      console.log('No se seleccionó ningún archivo'); // Mensaje si no hay archivos
     }
   }
 
@@ -125,9 +119,6 @@ export class TareaPasosPage {
       const file = input.files[0];
       this.selectedVideos[index] = file; // Almacena el archivo
       this.stepVideoValues[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
-      console.log('Archivo seleccionado:', file); // Verifica que el archivo se ha seleccionado
-    } else {
-      console.log('No se seleccionó ningún archivo'); // Mensaje si no hay archivos
     }
   }
 
@@ -254,19 +245,15 @@ export class TareaPasosPage {
       || this.stepPicto.length != 0 || this.stepImg.length != 0 || this.stepVideo.length != 0 || this.stepText.length != 0)){
       
       const guardadoExitoso = await this.firebaseService.guardarTareaPorPasos(dataToSave);
-      console.log('Datos guardados en Firestore con éxito');  
       
       if (guardadoExitoso) {
         this.mostrarToast('Guardado con éxito', true);
-        console.log('exito');
       } else {
         this.mostrarToast('Error al guardar', false);
-        console.log('error1');
 
       }
     }else{
       this.mostrarToast('Error al guardar', false);
-      console.log('error2');
 
     }
     

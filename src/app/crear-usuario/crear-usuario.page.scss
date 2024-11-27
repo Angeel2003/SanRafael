@@ -22,70 +22,75 @@ h2, h3 {
     color: #005682;
 }
 
+ion-button {
+  --background: #005682;
+  --color: #fff;
+}
+
 .eye-icon {
-    cursor: pointer;
-    align-self: center;
-  }
+  cursor: pointer;
+  align-self: center;
+}
 
-  .image-selection {
-    display: flex;
-    flex-direction: column; /* Organiza las filas verticalmente */
-    gap: 10px; /* Espaciado entre las filas */
-  }
-  
-  .image-row {
-    display: flex;
-    justify-content: space-between; /* Espacia las imágenes uniformemente */
-    gap: 10px; /* Espaciado entre las imágenes en la misma fila */
-  }
-  
-  .image-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%; /* Hace que cada contenedor ocupe el mismo espacio */
-    max-width: 150px; /* Aumenta el tamaño máximo del contenedor */
-  }
-  
-  .image-container img {
-    width: 150px; /* Asegura que todas las imágenes tengan el mismo tamaño */
-    height: 150px; /* Ajusta la altura para que sea igual al ancho */
-    object-fit: cover; /* Asegura que las imágenes no se deformen y cubran el contenedor */
-    border-radius: 8px; /* Bordes redondeados */
-  }
+.image-selection {
+  display: flex;
+  flex-direction: column; /* Organiza las filas verticalmente */
+  gap: 10px; /* Espaciado entre las filas */
+}
 
-  .selected-images {
-    display: flex;
-    flex-wrap: wrap; /* Permite que las imágenes se ajusten si hay muchas */
-    gap: 15px; /* Espaciado entre las imágenes */
-    margin-top: 20px;
-  }
-  
-  .selected-image-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .selected-image {
-    width: 100px; /* Tamaño más pequeño para las imágenes seleccionadas */
-    height: 100px;
-    object-fit: cover; /* Mantiene la proporción de la imagen */
-    border-radius: 8px; /* Bordes redondeados */
-  }
+.image-row {
+  display: flex;
+  justify-content: space-between; /* Espacia las imágenes uniformemente */
+  gap: 10px; /* Espaciado entre las imágenes en la misma fila */
+}
 
-  .image-preview-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 10px;
-  }
-  
-  .profile-image-preview {
-    width: 100px; /* Ajusta el tamaño deseado */
-    height: 100px; /* Asegúrate de mantener las proporciones */
-    object-fit: cover; /* Recorta la imagen para que se ajuste bien al tamaño */
-    border-radius: 50%; /* Opcional: para hacer la imagen circular */
-    border: 2px solid #ccc; /* Opcional: añade un borde */
-  }
+.image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* Hace que cada contenedor ocupe el mismo espacio */
+  max-width: 150px; /* Aumenta el tamaño máximo del contenedor */
+}
+
+.image-container img {
+  width: 150px; /* Asegura que todas las imágenes tengan el mismo tamaño */
+  height: 150px; /* Ajusta la altura para que sea igual al ancho */
+  object-fit: cover; /* Asegura que las imágenes no se deformen y cubran el contenedor */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+.selected-images {
+  display: flex;
+  flex-wrap: wrap; /* Permite que las imágenes se ajusten si hay muchas */
+  gap: 15px; /* Espaciado entre las imágenes */
+  margin-top: 20px;
+}
+
+.selected-image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.selected-image {
+  width: 100px; /* Tamaño más pequeño para las imágenes seleccionadas */
+  height: 100px;
+  object-fit: cover; /* Mantiene la proporción de la imagen */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+.image-preview-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.profile-image-preview {
+  width: 100px; /* Ajusta el tamaño deseado */
+  height: 100px; /* Asegúrate de mantener las proporciones */
+  object-fit: cover; /* Recorta la imagen para que se ajuste bien al tamaño */
+  border-radius: 50%; /* Opcional: para hacer la imagen circular */
+  border: 2px solid #ccc; /* Opcional: añade un borde */
+}

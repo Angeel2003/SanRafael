@@ -15,5 +15,12 @@ ion-title {
     height: 100px;
     object-fit: cover; /* Hace que la imagen cubra el área sin distorsionarse */
     border-radius: 50%; /* Redondea los bordes para una apariencia de círculo */
-  }
+
+
+}
+
+ion-button {
+    --background: #005682; /* Cambia el color de fondo */
+    --color: #ffffff;      /* Cambia el color del texto y el icono */
+}
   

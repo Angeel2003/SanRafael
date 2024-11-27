@@ -9,15 +9,12 @@
 
 ion-toolbar {
     display: flex;
-    justify-content: center;
-    /* Centra horizontalmente el contenido */
+    justify-content: center; /* Centra horizontalmente el contenido */
 }
-
+  
 ion-title {
-    text-align: center;
-    /* Asegura que el texto esté centrado */
-    width: 100%;
-    /* Ocupa el 100% del ancho para centrarse correctamente */
+    text-align: center; /* Asegura que el texto esté centrado */
+    width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
     font-size: 24px;
     color: #005682;
 }

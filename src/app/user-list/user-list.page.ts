@@ -19,7 +19,7 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, I
 export class UserListPage implements OnInit {
   users: any[] = [];
   currentPage = 0;
-  usersPerPage = 4; // Muestra 5 usuarios por página
+  usersPerPage = 4; // Muestra 4 usuarios por página
   previewUserGirl: string = '';
   previewUserBoy: string = '';
 

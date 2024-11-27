@@ -35,9 +35,9 @@
     <ion-row>
       <ion-col size="12">
         <ion-item>
-          <ion-label position="stacked">Rol</ion-label>
-          <ion-select [(ngModel)]="adminProfe.rol" name="rol" placeholder="Seleccione el rol">
-            <ion-select-option value="admin">Administrador</ion-select-option>
+          <ion-label position="stacked">Tipo de Usuario</ion-label>
+          <ion-select [(ngModel)]="adminProfe.tipoUsuario" name="tipoUsuario" placeholder="Seleccione el tipo de usuario">
+            <ion-select-option value="administrador">Administrador</ion-select-option>
             <ion-select-option value="profesor">Profesor</ion-select-option>
           </ion-select>
         </ion-item>
@@ -45,18 +45,18 @@
     </ion-row>
 
     <!-- Foto de Perfil -->
-<ion-row>
-  <ion-col size="12">
-    <ion-item lines="none">
-      <ion-label position="stacked">Foto de Perfil</ion-label>
-      <div class="image-preview-container">
-        <img *ngIf="adminProfe.foto" [src]="adminProfe.foto" alt="Vista previa" class="profile-image-preview">
-      </div>
-    </ion-item>
-    <ion-button expand="block" (click)="triggerImageInput()">Subir Imagen</ion-button>
-    <input type="file" id="imageInput" accept="image/*" (change)="onImageSelected($event)" hidden>
-  </ion-col>
-</ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item lines="none">
+          <ion-label position="stacked">Foto de Perfil</ion-label>
+          <div class="image-preview-container">
+            <img *ngIf="adminProfe.foto" [src]="adminProfe.foto" alt="Vista previa" class="profile-image-preview">
+          </div>
+        </ion-item>
+        <ion-button expand="block" (click)="triggerImageInput()">Subir Imagen</ion-button>
+        <input type="file" id="imageInput" accept="image/*" (change)="onImageSelected($event)" hidden>
+      </ion-col>
+    </ion-row>
 
     <!-- Contraseña -->
     <h2>Contraseña</h2>

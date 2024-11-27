@@ -3,6 +3,7 @@ import { personOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { Router } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton} from '@ionic/angular/standalone';
+import { FirebaseService } from '../services/firebase.service';
 
 @Component({
   selector: 'app-home',
@@ -12,10 +13,16 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton} from '
   imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton], 
 })
 export class HomePage {
-  constructor(private router: Router){
+
+  imagen: string = '';
+  constructor(private router: Router, private firebaseService: FirebaseService){
     addIcons({
       personOutline
     })
+  }
+
+  async ngOnInit() {
+    this.imagen = await this.firebaseService.getImageUrl('pictogramas/niña.png');
   }
 
   goToUserLogin() {

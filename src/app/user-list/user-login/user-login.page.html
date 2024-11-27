@@ -52,9 +52,9 @@
 
       <ion-grid>
         <ion-row>
-          <ion-col size="4" *ngFor="let button of buttons; let i = index">
+          <ion-col size="4" *ngFor="let image of images; let i = index">
             <ion-button class="pictogram" (click)="selectButton(i)">
-              <img [src]="button.image" />
+              <img [src]="image" />
             </ion-button>
           </ion-col>
         </ion-row>

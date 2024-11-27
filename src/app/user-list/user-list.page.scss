@@ -10,14 +10,6 @@ ion-title {
     color: #005682;
 }
 
-// ion-card {
-//     text-align: center; /* Centrar texto */
-//     margin: 40px; /* Espaciado entre tarjetas */
-//     background-color: #005682;
-//     padding: 10px;
-//     border-radius: 18px;
-// }
-
 ion-card {
     display: flex;
     flex-direction: column;
@@ -66,18 +58,18 @@ ion-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  .title {
+}
+
+.title {
     margin-right: 10px; /* Ajusta el espacio entre el título y la imagen */
-  }
-  
-  .image-col {
+}
+
+.image-col {
     display: flex;
     justify-content: center; /* Centra la imagen dentro de su columna */
-  }
-  
-  .user-preview-image {
+}
+
+.user-preview-image {
     max-height: 60px; /* Ajusta el tamaño de la imagen según sea necesario */
     max-width: auto;
-  }
+}

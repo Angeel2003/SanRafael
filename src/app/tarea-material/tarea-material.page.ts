@@ -145,8 +145,6 @@ export class TareaMaterialPage implements OnInit {
       const materialItem: MaterialItem = {material: material.nombreMaterial, tamanio: material.tamanio, color: material.color, imgTam: URLtamaño, imgColor: URLcolor, imagen: '', cantidad: material.cantidad, imgCantidad: URLcantidad};
       this.items.push(materialItem);
     }
-    console.log('MAteriales inicializados correctamente');
-    console.log(JSON.stringify(this.items));
   }
 
   imgTareaPreview(event: Event) {
@@ -170,7 +168,6 @@ export class TareaMaterialPage implements OnInit {
     if (input.files && input.files.length) {
       const file = input.files[0];
       this.items[index].color = URL.createObjectURL(file);
-      console.log(this.items[index].color);
     }
   }
 
@@ -232,7 +229,6 @@ export class TareaMaterialPage implements OnInit {
 
     if (item.cantidad && item.cantidad < 10){
       const pathCantidad = `pictogramas/numeros/${item.cantidad}.png`;
-      console.log(pathCantidad);
       item.imgCantidad = await this.firebaseService.getDownloadURL(pathCantidad);
     }
   }
@@ -280,7 +276,6 @@ export class TareaMaterialPage implements OnInit {
       this.mostrarToast('Nuevo item', true);
     } else {
       this.mostrarToast('Faltan campos por rellenar (debe haber nombre e imagen de la tarea y nombre, aula y cantidad de cada item)', false);
-      console.log("Faltan campos por rellenar");
     }
   }
 
@@ -361,13 +356,10 @@ export class TareaMaterialPage implements OnInit {
       }
 
       await this.firebaseService.guardarTareaMaterial(dataToSave);
-      console.log('Datos guardados: ', this.items);
       this.router.navigate(['/peticion-material']);
       this.mostrarToast('Tarea material guardada', true);
     } else {
-      console.log('no entra aqui');
       this.mostrarToast('Faltan campos por rellenar (debe haber nombre e imagen de la tarea y nombre, aula y cantidad de cada item)', false);
-      console.log('Faltan campos por rellenar');
     }
 
 

@@ -1,16 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
-import { QueryList, ViewChildren, ElementRef } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
 import { FirebaseService } from '../services/firebase.service';
-import { Router } from '@angular/router';
-import { eyeOff, eye } from 'ionicons/icons';
-import { lockClosedOutline } from 'ionicons/icons';
-import { addIcons } from 'ionicons';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-
 
 @Component({
   selector: 'app-modificar-usuario',
@@ -54,7 +47,6 @@ export class ModificarUsuarioPage {
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       const idUsuario = params.get('id');  // Aquí obtienes el parámetro 'id' de la URL
-      console.log('ID Usuario desde la ruta:', idUsuario);  // Asegúrate de que el ID se obtenga correctamente
       if (idUsuario) {
         this.cargarDatosUsuario(idUsuario);
       } else {
@@ -76,8 +68,6 @@ export class ModificarUsuarioPage {
         if (usuario.foto) {
           this.profileImageUrl = usuario.foto;  // Aquí asignamos la URL de la foto
         }
-  
-        console.log('Usuario cargado:', this.usuario); // Debug
       } else {
         console.error('El usuario no existe en la base de datos.');
       }

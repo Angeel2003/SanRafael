@@ -78,12 +78,10 @@ export class AdminLoginPage implements OnInit {
     const isAuthenticated = await this.firebaseService.loginUser(email, password);
   
     if (isAuthenticated) {
-      console.log("Inicio de sesión exitoso");
       this.mostrarToast('Inicio de sesión exitoso.', true);
       // Buscar al administrador en la base de datos
       const adminProfe = await this.firebaseService.getAdminByEmail(email);
       if (adminProfe) {
-        console.log("Administrador encontrado");  
         // Enviar los datos del administrador al perfil
         const navigationExtras: NavigationExtras = {
           state: {
@@ -97,7 +95,6 @@ export class AdminLoginPage implements OnInit {
       }
     } else {
       this.mostrarToast('Error en las credenciales. Inténtalo de nuevo.', false);
-      console.log("Error en las credenciales. Inténtalo de nuevo.");
       // Muestra un mensaje de error en la interfaz
     }
   }

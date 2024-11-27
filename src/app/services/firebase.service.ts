@@ -38,7 +38,6 @@ export class FirebaseService {
 
     try {
       await uploadBytes(storageRef, file); // Sube el archivo
-      console.log('Archivo subido con éxito');
     } catch (error) {
       console.error('Error al subir el archivo: ', error);
       throw new Error('Error al subir el archivo');
@@ -62,7 +61,6 @@ export class FirebaseService {
 
     try {
       await deleteObject(storageRef);
-      console.log('Archivo eliminado con éxito');
     } catch (error) {
       console.error('Error al eliminar el archivo: ', error);
       throw new Error('Error al eliminar el archivo');
@@ -74,7 +72,6 @@ export class FirebaseService {
 
     try {
       await addDoc(tasksCollection, taskData);
-      console.log('Tarea guardada con éxito');
       return true;
     } catch (error) {
       console.error('Error al guardar la tarea: ', error);
@@ -87,7 +84,6 @@ export class FirebaseService {
     try {
       const usersCollection = collection(this.db, 'alumnos');
       await addDoc(usersCollection, profileData);
-      console.log('Perfil guardado con éxito en Firestore');
     } catch (error) {
       console.error('Error al guardar el perfil: ', error);
       throw new Error('Error al guardar el perfil');
@@ -161,7 +157,6 @@ export class FirebaseService {
           await updateDoc(studentDocRef, {
             tareasAsig: arrayUnion(asignacion)
           });
-          console.log('Tarea agregada correctamente al estudiante');
           return true;  // Devuelve true si se agregó la tarea correctamente
         }
       }
@@ -174,13 +169,11 @@ export class FirebaseService {
     }
   }
 
-
-  //Tarea material
+  //Tarea material  
   async guardarTareaMaterial(taskData: any): Promise<void> {
     const tasksCollection = collection(this.db, 'tarea-material');
     try {
       await addDoc(tasksCollection, taskData);
-      console.log('Tarea de material guardada con éxito');
     } catch (error) {
       console.error('Error al guardar la tarea de material: ', error);
       throw new Error('Error al guardar la tarea de material');
@@ -245,10 +238,8 @@ export class FirebaseService {
 
       if (docSnapshot.exists()) {
         await updateDoc(docRef, data);
-        console.log('Tarea actualizada con éxito');
         return true;
       } else {
-        console.log('no existe tarea');
         return false;
       }
     } catch (error) {
@@ -262,7 +253,6 @@ export class FirebaseService {
     const tasksCollection = collection(this.db, 'tarea-comanda');
     try {
       await addDoc(tasksCollection, taskData);
-      console.log('Tarea de comanda guardada con éxito');
     } catch (error) {
       console.error('Error al guardar la tarea de comanda: ', error);
       throw new Error('Error al guardar la tarea de comanda');
@@ -300,10 +290,8 @@ export class FirebaseService {
   
       const alumnoData = alumnoDocSnapshot.data(); // Datos del alumno
       const tareasAsignadas = alumnoData?.['tareasAsig'] || []; // Obtén las tareas asignadas, si existen
-      console.log("Tareas asignadas:", tareasAsignadas);
   
       if (!Array.isArray(tareasAsignadas) || tareasAsignadas.length === 0) {
-        console.log("El alumno no tiene tareas asignadas.");
         return []; // Devuelve un array vacío si no hay tareas
       }
   
@@ -315,7 +303,6 @@ export class FirebaseService {
         .filter((tarea: any) => {
           const fechaInicio = new Date(tarea.fechaInicio); // Convertir fechaInicio a objeto Date
           const fechaFin = new Date(tarea.fechaFin);       // Convertir fechaFin a objeto Date
-          console.log('Fechafin',fechaFin);
           return today >= fechaInicio && today <= fechaFin; // Verificar si hoy está dentro del rango
         })
         .map((tarea: any) => ({
@@ -323,7 +310,6 @@ export class FirebaseService {
           imagen: tarea.preview || '', // Añadir la imagen si existe
         }));
   
-      console.log("Tareas filtradas:", tareasFiltradas);
       return tareasFiltradas;
     } catch (error) {
       console.error("Error al obtener las tareas del alumno:", error);
@@ -366,7 +352,6 @@ export class FirebaseService {
     const storageRef = ref(this.storage, path);
     try{
       const url = await getDownloadURL(storageRef);
-      console.log('URL de la imagen obtenida: ', url);
       return url;
     } catch (error){
       console.error('Error al obtener la URL de la imagen: ', error);
@@ -390,16 +375,12 @@ export class FirebaseService {
 
 
   async getPictogramImagesFromStorage(): Promise<string[]> {
-    console.log('getPictogramImagesFromStorage ejecutada'); // Para verificar que la función se ejecuta
   
     try {
-      const folderPath = 'pictograma'; // Ruta de la carpeta en Firebase Storage
-      console.log('Obteniendo archivos de la carpeta:', folderPath);
+      const folderPath = 'pictogramas'; // Ruta de la carpeta en Firebase Storage
   
       const folderRef = ref(this.storage, folderPath);
       const listResult = await listAll(folderRef);
-  
-      console.log('Archivos encontrados:', listResult.items.map(item => item.name));
   
       // Limitar a las primeras 6 imágenes
       const limitedItems = listResult.items.slice(0, 6); // Limitar a las primeras 6 imágenes
@@ -412,20 +393,18 @@ export class FirebaseService {
       const urls = await Promise.all(
         limitedItems.map(item => getDownloadURL(item))
       );
-  
-      console.log('URLs de imágenes obtenidas:', urls);
       return urls; // Devuelve las URLs de las primeras 6 imágenes
     } catch (error) {
       console.error('Error al obtener imágenes de Firebase Storage:');
       throw new Error('No se pudieron obtener las imágenes desde Storage.');
     }
   }
+
   //Gestionar material
   async guardarMaterialesAlmacen(taskData: any): Promise<boolean> {
     const tasksCollection = collection(this.db, 'materiales');
     try {
       await addDoc(tasksCollection, taskData);
-      console.log('Materiales guardados con éxito');
       return true;
     } catch (error) {
       console.error('Error al guardar materiales: ', error);
@@ -457,7 +436,6 @@ export class FirebaseService {
     };
     try {
       await addDoc(collectionRef, solicitud);
-      console.log('Solicitud guardada con éxito:', solicitud);
       return true;
     } catch (error) {
       console.error('Error al guardar la solicitud:', error);
@@ -486,7 +464,6 @@ export class FirebaseService {
         id: doc.id,
         ...(doc.data())
       }));
-      console.log("Peticion de material obtenido exitosamente");
       return request
     }catch(error){
       console.error("Error al obtener las peticiones de materiales:", error);
@@ -495,13 +472,13 @@ export class FirebaseService {
   }
 
   //Comprobar si una coleccion esta vacia o no
-   isCollectionEmpty(collectionName: string): Observable<boolean | null> {
+   isCollectionEmpty(collectionName: string): Observable<number | null> {
     const collectionRef = collection(this.db, collectionName);
   
     return new Observable(observer => {
       getDocs(collectionRef)
         .then(snapshot => {
-          observer.next(snapshot.empty); // Emite true si está vacía, false si no.
+          observer.next(snapshot.size); // Emite true si está vacía, false si no.
           observer.complete();
         })
         .catch(error => {
@@ -522,8 +499,6 @@ export class FirebaseService {
   
       // Verifica si el documento existe
       if (alumnoDocSnapshot.exists()) {
-        console.log('Alumno obtenido con éxito:', alumnoDocSnapshot.data());
-        
         // Retorna todos los campos del alumno junto con su ID
         return { id: alumnoDocSnapshot.id, ...alumnoDocSnapshot.data() };
       } else {
@@ -544,7 +519,6 @@ export class FirebaseService {
   
       if (alumnoDocSnapshot.exists()) {
         await updateDoc(alumnoDocRef, data); // Actualiza el documento con los datos proporcionados
-        console.log('Alumno actualizado con éxito:', id);
         return true; // Retorna true si la actualización fue exitosa
       } else {
         console.warn('No se encontró un alumno con el ID especificado para actualizar:', id);

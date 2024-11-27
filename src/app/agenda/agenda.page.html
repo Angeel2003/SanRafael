@@ -34,7 +34,7 @@
           <div class="tarea-content">
             <p class="tarea-title">Tarea {{ i + 1 }}: {{ tarea.nombre }}</p>
           </div>
-          <div class="tarea-image" *ngIf="nivelesAccesibilidad == 'pictograma' || nivelesAccesibilidad == 'imagenes'" class="tarea-image">
+          <div class="tarea-image" *ngIf="nivelesAccesibilidad == 'Pictograma' || nivelesAccesibilidad == 'Imagen' || nivelesAccesibilidad == 'Video'" class="tarea-image">
             <ng-container *ngIf="tarea.imagen; else noImagen">
               <img 
                 [src]="tarea.imagen" 

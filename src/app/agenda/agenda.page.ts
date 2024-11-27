@@ -21,7 +21,7 @@ export interface Tarea {
 
 export class AgendaPage implements OnInit {
   tareas: Tarea[] = [];
-  nivelesAccesibilidad: string = 'texto';
+  nivelesAccesibilidad: string = '';
   loading: boolean = true;
   tareasCompletas: any[] = [];
   previewAgenda: any;
@@ -40,8 +40,6 @@ export class AgendaPage implements OnInit {
       // Combina las tareas obtenidas con las ya existentes
       this.tareasCompletas = this.tareasCompletas.concat(tareas);
     }
-  
-    console.log('Tareas completas:', this.tareasCompletas);
   }
 
 
@@ -91,7 +89,6 @@ export class AgendaPage implements OnInit {
 
     try {
       const tareasFromFirebase = await this.firebaseService.getTareasForUser(userId);
-      console.log("Tareas obtenidas desde Firebase: ", tareasFromFirebase);
       this.tareas = tareasFromFirebase.map((tarea: Tarea) => ({
         nombre: tarea.nombre || '',
         imagen: this.getPreviewFromTask(tarea.nombre),

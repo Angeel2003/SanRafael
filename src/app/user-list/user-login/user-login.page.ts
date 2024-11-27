@@ -30,18 +30,11 @@ export class UserLoginPage implements OnInit {
   isPasswordIncorrect: boolean = false;
   incorrectPictogram: number[] = [-1, -1, -1];
 
-  buttons = [
-    { image: 'https://img.freepik.com/vector-premium/cuadrado-sencillo-poner-fecha-blanco-negro-ilustracion-vectorial-linea-arte_969863-348534.jpg' },
-    { image: 'https://www.j-line.be/media/images/HiRes/7844.jpg?v=73944c463c06b30eeac84d541a34e8f1' },
-    { image: 'https://img.freepik.com/vector-premium/estrella-blanca-vector-icono-estrella-icono-vector-estrella-icono-linea-estrellas_619470-509.jpg' },
-    { image: 'https://www.shutterstock.com/image-vector/equilateral-triangle-mathematics-arrow-line-260nw-2499367505.jpg' },
-    { image: 'https://i.pinimg.com/736x/35/f3/58/35f3588006e7c87a71138ded73cd3d89.jpg' },
-    { image: 'https://static.vecteezy.com/system/resources/thumbnails/005/200/636/small/hexagon-icon-black-color-illustration-flat-style-simple-image-vector.jpg' },
-  ];
+  images : string[] = [];
 
   userSelection: number[] = [];
-  correctCombination = [0, 2, 4]; // Índices de la combinación correcta
-  indicators = ['https://img.freepik.com/fotos-premium/fondo-gris-claro-pequenos-destellos-textura-enfoque-macro-microtextura_328295-112.jpg', 'https://img.freepik.com/fotos-premium/fondo-gris-claro-pequenos-destellos-textura-enfoque-macro-microtextura_328295-112.jpg', 'https://img.freepik.com/fotos-premium/fondo-gris-claro-pequenos-destellos-textura-enfoque-macro-microtextura_328295-112.jpg'];
+  correctCombination: number[] = []; // Índices de la combinación correcta
+  indicators: string[] = ['https://img.freepik.com/fotos-premium/fondo-gris-claro-pequenos-destellos-textura-enfoque-macro-microtextura_328295-112.jpg', 'https://img.freepik.com/fotos-premium/fondo-gris-claro-pequenos-destellos-textura-enfoque-macro-microtextura_328295-112.jpg', 'https://img.freepik.com/fotos-premium/fondo-gris-claro-pequenos-destellos-textura-enfoque-macro-microtextura_328295-112.jpg'];
 
 
   constructor(private router: Router, private firebaseService: FirebaseService) {
@@ -60,6 +53,8 @@ export class UserLoginPage implements OnInit {
     }
     else if (this.user.tipoContrasena === 'Pictograma'){
       this.isPictograma = true;
+      this.images = this.user.imagenesPicto;
+      this.correctCombination = this.user.contrasenaPicto;
     }
     else {
       this.isTexto = true;
@@ -77,11 +72,11 @@ export class UserLoginPage implements OnInit {
     if (this.userSelection.length < 3) {
       this.userSelection.push(index);
       // this.indicators[this.userSelection.length - 1] = this.correctCombination[this.userSelection.length - 1] === index ? 'correct' : 'wrong';
-      this.indicators[this.userSelection.length - 1] = this.buttons[index].image;
+      this.indicators[this.userSelection.length - 1] = this.images[index];
 
       if (this.userSelection.some((selection, i) => selection !== this.correctCombination[i])) {
         this.incorrectPictogram[this.userSelection.length - 1] = 1;
-        await this.sleep(750);
+        await this.sleep(1500);
         this.deleteSelection();
       } else {
         this.incorrectPictogram[this.userSelection.length - 1] = 0;

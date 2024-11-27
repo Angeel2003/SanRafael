@@ -22,21 +22,12 @@ import { addIcons } from 'ionicons';
   ]
 })
 export class CrearUsuarioPage implements OnInit {
-  passwordType: string = ''; // Para el tipo de contraseña
-  // accessibilityLevel: any = { // Objeto para almacenar la selección de accesibilidad
-  //   texto: false,
-  //   audio: false,
-  //   video: false,
-  //   pictogramas: false
-  // };
-
-  // // Lista de URLs de imágenes cargadas (máximo 6 imágenes)
-  // selectedImages: (string | null)[] = [null, null, null, null, null, null];
+  tipoContrasena: string = '';
 
   // Almacena archivos y URLs separadamente
   selectedImages: (File | null)[] = [null, null, null, null, null, null];
   selectedImageUrls: (string | null)[] = [null, null, null, null, null, null];
-  accessibilityLevel: string = ''; // Valor inicial por defecto
+  nivelAccesibilidad: string = ''; // Valor inicial por defecto
 
 
   // Lista de nombres de archivos de las imágenes cargadas, sin extensión
@@ -48,14 +39,11 @@ export class CrearUsuarioPage implements OnInit {
   // Array para mantener el orden de selección
   selectedOrder: number[] = [];
 
-  // Contraseña compuesta por los nombres de las imágenes seleccionadas
-  password: string = '';
-
   // Contraseña de tipo texto
-  textPassword: string = '';
+  contrasena: string = '';
 
 
-  passwordVisible: boolean = false;
+  passwordVisible: boolean = true;
 
   maxSelections: number = 3; // Máximo número de imágenes seleccionables
   currentSelections: number = 0;
@@ -71,8 +59,7 @@ export class CrearUsuarioPage implements OnInit {
   // Referencia a los inputs de archivo
   @ViewChildren('fileInput') fileInputs!: QueryList<ElementRef<HTMLInputElement>>;
 
-  constructor(private firebaseService: FirebaseService, private router: Router,
-    private toastController: ToastController) {
+  constructor(private firebaseService: FirebaseService, private toastController: ToastController) {
     addIcons({
       eyeOff,
       eye,
@@ -81,18 +68,14 @@ export class CrearUsuarioPage implements OnInit {
   }
 
   ngOnInit() {
-    console.log('ngOnInit ejecutado'); // Para verificar que el componente se inicializa
     this.loadPictogramImages(); // Llama a la función para cargar imágenes
   }
 
 
   async loadPictogramImages() {
-    console.log('Cargando imágenes desde Firebase Storage...');
     try {
       // Llamar a la función que obtiene las primeras 6 imágenes
       this.selectedImageUrls = await this.firebaseService.getPictogramImagesFromStorage();
-
-      console.log('Imágenes cargadas:', this.selectedImageUrls);
 
       if (this.selectedImageUrls.length === 0) {
         console.warn('No se cargaron imágenes.');
@@ -104,8 +87,8 @@ export class CrearUsuarioPage implements OnInit {
     }
   }
 
-  onPasswordTypeChange() {
-    if (this.passwordType === 'pictogramas') {
+  ontipoContrasenaChange() {
+    if (this.tipoContrasena === 'Pictograma') {
       this.loadPictogramImages(); // Carga imágenes si se seleccionan pictogramas
     } else {
       // Restablece los datos si se selecciona otro tipo de contraseña
@@ -114,7 +97,7 @@ export class CrearUsuarioPage implements OnInit {
       this.imageNames.fill(null);
       this.selectedForPassword.fill(false);
       this.selectedOrder = [];
-      this.password = '';
+      this.contrasena = '';
     }
   }
   toggleTextPasswordVisibility() {
@@ -144,22 +127,17 @@ export class CrearUsuarioPage implements OnInit {
       return;
     }
   
-    if (!this.passwordType) {
+    if (!this.tipoContrasena) {
       await this.showToast('Por favor, selecciona un tipo de contraseña.', 'danger');
       return;
     }
   
-    if (this.passwordType === 'texto' && !this.textPassword.trim()) {
+    if (this.tipoContrasena === 'Texto' && !this.contrasena.trim()) {
       await this.showToast('Por favor, ingresa una contraseña de texto.', 'danger');
       return;
     }
   
-    if (this.passwordType === 'pin' && (!this.textPassword.trim() || this.textPassword.length !== 4)) {
-      await this.showToast('Por favor, ingresa un PIN de 4 dígitos.', 'danger');
-      return;
-    }
-  
-    if (this.passwordType === 'pictogramas' && this.selectedImagesOrder.length < this.maxSelections) {
+    if (this.tipoContrasena === 'Pictograma' && this.selectedImagesOrder.length < this.maxSelections) {
       await this.showToast(`Por favor, selecciona ${this.maxSelections} pictogramas para la contraseña.`, 'danger');
       return;
     }
@@ -168,20 +146,21 @@ export class CrearUsuarioPage implements OnInit {
     const perfilData: any = {
       nombre: this.nombre,
       usuario: this.usuario,
-      accessLevel: this.accessibilityLevel,
-      passwordType: this.passwordType,
-      imagePasswordOrder: [],
-      textPassword: '',
-      profileImageUrl: this.profileImageUrl // Incluye la URL de la imagen de perfil
+      nivelAccesibilidad: this.nivelAccesibilidad,
+      tipoContrasena: this.tipoContrasena,
+      contrasenaPicto: [],
+      imagenesPicto: [],
+      contrasena: '',
+      foto: this.profileImageUrl, // Incluye la URL de la imagen de perfil
+      tareasAsig: [],
+      tareasTermin: []
     };
   
-    if (this.passwordType === 'pictogramas') {
-      perfilData.imagePasswordOrder = this.selectedOrder.map(index => ({
-        position: index,
-        imageName: this.imageNames[index]
-      }));
-    } else if (this.passwordType === 'texto' || this.passwordType === 'pin') {
-      perfilData.textPassword = this.textPassword;
+    if (this.tipoContrasena === 'Pictograma') {
+      perfilData.contrasenaPicto = this.selectedOrder;
+      perfilData.imagenesPicto = this.selectedImageUrls;
+    } else if (this.tipoContrasena === 'Texto' || this.tipoContrasena === 'PIN') {
+      perfilData.contrasena = this.contrasena;
     }
   
     try {
@@ -228,14 +207,6 @@ export class CrearUsuarioPage implements OnInit {
     }
   }
 
-  updatePassword() {
-    this.password = this.selectedOrder
-      .map(index => this.imageNames[index])
-      .filter(name => name !== null)
-      .join(', ');
-    console.log('Contraseña actualizada:', this.password);
-  }
-
  onCheckboxChange(index: number) {
   // Marca o desmarca el pictograma
   this.selectedForPassword[index] = !this.selectedForPassword[index];
@@ -249,12 +220,11 @@ export class CrearUsuarioPage implements OnInit {
   if (this.selectedForPassword[index] && selectedImage !== null) {
     // Si se selecciona, añadir al array en el orden correspondiente (solo si no es null)
     this.selectedImagesOrder.push(selectedImage);
+    this.selectedOrder.push(index);
   } else if (selectedImage !== null) {
     // Si se deselecciona, eliminar de la lista de seleccionados
     this.selectedImagesOrder = this.selectedImagesOrder.filter(image => image !== selectedImage);
   }
-
-  console.log('Pictogramas seleccionados (en orden):', this.selectedImagesOrder);
 }
 
   isCheckboxDisabled(index: number): boolean {
