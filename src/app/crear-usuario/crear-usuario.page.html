@@ -62,7 +62,7 @@
         <ion-col size="12">
           <ion-item>
             <ion-label position="stacked">Nombre</ion-label>
-            <ion-input placeholder="Nombre" type="text"></ion-input>
+            <ion-input placeholder="Nombre" type="text" [(ngModel)]="nombre"></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -71,11 +71,24 @@
         <ion-col size="12">
           <ion-item>
             <ion-label position="stacked">Usuario</ion-label>
-            <ion-input placeholder="Usuario" type="text"></ion-input>
+            <ion-input placeholder="Usuario" type="text" [(ngModel)]="usuario"></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
-      
+
+      <ion-row>
+        <ion-col size="12">
+          <ion-item>
+            <ion-label position="stacked">Imagen de Perfil</ion-label>
+            <div class="image-preview-container">
+              <img *ngIf="profileImageUrl" [src]="profileImageUrl" alt="Vista previa" class="profile-image-preview">
+            </div>
+            <ion-button expand="block" (click)="triggerProfileImageInput()">Cargar Imagen</ion-button>
+            <input type="file" id="profileImageInput" accept="image/*" (change)="onProfileImageSelected($event)" hidden>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
       <ion-row>
         <ion-col size="12">
           <ion-text class="ion-padding-top">
@@ -110,7 +123,30 @@
             <ion-select placeholder="Seleccione tipo de contraseña" [(ngModel)]="passwordType">
               <ion-select-option value="pin">Pin numérico</ion-select-option>
               <ion-select-option value="pictogramas">Pictogramas</ion-select-option>
+              <ion-select-option value="texto">Texto</ion-select-option>
             </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      
+      <!-- Sección de Contraseña de Texto -->
+      <ion-row *ngIf="passwordType === 'texto'">
+        <ion-col size="12">
+          <ion-item>
+            <ion-label position="stacked">Contraseña</ion-label>
+            <ion-input 
+              id="textPasswordInput"
+              [type]="passwordVisible ? 'text' : 'password'"
+              placeholder="Ingrese su contraseña" 
+              [(ngModel)]="textPassword">
+            </ion-input>
+            <ion-icon 
+              class="eye-icon"
+              id="toggleTextPasswordIcon"
+              slot="end"
+              [name]="passwordVisible ? 'eye' : 'eye-off'"
+              (click)="toggleTextPasswordVisibility()">
+            </ion-icon>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -120,53 +156,51 @@
         <ion-col size="12">
           <ion-item>
             <ion-label position="stacked">Introduzca su Pin</ion-label>
-            <ion-input type="number" placeholder="1234" maxlength="4"></ion-input>
+            <ion-input type="number" placeholder="1234" maxlength="4" required [(ngModel)]="textPassword"></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
 
-      <!-- Sección de Contraseña con Pictogramas -->
-      <ion-row *ngIf="passwordType === 'pictogramas'">
-        <ion-col size="12">
-          <ion-text class="ion-padding-top">
-            <h3>Cargar Imágenes como Contraseña:</h3>
-          </ion-text>
-        </ion-col>
 
-        <!-- Botones para cargar hasta 6 imágenes -->
-        <ion-col size="4" *ngFor="let imageUrl of selectedImageUrls; let i = index">
-          <ion-card>
-            <ion-card-content>
-              <!-- Muestra la imagen si existe en selectedImageUrls -->
-              <ion-img [src]="imageUrl" *ngIf="imageUrl"></ion-img>
-              <h1 *ngIf="!imageUrl">Imagen {{ i + 1 }}</h1>
+      <!-- Sección de imágenes, visible solo para pictogramas -->
+      <div *ngIf="passwordType === 'pictogramas'">
+        <div class="image-selection">
+          <div class="image-row">
+            <ng-container *ngFor="let imageUrl of selectedImageUrls; let i = index">
+              <div class="image-container" *ngIf="i < 3"> <!-- Muestra las primeras 3 imágenes -->
+                <img *ngIf="imageUrl" [src]="imageUrl" alt="Imagen {{ i + 1 }}">
+                <ion-checkbox 
+                  [checked]="selectedForPassword[i]" 
+                  [disabled]="isCheckboxDisabled(i)" 
+                  (ionChange)="onCheckboxChange(i)">
+                </ion-checkbox>
+              </div>
+            </ng-container>
+          </div>
+          <div class="image-row">
+            <ng-container *ngFor="let imageUrl of selectedImageUrls; let i = index">
+              <div class="image-container" *ngIf="i >= 3 && i < 6"> <!-- Muestra las siguientes 3 imágenes -->
+                <img *ngIf="imageUrl" [src]="imageUrl" alt="Imagen {{ i + 1 }}">
+                <ion-checkbox 
+                  [checked]="selectedForPassword[i]" 
+                  [disabled]="isCheckboxDisabled(i)" 
+                  (ionChange)="onCheckboxChange(i)">
+                </ion-checkbox>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
 
-              <!-- Input file asociado a cada botón de carga de imagen -->
-              <input type="file" (change)="onFileSelected($event, i)" hidden #fileInput />
-              <ion-button (click)="triggerFileInput(i)" [disabled]="selectedImages[i] !== null">Cargar Imagen</ion-button>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-
-        <ion-col size="12">
-          <ion-text>
-            <h3>Selecciona las 3 imágenes para la contraseña:</h3>
-            <div *ngFor="let image of selectedImageUrls; let i = index">
-              <ion-checkbox slot="start" [(ngModel)]="selectedForPassword[i]" (ionChange)="onCheckboxChange(i)"
-                [disabled]="isCheckboxDisabled(i)">
-              </ion-checkbox>
-              <ion-label>{{ imageNames[i] ? imageNames[i] : 'Vacía' }}</ion-label>
-            </div>
-          </ion-text>
-        </ion-col>
-
-        <ion-col size="12">
-          <ion-text>
-            <h3>Contraseña seleccionada:</h3>
-            <p>{{ password }}</p>
-          </ion-text>
-        </ion-col>
-      </ion-row>
+      <!-- Sección para mostrar los pictogramas seleccionados en orden -->
+<div *ngIf="selectedImagesOrder.length > 0">
+  <h3>Pictogramas seleccionados:</h3>
+  <div class="selected-images">
+    <div *ngFor="let imageUrl of selectedImagesOrder; let i = index" class="selected-image-container">
+      <img [src]="imageUrl" alt="Pictograma seleccionado {{ i + 1 }}" class="selected-image">
+    </div>
+  </div>
+</div>
 
       <!-- Botones Guardar -->
       <ion-row>

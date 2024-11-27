@@ -1,0 +1,148 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/modificar-usuario-principal"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Modificar perfil usuario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid>
+    <h2>Información de Usuario</h2>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="stacked">Nombre</ion-label>
+          <ion-input [(ngModel)]="usuario.nombre" name="nombre" placeholder="Ingrese el nombre"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="stacked">Usuario</ion-label>
+          <ion-input [(ngModel)]="usuario.usuario" name="usuario"
+            placeholder="Ingrese el nombre de usuario"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <!-- Imagen de perfil -->
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="stacked">Imagen de Perfil</ion-label>
+          <div class="image-preview-container">
+            <!-- Muestra la imagen solo si profileImageUrl tiene un valor -->
+            <img *ngIf="profileImageUrl" [src]="profileImageUrl" alt="Vista previa" class="profile-image-preview">
+          </div>
+          <ion-button expand="block" (click)="triggerProfileImageInput()">Cargar Imagen</ion-button>
+          <input type="file" id="profileImageInput" accept="image/*" (change)="onProfileImageSelected($event)" hidden>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <!-- Nivel de Accesibilidad -->
+    <ion-row>
+      <ion-col size="12">
+        <ion-text class="ion-padding-top">
+          <h3>Selección del Nivel de Accesibilidad:</h3>
+        </ion-text>
+        <ion-radio-group [(ngModel)]="usuario.nivelAccesibilidad" name="nivelAccesibilidad">
+          <ion-item>
+            <ion-label>Texto</ion-label>
+            <ion-radio slot="start" value="Texto"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>Audio</ion-label>
+            <ion-radio slot="start" value="Audio"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>Video</ion-label>
+            <ion-radio slot="start" value="Video"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>Pictograma</ion-label>
+            <ion-radio slot="start" value="Pictograma"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </ion-col>
+    </ion-row>
+
+    <!-- Contraseña -->
+    <h2>Contraseña</h2>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-select placeholder="Seleccione tipo de contraseña" [(ngModel)]="usuario.tipoContrasena"
+            name="tipoContrasena">
+            <ion-select-option value="Pin Numerico">Pin numérico</ion-select-option>
+            <ion-select-option value="Contraseña Alfanumerica">Contraseña alfanumérica</ion-select-option>
+            <ion-select-option value="Pictogramas">Pictogramas</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <!-- Entrada de contraseña alfanumérica -->
+    <ion-row *ngIf="usuario.tipoContrasena === 'Contraseña Alfanumerica'">
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="stacked">Contraseña</ion-label>
+          <ion-input [(ngModel)]="usuario.contrasena" name="contrasena" [type]="passwordVisible ? 'text' : 'password'"
+            placeholder="Ingrese su contraseña">
+          </ion-input>
+          <ion-icon slot="end" [name]="passwordVisible ? 'eye' : 'eye-off'" (click)="togglePasswordVisibility()">
+          </ion-icon>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <!-- Entrada de PIN numérico -->
+    <ion-row *ngIf="usuario.tipoContrasena === 'Pin Numerico'">
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="stacked">Pin</ion-label>
+          <ion-input [(ngModel)]="usuario.contrasena" name="contrasena" type="number" maxlength="4"
+            placeholder="Ingrese un pin numérico"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <!-- Selección de pictogramas -->
+    <ion-row *ngIf="usuario.tipoContrasena === 'Pictogramas'">
+      <ion-col size="12">
+        <h3>Seleccione los pictogramas en el orden deseado</h3>
+        <div class="image-selection">
+          <div class="image-row">
+            <ng-container *ngFor="let imageUrl of pictogramasDisponibles; let i = index">
+              <div class="image-container">
+                <img [src]="imageUrl" alt="Pictograma {{ i + 1 }}" (click)="togglePictogramaSeleccionado(i)">
+                <ion-checkbox [checked]="pictogramasSeleccionados.includes(imageUrl)"
+                  (ionChange)="togglePictogramaSeleccionado(i)">
+                </ion-checkbox>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- Mostrar pictogramas seleccionados -->
+        <div *ngIf="pictogramasSeleccionados.length > 0">
+          <h4>Pictogramas seleccionados:</h4>
+          <div class="selected-images">
+            <img *ngFor="let pictograma of pictogramasSeleccionados" [src]="pictograma" alt="Pictograma seleccionado">
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <!-- Botón Modificar -->
+    <ion-row>
+      <ion-col size="12" class="ion-text-right">
+        <ion-button expand="block" (click)="modificarUsuario()">Modificar</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

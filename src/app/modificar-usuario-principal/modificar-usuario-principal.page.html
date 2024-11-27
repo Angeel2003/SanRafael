@@ -1,0 +1,23 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/perfil-admin-profesor"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Perfiles de los usuarios</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="usuarios-container">
+    <!-- Recorre los usuarios cargados -->
+    <div class="usuario" *ngFor="let usuario of usuarios">
+      <img
+        [src]="usuario.foto || 'assets/default-profile.jpg'"
+        alt="Imagen de perfil"
+        class="imagen-perfil"
+      />
+      <p>{{ usuario.nombre }}</p>
+      <ion-button (click)="modificarUsuario(usuario.id)" expand="block">Modificar</ion-button>
+    </div>
+  </div>
+</ion-content>

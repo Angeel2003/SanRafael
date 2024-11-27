@@ -6,7 +6,7 @@ import { Auth, getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { from, map, Observable } from 'rxjs';
 import { Asignacion } from '../asignar-tarea/asignar-tarea.page';
 import { addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
-import { deleteObject, getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"; // Para Firebase Storage
+import { deleteObject, getDownloadURL, getStorage, ref, listAll, uploadBytes } from "firebase/storage"; // Para Firebase Storage
 import { OrderTask } from '../crear-tarea-comanda/crear-tarea-comanda.page';
 import { Tarea } from '../agenda/agenda.page';
 @Injectable({
@@ -82,10 +82,10 @@ export class FirebaseService {
     }
   }
 
-  async guardarPerfil(profileData: any): Promise<void> {
-    const usersCollection = collection(this.db, 'alumnos'); // Define la colección 'usuarios'
 
+  async guardarPerfil(profileData: any): Promise<void> {
     try {
+      const usersCollection = collection(this.db, 'alumnos');
       await addDoc(usersCollection, profileData);
       console.log('Perfil guardado con éxito en Firestore');
     } catch (error) {
@@ -389,6 +389,37 @@ export class FirebaseService {
   }
 
 
+  async getPictogramImagesFromStorage(): Promise<string[]> {
+    console.log('getPictogramImagesFromStorage ejecutada'); // Para verificar que la función se ejecuta
+  
+    try {
+      const folderPath = 'pictograma'; // Ruta de la carpeta en Firebase Storage
+      console.log('Obteniendo archivos de la carpeta:', folderPath);
+  
+      const folderRef = ref(this.storage, folderPath);
+      const listResult = await listAll(folderRef);
+  
+      console.log('Archivos encontrados:', listResult.items.map(item => item.name));
+  
+      // Limitar a las primeras 6 imágenes
+      const limitedItems = listResult.items.slice(0, 6); // Limitar a las primeras 6 imágenes
+  
+      if (limitedItems.length === 0) {
+        console.warn('No se encontraron imágenes en la carpeta.');
+        return [];
+      }
+  
+      const urls = await Promise.all(
+        limitedItems.map(item => getDownloadURL(item))
+      );
+  
+      console.log('URLs de imágenes obtenidas:', urls);
+      return urls; // Devuelve las URLs de las primeras 6 imágenes
+    } catch (error) {
+      console.error('Error al obtener imágenes de Firebase Storage:');
+      throw new Error('No se pudieron obtener las imágenes desde Storage.');
+    }
+  }
   //Gestionar material
   async guardarMaterialesAlmacen(taskData: any): Promise<boolean> {
     const tasksCollection = collection(this.db, 'materiales');
@@ -480,4 +511,50 @@ export class FirebaseService {
         });
     });
   }
+
+  async obtenerUsuario(id: string): Promise<any | null> {
+    try {
+      // Referencia al documento del alumno
+      const alumnoDocRef = doc(this.db, 'alumnos', id);
+      
+      // Obtiene el documento del alumno
+      const alumnoDocSnapshot = await getDoc(alumnoDocRef);
+  
+      // Verifica si el documento existe
+      if (alumnoDocSnapshot.exists()) {
+        console.log('Alumno obtenido con éxito:', alumnoDocSnapshot.data());
+        
+        // Retorna todos los campos del alumno junto con su ID
+        return { id: alumnoDocSnapshot.id, ...alumnoDocSnapshot.data() };
+      } else {
+        console.warn('No se encontró un alumno con el ID especificado:', id);
+        return null; // Retorna null si no existe el documento
+      }
+    } catch (error) {
+      console.error('Error al obtener el alumno:', error);
+      throw new Error('No se pudo obtener el alumno'); // Lanza un error si ocurre algún problema
+    }
+  }
+
+
+  async actualizarAlumno(id: string, data: any): Promise<boolean> {
+    try {
+      const alumnoDocRef = doc(this.db, 'alumnos', id); // Referencia al documento del alumno
+      const alumnoDocSnapshot = await getDoc(alumnoDocRef); // Verifica si el documento existe
+  
+      if (alumnoDocSnapshot.exists()) {
+        await updateDoc(alumnoDocRef, data); // Actualiza el documento con los datos proporcionados
+        console.log('Alumno actualizado con éxito:', id);
+        return true; // Retorna true si la actualización fue exitosa
+      } else {
+        console.warn('No se encontró un alumno con el ID especificado para actualizar:', id);
+        return false; // Retorna false si no existe el documento
+      }
+    } catch (error) {
+      console.error('Error al actualizar el alumno:', error);
+      throw new Error('No se pudo actualizar el alumno'); // Lanza un error si ocurre algún problema
+    }
+  }
+
+
 }
