@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { lockClosedOutline, closeOutline, checkmarkOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
-import { NgIf, NgForOf, NgClass } from '@angular/common';
+import { NgIf, NgForOf, NgClass, CommonModule } from '@angular/common';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButtons, IonButton, IonBackButton, 
   IonItem, IonLabel, IonInput } from '@ionic/angular/standalone';
 import { FirebaseService } from 'src/app/services/firebase.service';
@@ -14,7 +14,7 @@ import { FirebaseService } from 'src/app/services/firebase.service';
   styleUrls: ['./user-login.page.scss'],
   standalone: true,
   imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButtons, IonButton, IonBackButton, 
-    IonItem, IonLabel, IonInput, NgIf,NgForOf, NgClass]
+    IonItem, IonLabel, IonInput, NgIf,NgForOf, NgClass, CommonModule]
 })
 
 export class UserLoginPage implements OnInit {
@@ -69,15 +69,22 @@ export class UserLoginPage implements OnInit {
   }
 
   async selectButton(index: number) {
+    if(this.incorrectPictogram[this.userSelection.length - 1] == 1) {
+      this.userSelection.pop();
+    }
+
     if (this.userSelection.length < 3) {
-      this.userSelection.push(index);
-      // this.indicators[this.userSelection.length - 1] = this.correctCombination[this.userSelection.length - 1] === index ? 'correct' : 'wrong';
-      this.indicators[this.userSelection.length - 1] = this.images[index];
+      if(this.incorrectPictogram[this.userSelection.length - 1] == 1) {
+        this.userSelection.pop();
+        this.userSelection.push(index);
+        this.indicators[this.userSelection.length - 1] = this.images[index];
+      } else {
+        this.userSelection.push(index);
+        this.indicators[this.userSelection.length - 1] = this.images[index];
+      }
 
       if (this.userSelection.some((selection, i) => selection !== this.correctCombination[i])) {
         this.incorrectPictogram[this.userSelection.length - 1] = 1;
-        await this.sleep(1500);
-        this.deleteSelection();
       } else {
         this.incorrectPictogram[this.userSelection.length - 1] = 0;
         await this.sleep(250);
@@ -86,7 +93,6 @@ export class UserLoginPage implements OnInit {
       if (this.userSelection.length === 3) {
         this.verifyCombination();
         await this.sleep(1000);
-        this.resetSelection();
       }
     }
   }
@@ -114,8 +120,7 @@ export class UserLoginPage implements OnInit {
   verifyCombination() {
     if (JSON.stringify(this.userSelection) === JSON.stringify(this.correctCombination)) {
       this.onSubmit();
-    } else {
-      this.userSelection = []; // Reiniciar la selección
+      this.resetSelection();
     }
   }
 

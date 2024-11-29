@@ -1,0 +1,59 @@
+ion-toolbar {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente el contenido */
+}
+  
+ion-title {
+    text-align: center; /* Asegura que el texto esté centrado */
+    width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
+    font-size: 24px;
+    color: #005682;
+}
+
+.image-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.task-image {
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+}
+
+.text-container {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    height: 500px;
+}
+
+.task-text {
+    font-size: 2.5rem;
+    line-height: 2rem;
+}
+
+.pagination-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 150px; /* Espaciado entre los botones */
+}
+
+.custom-button {
+    --background: #005682; /* Cambia el color de fondo */
+    --color: #ffffff;      /* Cambia el color del texto y el icono */
+    width: 200px;
+    height: 50px;
+}
+
+ion-icon {
+    font-size: 32px;
+    color: white;
+}

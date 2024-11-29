@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { NgFor } from '@angular/common';
+import { NgFor, CommonModule } from '@angular/common';
 import { arrowBack, arrowForward } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { FirebaseService } from '../services/firebase.service';
@@ -13,7 +13,7 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, I
   styleUrls: ['./user-list.page.scss'],
   standalone: true,
   imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButtons, IonButton, IonBackButton, 
-    IonCard, IonCardHeader, IonCardTitle, NgFor]
+    IonCard, IonCardHeader, IonCardTitle, NgFor, CommonModule ]
 })
 
 export class UserListPage implements OnInit {

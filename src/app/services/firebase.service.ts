@@ -530,5 +530,15 @@ export class FirebaseService {
     }
   }
 
+  async getDocumentByName(collectionName: string, name: string): Promise<any> {
+    const collectionRef = collection(this.db, collectionName);
+    const q = query(collectionRef, where('nombre', '==', name));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+    return querySnapshot.docs[0].data(); // Devuelve el primer documento encontrado
+    }
+    return null; // Devuelve null si no encuentra nada
+  }
 
 }

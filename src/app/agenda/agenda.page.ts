@@ -4,10 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { IonSpinner, IonContent, IonHeader, IonTitle, IonToolbar, IonCol, IonButton, IonIcon, IonGrid, IonRow, IonItem, IonLabel, IonButtons, IonBackButton } from '@ionic/angular/standalone';
 
 import { FirebaseService } from '../services/firebase.service';
+import { NavigationExtras, Router } from '@angular/router';
 
 export interface Tarea {
   nombre: string,
-  imagen: string,
+  imagen: string
+}
+
+interface TareaDevolver {
+  tarea: any;
+  tipoTarea: string;
 }
 
 @Component({
@@ -25,8 +31,9 @@ export class AgendaPage implements OnInit {
   loading: boolean = true;
   tareasCompletas: any[] = [];
   previewAgenda: any;
+  tareaADevolver: TareaDevolver = { tarea: null, tipoTarea: '' };
 
-  constructor(private firebaseService: FirebaseService) {
+  constructor(private firebaseService: FirebaseService, private router: Router) {
     this.cargarTareasCompletas();
   }
   
@@ -51,6 +58,18 @@ export class AgendaPage implements OnInit {
   }
 
   getPreviewFromTask(taskName: string){
+    let preview = '';
+
+    for(let i = 0; i < this.tareasCompletas.length; i++){
+      if(this.tareasCompletas[i].nombre == taskName){
+        preview = this.tareasCompletas[i].previewUrl;
+      }
+    }
+
+    return preview;
+  }
+
+  getIdFromTask(taskName: string){
     let preview = '';
 
     for(let i = 0; i < this.tareasCompletas.length; i++){
@@ -91,13 +110,49 @@ export class AgendaPage implements OnInit {
       const tareasFromFirebase = await this.firebaseService.getTareasForUser(userId);
       this.tareas = tareasFromFirebase.map((tarea: Tarea) => ({
         nombre: tarea.nombre || '',
-        imagen: this.getPreviewFromTask(tarea.nombre),
+        imagen: this.getPreviewFromTask(tarea.nombre)
       }));
-      console.log("Tareas cargadas:", this.tareas);
     } catch (error) {
       console.error('Error al cargar las tareas:', error);
     } finally {
       this.loading = false;
     }
+  }
+
+  async getTareaByNombre(nombre: string) {
+    try {
+      const tareaPorPasos = await this.firebaseService.getDocumentByName('tarea-por-pasos', nombre);
+      if (tareaPorPasos) {
+        this.tareaADevolver.tarea = tareaPorPasos;
+        this.tareaADevolver.tipoTarea = 'tarea-por-pasos';
+      }
+  
+      const tareaComanda = await this.firebaseService.getDocumentByName('tarea-comanda', nombre);
+      if (tareaComanda) {
+        this.tareaADevolver.tarea = tareaComanda;
+        this.tareaADevolver.tipoTarea = 'tarea-comanda';
+      }
+  
+      const tareaMaterial = await this.firebaseService.getDocumentByName('tarea-material', nombre);
+      if (tareaMaterial) {
+        this.tareaADevolver.tarea = tareaMaterial;
+        this.tareaADevolver.tipoTarea = 'tarea-material';
+      }
+    } catch (error) {
+      console.error('Error al buscar la tarea:', error);
+    }
+  }
+
+  async realizarTarea(tareaPulsada: Tarea){
+    await this.getTareaByNombre(tareaPulsada.nombre);
+
+    const navigationExtras: NavigationExtras = {
+      state: {
+        tarea: this.tareaADevolver.tarea,
+        tipoTarea: this.tareaADevolver.tipoTarea,
+        nivelesAccesibilidad: this.nivelesAccesibilidad
+      }
+    };
+    this.router.navigate(['/realizar-tarea'], navigationExtras);
   }
 }

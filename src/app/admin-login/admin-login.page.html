@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/"></ion-back-button> <!-- Volver a la página anterior -->
     </ion-buttons>
-    <ion-title>Administrador/Profesor</ion-title>
+    <ion-title>ADMINISTRADOR/PROFESOR</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -14,13 +14,13 @@
 
       <ion-item id="item-email" class="input-item">
         <ion-icon name="mail-outline"></ion-icon>
-        <ion-label position="fixed">Usuario</ion-label>
+        <ion-label position="start">Usuario</ion-label>
         <ion-input id="emailLogin" type="text" [disabled]="false" placeholder="Introduce tu usuario"></ion-input>
       </ion-item>
   
       <ion-item id="item-password" class="input-item">
         <ion-icon name="lock-closed-outline"></ion-icon>
-        <ion-label position="fixed">Contraseña</ion-label>
+        <ion-label position="start">Contraseña</ion-label>
         <ion-input id="password" type="password" [disabled]="false" placeholder="Introduce tu contraseña"></ion-input>
         <ion-icon class="eye-icon" name="eye-off" id="togglePassword" slot="end" (click)="toggleLoginPasswordVisibility()"></ion-icon>
       </ion-item>

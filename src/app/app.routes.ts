@@ -97,7 +97,11 @@ export const routes: Routes = [
   {
     path: 'modificar-usuario/:id',
     loadComponent: () => import('./modificar-usuario/modificar-usuario.page').then(m => m.ModificarUsuarioPage)
+  },  {
+    path: 'realizar-tarea',
+    loadComponent: () => import('./realizar-tarea/realizar-tarea.page').then( m => m.RealizarTareaPage)
   },
+
 
 
 

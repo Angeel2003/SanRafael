@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-row class="header-row">
       <ion-col size="auto">
-        <ion-title class="title">Agenda</ion-title>
+        <ion-title class="title">AGENDA</ion-title>
       </ion-col>
       <ion-col size="auto" class="image-col">
         <img 
@@ -30,9 +30,9 @@
   <ng-template #content>
     <ng-container *ngIf="tareas && tareas.length > 0; else noTareas">
       <div class="tareas-container">
-        <div class="tarea-card" *ngFor="let tarea of tareas; let i = index">
+        <div (click)="realizarTarea(tarea)" class="tarea-card" *ngFor="let tarea of tareas; let i = index">
           <div class="tarea-content">
-            <p class="tarea-title">Tarea {{ i + 1 }}: {{ tarea.nombre }}</p>
+            <p class="tarea-title">TAREA {{ i + 1 }}: {{ tarea.nombre | uppercase }}</p>
           </div>
           <div class="tarea-image" *ngIf="nivelesAccesibilidad == 'Pictograma' || nivelesAccesibilidad == 'Imagen' || nivelesAccesibilidad == 'Video'" class="tarea-image">
             <ng-container *ngIf="tarea.imagen; else noImagen">
@@ -43,7 +43,7 @@
               />
             </ng-container>
             <ng-template #noImagen>
-              <p class="no-image">Sin imagen</p>
+              <p class="no-image">SIN IMAGEN</p>
             </ng-template>
           </div>
         </div>
@@ -52,7 +52,7 @@
 
     <ng-template #noTareas>
       <div class="no-tareas">
-        No hay tareas asignadas
+        NO HAY TAREAS ASIGNADAS
       </div>
     </ng-template>
   </ng-template>
