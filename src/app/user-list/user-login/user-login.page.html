@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/user-list"></ion-back-button> <!-- Ajusta la ruta si es necesario -->
     </ion-buttons>
-    <ion-title>{{ user.nombre }}</ion-title>
+    <ion-title>{{ user.nombre | uppercase }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -14,14 +14,14 @@
 
       <ion-item id="item-pin" class="input-item">
         <ion-icon name="lock-closed-outline"></ion-icon>
-        <ion-label position="fixed">PIN</ion-label>
-        <ion-input id="pinLogin" type="number" [disabled]="false" placeholder="Introduce tu PIN"></ion-input>
+        <ion-label position="start">PIN</ion-label>
+        <ion-input id="pinLogin" type="number" [disabled]="false" placeholder="INTRODUCE TU PIN"></ion-input>
       </ion-item>
   
-      <ion-button expand="block" shape="round" (click)="onSubmitPass()">Entrar</ion-button>
+      <ion-button expand="block" shape="round" (click)="onSubmitPass()">ENTRAR</ion-button>
 
       <div [ngClass]="{'ion-hide': !isPasswordIncorrect}" class="incorrectPassword">
-        <p>Vuelve a intentarlo</p>
+        <p>VUELVE A INTENTARLO</p>
         <img [src]="'https://cdn.pixabay.com/photo/2017/02/12/21/29/false-2061132_640.png'" alt="Contreaseña Incorrecta" />
       </div>
   
@@ -33,14 +33,14 @@
 
       <ion-item id="item-texto" class="input-item">
         <ion-icon name="lock-closed-outline"></ion-icon>
-        <ion-label position="fixed">Contraseña</ion-label>
-        <ion-input id="textoLogin" type="text" [disabled]="false" placeholder="Introduce tu contraseña"></ion-input>
+        <ion-label position="start">CONTRASEÑA</ion-label>
+        <ion-input id="textoLogin" type="text" [disabled]="false" placeholder="INTRODUCE TU CONTRASEÑA"></ion-input>
       </ion-item>
   
-      <ion-button expand="block" shape="round" (click)="onSubmitPass()">Entrar</ion-button>
+      <ion-button expand="block" shape="round" (click)="onSubmitPass()">ENTRAR</ion-button>
 
       <div [ngClass]="{'ion-hide': !isPasswordIncorrect}" class="incorrectPassword">
-        <p>Vuelve a intentarlo</p>
+        <p>VUELVE A INTENTARLO</p>
         <img [src]="'https://cdn.pixabay.com/photo/2017/02/12/21/29/false-2061132_640.png'" alt="Contreaseña Incorrecta" />
       </div>
   

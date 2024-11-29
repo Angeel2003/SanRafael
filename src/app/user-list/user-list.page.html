@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-row class="header-row">
       <ion-col size="auto">
-        <ion-title class="title">Usuarios</ion-title>
+        <ion-title class="title">USUARIOS</ion-title>
       </ion-col>
       <ion-col size="auto" class="image-col">
         <img 
@@ -32,7 +32,7 @@
         <ion-card (click)="goToUserLogin(user)">
           <img [src]="user.foto" alt="{{ user.nombre }}" />
           <ion-card-header>
-            <ion-card-title>{{ user.nombre }}</ion-card-title>
+            <ion-card-title>{{ user.nombre | uppercase }}</ion-card-title>
           </ion-card-header>
         </ion-card>
       </ion-col>
