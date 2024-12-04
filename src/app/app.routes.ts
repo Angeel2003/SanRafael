@@ -101,6 +101,10 @@ export const routes: Routes = [
     path: 'realizar-tarea',
     loadComponent: () => import('./realizar-tarea/realizar-tarea.page').then( m => m.RealizarTareaPage)
   },
+  {
+    path: 'historial-tareas',
+    loadComponent: () => import('./historial-tareas/historial-tareas.page').then( m => m.HistorialTareasPage)
+  },
 
 
 
