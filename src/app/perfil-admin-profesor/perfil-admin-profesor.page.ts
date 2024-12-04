@@ -98,4 +98,8 @@ export class PerfilAdminProfesorPage implements OnInit {
   peticionMaterial() {
     this.router.navigate(['/peticion-material']);
   }
+
+  historialTareas() {
+    this.router.navigate(['/historial-tareas']);
+  }
 }
