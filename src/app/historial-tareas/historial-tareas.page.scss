@@ -9,3 +9,35 @@ ion-title {
     font-size: 24px;
     color: #005682;
 }
+
+p{
+    margin-left: 3%;
+    text-align: center;
+}
+
+ion-row, ion-col{
+    justify-content: center;
+}
+
+.no-dot{
+    list-style-type: none; /* Quita los puntos */
+    padding: 0; /* Opcional: elimina el relleno izquierdo */
+    margin: 0; /* Opcional: elimina el margen */
+}
+
+.pending-border{
+    border: 2px black solid;
+}
+
+.accept{
+    --background: green;
+}
+
+.decline{
+    --background: red;
+}
+
+.inside-border{
+    margin-left: 7%;
+    margin-right: 10%;
+}

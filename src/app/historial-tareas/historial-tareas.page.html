@@ -8,9 +8,33 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">historial-tareas</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <p><strong>Tareas completadas</strong></p>
+        <ul class="no-dot"> <!-- Tareas pendientes -->
+          <li class="pending-border" *ngFor="let pending of this.pendingTask">
+            <span class="inside-border">{{pending.nombreTarea}}</span>
+            <ion-button (click)="accept()" class="accept">Aceptar</ion-button>
+            <ion-button (click)="denied()" class="decline">Rechazar</ion-button>
+          </li> 
+        </ul>
+        <ul class="no-dot"> <!-- Tareas completadas -->
+          <li *ngFor="let finished of this.finishedTask"><p *ngIf="finished.completada == true">{{finished.nombreTarea}}</p></li> 
+        </ul>
+      </ion-col>
+      <ion-col>
+        <p><strong>Tareas no completadas</strong></p>
+        <ul class="no-dot"> <!-- Tareas no completadas -->
+          <li *ngFor="let finished of this.finishedTask"><p *ngIf="finished.completada == true">{{finished.nombreTarea}}</p></li> 
+        </ul>
+      </ion-col>
+      <ion-col>
+        <p><strong>Tareas asignadas</strong></p>
+        <ul class="no-dot"> <!-- Tareas asignadas -->
+          <li *ngFor="let assigned of this.assignedTask"><p>{{assigned.nombreTarea}}</p></li> 
+        </ul>  
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

@@ -471,6 +471,22 @@ export class FirebaseService {
     }
   }
 
+  async getStudents(): Promise<any[]>{
+    try{
+      const studentsCollection = collection(this.db, 'alumnos');
+      const snapshot = await getDocs(studentsCollection);
+      let request = [];
+      request = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...(doc.data())
+      }));
+      return request
+    }catch(error){
+      console.error("Error al obtener los alumnos:", error);
+      return [];
+    }
+  }
+
   //Comprobar si una coleccion esta vacia o no
    isCollectionEmpty(collectionName: string): Observable<number | null> {
     const collectionRef = collection(this.db, collectionName);
