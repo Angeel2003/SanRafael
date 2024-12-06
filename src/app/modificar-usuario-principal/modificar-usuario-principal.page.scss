@@ -72,3 +72,18 @@ ion-icon {
   --background: #606a6e; /* Cambia el color de fondo */
   --color: #ffffff;      /* Cambia el color del texto y el icono */
 }
+
+
+.card-image-container {
+  position: relative;
+}
+
+.card-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  --background: #ff4c4c;
+  --color: #ffffff;
+  font-size: 30px;
+}

@@ -17,14 +17,18 @@
   <ion-grid>
     <ion-row>
       <ion-col size="2.4" *ngFor="let user of paginatedUsers">
-        <ion-card>
-          <img [src]="user.foto" alt="{{ user.nombre }}" />
+      
+        <ion-card (click)="historialTareas(user)" >
+          <div class="card-image-container">
+            <ion-badge class="card-badge">{{ user.notificacionesCount }}</ion-badge>
+            <img [src]="user.foto" alt="{{ user.nombre }}" />
+          </div>
           <ion-card-header>
             <ion-card-title>{{ user.nombre }}</ion-card-title>
           </ion-card-header>
         </ion-card>
 
-        <ion-button (click)="modificarUsuario(user.id)" expand="block">MODIFICAR</ion-button>
+        <ion-button (click)="modificarUsuario(user.id)" expand="block">MODIFICAR </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>

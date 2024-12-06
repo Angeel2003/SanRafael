@@ -22,7 +22,7 @@
   <ng-container *ngIf="loading; else content">
     <div class="loading-spinner">
       <ion-spinner name="crescent"></ion-spinner>
-      <p>Cargando tareas...</p>
+      <p>CARGANDO TAREAS...</p>
     </div>
   </ng-container>
 
@@ -34,7 +34,10 @@
           <div class="tarea-content">
             <p class="tarea-title">TAREA {{ i + 1 }}: {{ tarea.nombre | uppercase }}</p>
           </div>
-          <div class="tarea-image" *ngIf="nivelesAccesibilidad == 'Pictograma' || nivelesAccesibilidad == 'Imagen' || nivelesAccesibilidad == 'Video'" class="tarea-image">
+          <div 
+            *ngIf="nivelesAccesibilidad == 'Pictograma' || nivelesAccesibilidad == 'Imagen' || nivelesAccesibilidad == 'Video'" 
+            class="tarea-image"
+          >
             <ng-container *ngIf="tarea.imagen; else noImagen">
               <img 
                 [src]="tarea.imagen" 
@@ -46,6 +49,9 @@
               <p class="no-image">SIN IMAGEN</p>
             </ng-template>
           </div>
+           
+          <ion-icon *ngIf="tarea.fechaFin && fechaHoy && tarea.fechaFin >= fechaHoy" name="close-outline" class="cross-overlay"></ion-icon>
+
         </div>
       </div>
     </ng-container>

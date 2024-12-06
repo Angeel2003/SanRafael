@@ -29,25 +29,24 @@ export class HistorialTareasPage implements OnInit {
   //TAreas pendientes de revision por el administrador para ver si estan comletadas.
   pendingTask: any = [];
   
+  user: any;
 
-  constructor(private firebaseService: FirebaseService) {
+  constructor(private router: Router, private firebaseService: FirebaseService) {
     addIcons({
     });
   }
 
   async ngOnInit(){
-    this.students = await this.firebaseService.getStudents();
-    console.log("Alumnos obtenidos con exito");
+    // this.students = await this.firebaseService.getStudents();
+    const navigation = this.router.getCurrentNavigation();
+    this.user = navigation?.extras.state?.['user'];
     
     //Inicializamos las tareas
-    this.finishedTask = this.students[0].tareasTermin;
-    this.assignedTask = this.students[0].tareasAsig;
-    this.pendingTask = this.students[0].tareasPendientes;
+    this.finishedTask = this.user.tareasTermin;
+    this.assignedTask = this.user.tareasAsig;
+    this.pendingTask = this.user.tareasPendientes;
   
     
-    console.log(JSON.stringify(this.finishedTask, null, 2));
-    console.log(JSON.stringify(this.assignedTask, null, 2));
-    console.log(JSON.stringify(this.pendingTask, null, 2));
   }
 
   accept(){
