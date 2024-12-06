@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FirebaseError, initializeApp } from 'firebase/app';
 import { getAnalytics } from "firebase/analytics";
 
-import { Auth, getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { from, map, Observable } from 'rxjs';
 import { Asignacion } from '../asignar-tarea/asignar-tarea.page';
 import { addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
@@ -307,7 +307,9 @@ export class FirebaseService {
         })
         .map((tarea: any) => ({
           nombre: tarea.nombreTarea || 'Sin nombre',
-          imagen: tarea.preview || '', // Añadir la imagen si existe
+          imagen: tarea.preview || '',
+          fechaInicio: tarea.fechaInicio,
+          fechaFin: tarea.fechaFin
         }));
   
       return tareasFiltradas;
@@ -317,7 +319,7 @@ export class FirebaseService {
     }
   }
   
-  async getStudentDoc(userId: string): Promise<string> {  // Retornamos un string
+  async getStudentDocAcces(userId: string): Promise<string> {  // Retornamos un string
     const docRef = doc(this.db, 'alumnos', userId); // Referencia al documento del alumno
     
     try {
@@ -557,4 +559,55 @@ export class FirebaseService {
     return null; // Devuelve null si no encuentra nada
   }
 
+  // Modificar usuario principal
+  getNotificacionesAdmin(): Observable<any[]> {
+    const collectionRef = collection(this.db, 'notificacionesAdmin');
+    
+    return new Observable(observer => {
+      getDocs(collectionRef)
+        .then(snapshot => {
+          // Extraemos los datos de los documentos y los devolvemos como un array
+          const notificaciones = snapshot.docs.map(doc => doc.data());
+          observer.next(notificaciones);  // Emite las notificaciones
+          observer.complete();
+        })
+        .catch(error => {
+          console.error('Error al recuperar las notificaciones:', error);
+          observer.next([]);  // Devuelve un array vacío en caso de error
+          observer.complete();
+        });
+    });
+  }
+
+  async enviarNotificacion(notificacion: any) {
+    try {
+      const notificacionesCollection = collection(this.db, 'notificacionesAdmin');
+      await addDoc(notificacionesCollection, notificacion);
+    } catch (error) {
+      console.error('Error al guardar la notificación:', error);
+      throw error;
+    }
+  }
+
+  async verificarNotificacionExistente(alumnoId: any, tipoNotificacion: string, fechaFin: any, fechaInicio: any, nombreTarea: any): Promise<boolean> {
+    try {
+      const notificacionesCollection = collection(this.db, 'notificacionesAdmin');
+      const q = query(
+        notificacionesCollection,
+        where('alumnoId', '==', alumnoId),
+        where('tipoNotificacion', '==', tipoNotificacion),
+        where('fechaFin', '==', fechaFin),
+        where('fechaInicio', '==', fechaInicio),
+        where('nombreTarea', '==', nombreTarea)
+      );
+  
+      const querySnapshot = await getDocs(q);
+      return !querySnapshot.empty; // Devuelve `true` si ya existe la notificación
+    } catch (error) {
+      console.error('Error al verificar si la notificación ya existe:', error);
+      throw error;
+    }
+  }
+  
+  
 }

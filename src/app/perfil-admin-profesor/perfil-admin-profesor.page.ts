@@ -58,7 +58,12 @@ export class PerfilAdminProfesorPage implements OnInit {
   }
 
   gestionarUsuarios() {
-    this.router.navigate(['/modificar-usuario-principal']);
+    const navigationExtras: NavigationExtras = {
+      state: {
+        tipoUsuario: 'administrador'
+      }
+    };
+    this.router.navigate(['/modificar-usuario-principal'], navigationExtras);
   }
 
   crearTareaPorPasos() {
@@ -99,7 +104,4 @@ export class PerfilAdminProfesorPage implements OnInit {
     this.router.navigate(['/peticion-material']);
   }
 
-  historialTareas() {
-    this.router.navigate(['/historial-tareas']);
-  }
 }

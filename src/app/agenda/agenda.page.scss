@@ -130,3 +130,11 @@ ion-item {
     max-height: 30px; /* Ajusta el tamaño de la imagen según sea necesario */
     max-width: auto;
   }
+
+ 
+
+  .cross-overlay {
+    color: red;
+    font-size: 100px; /* Ajusta el tamaño según sea necesario */
+    pointer-events: none; /* Evita que interfiera con el clic en la imagen */
+}

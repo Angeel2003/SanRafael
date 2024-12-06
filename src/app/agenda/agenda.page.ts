@@ -2,14 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonSpinner, IonContent, IonHeader, IonTitle, IonToolbar, IonCol, IonButton, IonIcon, IonGrid, IonRow, IonItem, IonLabel, IonButtons, IonBackButton } from '@ionic/angular/standalone';
-
+import { addIcons } from 'ionicons';
+import { closeOutline } from 'ionicons/icons';
 import { FirebaseService } from '../services/firebase.service';
 import { NavigationExtras, Router } from '@angular/router';
 
 export interface Tarea {
-  nombre: string,
-  imagen: string
+  nombre: string;
+  imagen: string;
+  fechaInicio: any; 
+  fechaFin: any; 
 }
+
 
 interface TareaDevolver {
   tarea: any;
@@ -32,9 +36,15 @@ export class AgendaPage implements OnInit {
   tareasCompletas: any[] = [];
   previewAgenda: any;
   tareaADevolver: TareaDevolver = { tarea: null, tipoTarea: '' };
+  fullUser: any;
+  fechaHoy: Date | undefined;
 
   constructor(private firebaseService: FirebaseService, private router: Router) {
     this.cargarTareasCompletas();
+
+    addIcons({
+      closeOutline
+    })
   }
   
   async cargarTareasCompletas(): Promise<void> {
@@ -52,10 +62,64 @@ export class AgendaPage implements OnInit {
 
   async ngOnInit() {
     this.previewAgenda = await this.firebaseService.getImageUrl('pictogramas/agenda.png');
+    this.fechaHoy = new Date();
 
-    await this.loadAccesibilityLevels();
     await this.loadTareas();
+    
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      console.error('User ID not found in localStorage');
+      return;
+    }
+
+    try {
+      this.fullUser = await this.firebaseService.obtenerUsuario(userId);
+      this.nivelesAccesibilidad = this.fullUser.nivelAccesibilidad;
+    } catch (error) {
+      console.error('Error al cargar los niveles de accesibilidad:', error);
+    }
+
+    for (let tarea of this.tareas) {
+      if (tarea.fechaFin) {  
+        const fechaFin = new Date(tarea.fechaFin);
+
+        if (fechaFin >= this.fechaHoy) {
+          this.enviarNotificacion(tarea);
+        }
+      }
+    }
+
+
   }
+
+  async enviarNotificacion(tarea: any) {
+    const notificacion = {
+      alumnoId: this.fullUser.id,  // ID del usuario asociado
+      tipoNotificacion: 'FechaFinalizada',
+      fechaFin: tarea.fechaFin,
+      fechaInicio: tarea.fechaInicio,
+      nombreTarea: tarea.nombre
+    };
+  
+    try {
+      // Verificar si ya existe una notificación similar en la base de datos
+      const notificacionExistente = await this.firebaseService.verificarNotificacionExistente(
+        notificacion.alumnoId,
+        notificacion.tipoNotificacion,
+        notificacion.fechaFin,
+        notificacion.fechaInicio,
+        notificacion.nombreTarea
+      );
+  
+      if (!notificacionExistente) {
+        await this.firebaseService.enviarNotificacion(notificacion);
+      }
+    } catch (error) {
+      console.error('Error al verificar o enviar la notificación:', error);
+    }
+  }
+  
+
 
   getPreviewFromTask(taskName: string){
     let preview = '';
@@ -81,20 +145,6 @@ export class AgendaPage implements OnInit {
     return preview;
   }
 
-  // Carga los niveles de accesibilidad del usuario actual
-  async loadAccesibilityLevels() {
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
-      console.error('User ID not found in localStorage');
-      return;
-    }
-
-    try {
-      this.nivelesAccesibilidad = await this.firebaseService.getStudentDoc(userId);
-    } catch (error) {
-      console.error('Error al cargar los niveles de accesibilidad:', error);
-    }
-  }
 
   // Carga las tareas asignadas al usuario actual
   async loadTareas() {
@@ -108,9 +158,11 @@ export class AgendaPage implements OnInit {
 
     try {
       const tareasFromFirebase = await this.firebaseService.getTareasForUser(userId);
-      this.tareas = tareasFromFirebase.map((tarea: Tarea) => ({
+      this.tareas = tareasFromFirebase.map((tarea: any) => ({
         nombre: tarea.nombre || '',
-        imagen: this.getPreviewFromTask(tarea.nombre)
+        imagen: this.getPreviewFromTask(tarea.nombre),
+        fechaInicio: tarea.fechaInicio ? new Date(tarea.fechaInicio) : null,
+        fechaFin: tarea.fechaFin ? new Date(tarea.fechaFin) : null
       }));
     } catch (error) {
       console.error('Error al cargar las tareas:', error);
@@ -118,6 +170,7 @@ export class AgendaPage implements OnInit {
       this.loading = false;
     }
   }
+
 
   async getTareaByNombre(nombre: string) {
     try {

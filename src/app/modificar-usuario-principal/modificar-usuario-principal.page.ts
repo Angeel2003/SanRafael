@@ -1,31 +1,33 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
 import { FirebaseService } from '../services/firebase.service';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { arrowBack, arrowForward } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+import { IonContent, IonIcon, IonCard, IonCardHeader, IonCardTitle, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonGrid, IonRow, IonCol, IonButton, IonBadge } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-modificar-usuario-principal',
   templateUrl: './modificar-usuario-principal.page.html',
   styleUrls: ['./modificar-usuario-principal.page.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    IonicModule
-  ]
+  imports: [IonContent, CommonModule, FormsModule, IonIcon, IonCard, IonCardHeader, IonCardTitle, ReactiveFormsModule, IonHeader, IonTitle, IonToolbar, IonButtons, IonBackButton, IonGrid, IonRow, IonCol, IonButton, IonBadge]
 })
 
 export class ModificarUsuarioPrincipalPage implements OnInit {
   users: any[] = [];
   currentPage = 0;
   usersPerPage = 5; // Muestra 4 usuarios por página
+  notificaciones: any;
+  adminProfe: string;
+  private intervalId: any;
+  peticiones: number | null = 0;
 
   constructor(private router: Router, private firebaseService: FirebaseService) {
+    const navigation = this.router.getCurrentNavigation();
+    this.adminProfe = navigation?.extras.state?.['tipoUsuario'];
+
     addIcons({
       arrowBack,
       arrowForward
@@ -33,7 +35,18 @@ export class ModificarUsuarioPrincipalPage implements OnInit {
   }
 
   ngOnInit() { 
+    if(this.adminProfe == 'administrador'){
+      this.intervalId = setInterval(() => {
+        this.checkCollectionStatus();
+      }, 100);
+    }
     this.cargarUsuarios();
+  }
+
+  ngOnDestroy() {
+    if (this.intervalId && this.adminProfe == 'administrador') {
+      clearInterval(this.intervalId);
+    }
   }
 
   async cargarUsuarios() {
@@ -75,4 +88,43 @@ export class ModificarUsuarioPrincipalPage implements OnInit {
   modificarUsuario(id: string) {
     this.router.navigate(['/modificar-usuario', id]); // Correctamente pasa el parámetro dinámico
   }
+
+  checkCollectionStatus() {
+    this.firebaseService.getNotificacionesAdmin().subscribe({
+      next: (notificaciones) => {
+        // Verifica que las notificaciones son un array
+        if (Array.isArray(notificaciones)) {
+          this.notificaciones = notificaciones;
+  
+          // Asumimos que tienes una lista de usuarios (esto depende de tu estructura de datos)
+          for (let user of this.users) {
+            // Contar las notificaciones de cada alumno
+            const notificacionesPorAlumno = this.notificaciones.filter(
+              (notificacion: any) => notificacion.alumnoId === user.id
+            );
+  
+            // Añadir el contador de notificaciones a cada alumno
+            user.notificacionesCount = notificacionesPorAlumno.length;
+          }
+  
+        } else {
+          console.error('Las notificaciones no son un array:', notificaciones);
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener las notificaciones:', error);
+      },
+    });
+  }
+  
+  historialTareas(user: any){
+    const navigationExtras: NavigationExtras = {
+      state: {
+        user: user
+      }
+    };
+    this.router.navigate(['/historial-tareas'], navigationExtras);
+  }
+  
+  
 }
