@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/perfil-admin-profesor"></ion-back-button> <!-- Ajusta la ruta si es necesario -->
+      <ion-back-button defaultHref="/perfil-admin-profesor" aria-label="Volver al perfil de administrador o profesor"></ion-back-button>
     </ion-buttons>
     <ion-title>ASIGNAR TAREA A ALUMNO</ion-title>
   </ion-toolbar>
@@ -36,28 +36,42 @@
           debounce="300"
           placeholder="Buscar tarea"
           show-clear-button="focus"
-          clear-input="true">
-        </ion-searchbar>
-
+          clear-input="true"
+          aria-label="Buscar tarea por nombre"
+        ></ion-searchbar>
+      
         <ion-list>
           <ion-item *ngFor="let task of filteredTasks">
             <ion-checkbox 
               justify="end" 
               alignment="end" 
               value="{{task}}" 
-              (ionChange)="onSelectTask($event)">{{ task }}
+              (ionChange)="onSelectTask($event)" 
+              [attr.aria-label]="'Seleccionar tarea: ' + task"
+            >
+              {{ task }}
             </ion-checkbox>
           </ion-item>
         </ion-list>
       </ion-col>
+      
       <ion-col>
         <ion-item>
-          <ion-label>Selecciona la alumno</ion-label>
-          <ion-select [(ngModel)]="selectedStudent" interface="popover" (ionChange)="onSelectStudent($event)"  (ionBlur)="handleBlur()">
-            <ion-select-option *ngFor="let student of studentNames" [value]="student">{{ student }}</ion-select-option>
+          <ion-label>Selecciona el alumno</ion-label>
+          <ion-select 
+            [(ngModel)]="selectedStudent" 
+            interface="popover" 
+            (ionChange)="onSelectStudent($event)"  
+            (ionBlur)="handleBlur()" 
+            aria-label="Selecciona un alumno"
+          >
+            <ion-select-option *ngFor="let student of studentNames" [value]="student" [attr.aria-label]="'Alumno: ' + student">
+              {{ student }}
+            </ion-select-option>
           </ion-select>
         </ion-item>
       </ion-col>
+      
       <ion-col>
         <ion-list>
           <ion-item>
@@ -66,8 +80,9 @@
               alignment="start" 
               value="texto" 
               (ionChange)="onCheckboxChange($event)"
-              [checked]="selectedValueAcces.includes('Texto')">Texto
-            </ion-checkbox>
+              [checked]="selectedValueAcces.includes('Texto')" 
+              aria-label="Accesibilidad: Texto"
+            >Texto</ion-checkbox>
           </ion-item>
           <ion-item>
             <ion-checkbox 
@@ -75,8 +90,9 @@
               alignment="start" 
               value="pictograma" 
               (ionChange)="onCheckboxChange($event)"
-              [checked]="selectedValueAcces.includes('Pictograma')">Pictograma
-            </ion-checkbox>
+              [checked]="selectedValueAcces.includes('Pictograma')" 
+              aria-label="Accesibilidad: Pictograma"
+            >Pictograma</ion-checkbox>
           </ion-item>
           <ion-item>
             <ion-checkbox 
@@ -84,8 +100,9 @@
               alignment="start" 
               value="imagen" 
               (ionChange)="onCheckboxChange($event)"
-              [checked]="selectedValueAcces.includes('Imagen')">Imagen
-            </ion-checkbox>
+              [checked]="selectedValueAcces.includes('Imagen')" 
+              aria-label="Accesibilidad: Imagen"
+            >Imagen</ion-checkbox>
           </ion-item>
           <ion-item>
             <ion-checkbox 
@@ -93,8 +110,9 @@
               alignment="start" 
               value="video" 
               (ionChange)="onCheckboxChange($event)"
-              [checked]="selectedValueAcces.includes('Video')">Video
-            </ion-checkbox>
+              [checked]="selectedValueAcces.includes('Video')" 
+              aria-label="Accesibilidad: Video"
+            >Video</ion-checkbox>
           </ion-item>
           <ion-item>
             <ion-checkbox 
@@ -102,23 +120,48 @@
               alignment="start" 
               value="audio" 
               (ionChange)="onCheckboxChange($event)"
-              [checked]="selectedValueAcces.includes('Audio')">Audio
-            </ion-checkbox>
+              [checked]="selectedValueAcces.includes('Audio')" 
+              aria-label="Accesibilidad: Audio"
+            >Audio</ion-checkbox>
           </ion-item>
         </ion-list>
       </ion-col>
+      
       <ion-col>
-          <div>
-            <ion-label>Fecha inicio</ion-label>
-            <ion-datetime presentation="date-time" [preferWheel]="true" [(ngModel)]="dateInit" (ionChange)="onDateInitChange($event)" local="es-ES"></ion-datetime>
-            <ion-label>Fecha fin</ion-label>
-            <ion-datetime presentation="date-time" [preferWheel]="true" [(ngModel)]="dateEnd" (ionChange)="onDateEndChange($event)" local="es-ES"></ion-datetime>
+        <div>
+          <ion-label>Fecha inicio</ion-label>
+          <ion-datetime 
+            presentation="date-time" 
+            [preferWheel]="true" 
+            [(ngModel)]="dateInit" 
+            (ionChange)="onDateInitChange($event)" 
+            locale="es-ES" 
+            aria-label="Seleccionar fecha de inicio"
+          ></ion-datetime>
+          <ion-label>Fecha fin</ion-label>
+          <ion-datetime 
+            presentation="date-time" 
+            [preferWheel]="true" 
+            [(ngModel)]="dateEnd" 
+            (ionChange)="onDateEndChange($event)" 
+            locale="es-ES" 
+            aria-label="Seleccionar fecha de fin"
+          ></ion-datetime>
         </div>
       </ion-col>
+      
     </ion-row>
   </ion-grid>
 </ion-content>
 
 <ion-footer>
-  <ion-button class="save-button" id="open-toast" expand="full" (click)="guardarAsignacion()">GUARDAR</ion-button>
+  <ion-button 
+    class="save-button" 
+    id="open-toast" 
+    expand="full" 
+    (click)="guardarAsignacion()" 
+    aria-label="Guardar asignación de tarea"
+  >
+    GUARDAR
+  </ion-button>
 </ion-footer>

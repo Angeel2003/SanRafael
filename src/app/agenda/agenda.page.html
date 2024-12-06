@@ -1,18 +1,25 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/user-list"></ion-back-button>
+      <ion-back-button 
+        defaultHref="/user-list" 
+        aria-label="Volver a la lista de usuarios">
+      </ion-back-button>
     </ion-buttons>
     <ion-row class="header-row">
       <ion-col size="auto">
-        <ion-title class="title">AGENDA</ion-title>
+        <ion-title class="title" aria-label="Agenda">AGENDA</ion-title>
       </ion-col>
       <ion-col size="auto" class="image-col">
         <img 
           [src]="previewAgenda" 
           alt="Pictograma de agenda" 
           class="tarea-preview-image" 
+          aria-describedby="agenda-image-desc"
         />
+        <span id="agenda-image-desc" class="sr-only">
+          Imagen que representa la agenda del usuario.
+        </span>
       </ion-col>
     </ion-row>
   </ion-toolbar>
@@ -21,8 +28,8 @@
 <ion-content [fullscreen]="true">
   <ng-container *ngIf="loading; else content">
     <div class="loading-spinner">
-      <ion-spinner name="crescent"></ion-spinner>
-      <p>CARGANDO TAREAS...</p>
+      <ion-spinner name="crescent" aria-hidden="true"></ion-spinner>
+      <p aria-live="polite">CARGANDO TAREAS...</p>
     </div>
   </ng-container>
 
@@ -30,9 +37,18 @@
   <ng-template #content>
     <ng-container *ngIf="tareas && tareas.length > 0; else noTareas">
       <div class="tareas-container">
-        <div (click)="realizarTarea(tarea)" class="tarea-card" *ngFor="let tarea of tareas; let i = index">
+        <div 
+          (click)="realizarTarea(tarea)" 
+          class="tarea-card" 
+          *ngFor="let tarea of tareas; let i = index" 
+          role="button" 
+          [attr.aria-label]="'Abrir tarea ' + (i + 1) + ': ' + tarea.nombre | uppercase"
+          tabindex="0"
+        >
           <div class="tarea-content">
-            <p class="tarea-title">TAREA {{ i + 1 }}: {{ tarea.nombre | uppercase }}</p>
+            <p class="tarea-title">
+              TAREA {{ i + 1 }}: {{ tarea.nombre | uppercase }}
+            </p>
           </div>
           <div 
             *ngIf="nivelesAccesibilidad == 'Pictograma' || nivelesAccesibilidad == 'Imagen' || nivelesAccesibilidad == 'Video'" 
@@ -41,23 +57,31 @@
             <ng-container *ngIf="tarea.imagen; else noImagen">
               <img 
                 [src]="tarea.imagen" 
-                alt="{{ tarea.nombre }}" 
+                alt="Imagen de previsualización de {{ tarea.nombre }}" 
                 class="tarea-preview-image" 
               />
+              <span id="imagen-tarea-{{i}}-desc" class="sr-only">
+                Imagen de la tarea {{ tarea.nombre }}.
+              </span>
             </ng-container>
             <ng-template #noImagen>
-              <p class="no-image">SIN IMAGEN</p>
+              <p class="no-image" aria-label="Sin imagen disponible">
+                SIN IMAGEN
+              </p>
             </ng-template>
           </div>
            
-          <ion-icon *ngIf="tarea.fechaFin && fechaHoy && tarea.fechaFin >= fechaHoy" name="close-outline" class="cross-overlay"></ion-icon>
-
+          <ion-icon 
+            *ngIf="tarea.fechaFin && fechaHoy && tarea.fechaFin >= fechaHoy" 
+            name="close-outline" 
+            class="cross-overlay">
+          </ion-icon>
         </div>
       </div>
     </ng-container>
 
     <ng-template #noTareas>
-      <div class="no-tareas">
+      <div class="no-tareas" aria-live="polite">
         NO HAY TAREAS ASIGNADAS
       </div>
     </ng-template>

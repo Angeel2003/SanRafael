@@ -1,11 +1,15 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/perfil-admin-profesor"></ion-back-button>
+      <ion-back-button 
+        defaultHref="/perfil-admin-profesor" 
+        aria-label="Volver al perfil de administrador o profesor">
+      </ion-back-button>
     </ion-buttons>
     <ion-title>CREAR USUARIO</ion-title>
   </ion-toolbar>
 </ion-header>
+
 
 <ion-content [fullscreen]="true">
     <ion-grid>
@@ -14,32 +18,55 @@
         <ion-col size="12">
           <ion-item>
             <ion-label position="stacked">Nombre</ion-label>
-            <ion-input placeholder="Nombre" type="text" [(ngModel)]="nombre"></ion-input>
+            <ion-input 
+              placeholder="Nombre" 
+              type="text" 
+              [(ngModel)]="nombre" 
+              aria-label="Campo para ingresar el nombre del usuario">
+            </ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
-  
+      
       <ion-row>
         <ion-col size="12">
           <ion-item>
             <ion-label position="stacked">Usuario</ion-label>
-            <ion-input placeholder="Usuario" type="text" [(ngModel)]="usuario"></ion-input>
+            <ion-input 
+              placeholder="Usuario" 
+              type="text" 
+              [(ngModel)]="usuario" 
+              aria-label="Campo para ingresar el nombre de usuario">
+            </ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
-
+      
       <ion-row>
         <ion-col size="12">
           <ion-item>
             <ion-label position="stacked">Imagen de Perfil</ion-label>
             <div class="image-preview-container">
-              <img *ngIf="profileImageUrl" [src]="profileImageUrl" alt="Vista previa" class="profile-image-preview">
+              <img 
+                *ngIf="profileImageUrl" 
+                [src]="profileImageUrl" 
+                alt="Vista previa de la imagen de perfil" 
+                class="profile-image-preview">
             </div>
-            <ion-button expand="block" (click)="triggerProfileImageInput()">Cargar Imagen</ion-button>
-            <input type="file" id="profileImageInput" accept="image/*" (change)="onProfileImageSelected($event)" hidden>
+            <ion-button expand="block" (click)="triggerProfileImageInput()" aria-label="Subir imagen de perfil">
+              Cargar Imagen
+            </ion-button>
+            <input 
+              type="file" 
+              id="profileImageInput" 
+              accept="image/*" 
+              (change)="onProfileImageSelected($event)" 
+              aria-label="Seleccionar una imagen de perfil" 
+              hidden>
           </ion-item>
         </ion-col>
       </ion-row>
+      
 
       <ion-row>
         <ion-col size="12">
@@ -47,30 +74,31 @@
             <h3>Selección del Nivel de Accesibilidad:</h3>
           </ion-text>
           
-          <ion-radio-group [(ngModel)]="nivelAccesibilidad">
+          <ion-radio-group [(ngModel)]="nivelAccesibilidad" aria-labelledby="nivelAccesibilidadGroup">
             <ion-item>
               <ion-label>Texto</ion-label>
-              <ion-radio slot="start" value="Texto"></ion-radio>
+              <ion-radio slot="start" value="Texto" aria-label="Seleccionar accesibilidad por texto"></ion-radio>
             </ion-item>
             <ion-item>
               <ion-label>Audio</ion-label>
-              <ion-radio slot="start" value="Audio"></ion-radio>
+              <ion-radio slot="start" value="Audio" aria-label="Seleccionar accesibilidad por audio"></ion-radio>
             </ion-item>
             <ion-item>
               <ion-label>Video</ion-label>
-              <ion-radio slot="start" value="Video"></ion-radio>
+              <ion-radio slot="start" value="Video" aria-label="Seleccionar accesibilidad por video"></ion-radio>
             </ion-item>
             <ion-item>
               <ion-label>Imágenes</ion-label>
-              <ion-radio slot="start" value="Imagen"></ion-radio>
+              <ion-radio slot="start" value="Imagen" aria-label="Seleccionar accesibilidad por imágenes"></ion-radio>
             </ion-item>
             <ion-item>
               <ion-label>Pictogramas</ion-label>
-              <ion-radio slot="start" value="Pictograma" checked></ion-radio>
+              <ion-radio slot="start" value="Pictograma" aria-label="Seleccionar accesibilidad por pictogramas"></ion-radio>
             </ion-item>
           </ion-radio-group>
         </ion-col>
       </ion-row>
+      
 
       <h2>Contraseña</h2>
       <ion-row>
