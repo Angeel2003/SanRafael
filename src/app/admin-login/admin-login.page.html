@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/"></ion-back-button> <!-- Volver a la página anterior -->
+      <ion-back-button defaultHref="/" aria-label="Volver a la página anterior"></ion-back-button> <!-- Volver a la página anterior -->
     </ion-buttons>
     <ion-title>ADMINISTRADOR/PROFESOR</ion-title>
   </ion-toolbar>
@@ -9,23 +9,53 @@
 
 <ion-content>
 
-  <div class="adminLogin" >
-    <form id="formLogin">
+  <div class="adminLogin">
+    <form id="formLogin" aria-labelledby="form-login-label">
+      <h1 id="form-login-label" class="sr-only">Formulario de inicio de sesión</h1> <!-- Etiqueta para el formulario -->
 
       <ion-item id="item-email" class="input-item">
-        <ion-icon name="mail-outline"></ion-icon>
-        <ion-label position="start">Usuario</ion-label>
-        <ion-input id="emailLogin" type="text" [disabled]="false" placeholder="Introduce tu usuario"></ion-input>
+        <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+        <ion-label position="start" for="emailLogin">Usuario</ion-label>
+        <ion-input 
+          id="emailLogin" 
+          type="text" 
+          [disabled]="false" 
+          placeholder="Introduce tu usuario"
+          aria-describedby="item-email-desc"
+          aria-label="Introduce tu usuario">
+        </ion-input>
+        <div id="item-email-desc" class="sr-only">Campo para ingresar el nombre de usuario</div>
       </ion-item>
   
       <ion-item id="item-password" class="input-item">
-        <ion-icon name="lock-closed-outline"></ion-icon>
-        <ion-label position="start">Contraseña</ion-label>
-        <ion-input id="password" type="password" [disabled]="false" placeholder="Introduce tu contraseña"></ion-input>
-        <ion-icon class="eye-icon" name="eye-off" id="togglePassword" slot="end" (click)="toggleLoginPasswordVisibility()"></ion-icon>
+        <ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>
+        <ion-label position="start" for="password">Contraseña</ion-label>
+        <ion-input 
+          id="password" 
+          type="password" 
+          [disabled]="false" 
+          placeholder="Introduce tu contraseña"
+          aria-describedby="item-password-desc"
+          aria-label="Introduce tu contraseña">
+        </ion-input>
+        <ion-icon 
+          class="eye-icon" 
+          name="eye-off" 
+          id="togglePassword" 
+          slot="end" 
+          aria-label="Mostrar u ocultar contraseña" 
+          (click)="toggleLoginPasswordVisibility()">
+        </ion-icon>
+        <div id="item-password-desc" class="sr-only">Campo para ingresar la contraseña</div>
       </ion-item>
   
-      <ion-button expand="block" shape="round" (click)="onSubmit()">Iniciar Sesion</ion-button>
+      <ion-button 
+        expand="block" 
+        shape="round" 
+        (click)="onSubmit()" 
+        aria-label="Iniciar sesión">
+        Iniciar Sesión
+      </ion-button>
   
     </form>
   </div>

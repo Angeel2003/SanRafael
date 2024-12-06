@@ -1,11 +1,15 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/perfil-admin-profesor"></ion-back-button>
+      <ion-back-button 
+        defaultHref="/perfil-admin-profesor" 
+        aria-label="Volver al perfil de administrador o profesor">
+      </ion-back-button>
     </ion-buttons>
     <ion-title>PERFIL ADMINISTRADOR/PROFESOR</ion-title>
   </ion-toolbar>
 </ion-header>
+
 
 <ion-content [fullscreen]="true">
   <ion-grid>
@@ -16,33 +20,55 @@
       <ion-col size="12">
         <ion-item>
           <ion-label position="stacked">Nombre</ion-label>
-          <ion-input [(ngModel)]="adminProfe.nombre" name="nombre" placeholder="Ingrese el nombre"></ion-input>
+          <ion-input 
+            [(ngModel)]="adminProfe.nombre" 
+            name="nombre" 
+            placeholder="Ingrese el nombre" 
+            aria-label="Campo para ingresar el nombre del perfil">
+          </ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
+    
 
     <!-- Correo -->
     <ion-row>
       <ion-col size="12">
         <ion-item>
           <ion-label position="stacked">Correo</ion-label>
-          <ion-input [(ngModel)]="adminProfe.correo" name="correo" type="email" placeholder="Ingrese el correo"></ion-input>
+          <ion-input 
+            [(ngModel)]="adminProfe.correo" 
+            name="correo" 
+            type="email" 
+            placeholder="Ingrese el correo" 
+            aria-label="Campo para ingresar el correo electrónico del perfil">
+          </ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
+    
 
     <!-- Rol -->
     <ion-row>
       <ion-col size="12">
         <ion-item>
           <ion-label position="stacked">Tipo de Usuario</ion-label>
-          <ion-select [(ngModel)]="adminProfe.tipoUsuario" name="tipoUsuario" placeholder="Seleccione el tipo de usuario">
-            <ion-select-option value="administrador">Administrador</ion-select-option>
-            <ion-select-option value="profesor">Profesor</ion-select-option>
+          <ion-select 
+            [(ngModel)]="adminProfe.tipoUsuario" 
+            name="tipoUsuario" 
+            placeholder="Seleccione el tipo de usuario" 
+            aria-label="Seleccionar el tipo de usuario del perfil">
+            <ion-select-option value="administrador" aria-label="Seleccionar Administrador">
+              Administrador
+            </ion-select-option>
+            <ion-select-option value="profesor" aria-label="Seleccionar Profesor">
+              Profesor
+            </ion-select-option>
           </ion-select>
         </ion-item>
       </ion-col>
     </ion-row>
+    
 
     <!-- Foto de Perfil -->
     <ion-row>
@@ -50,13 +76,29 @@
         <ion-item lines="none">
           <ion-label position="stacked">Foto de Perfil</ion-label>
           <div class="image-preview-container">
-            <img *ngIf="adminProfe.foto" [src]="adminProfe.foto" alt="Vista previa" class="profile-image-preview">
+            <img 
+              *ngIf="adminProfe.foto" 
+              [src]="adminProfe.foto" 
+              alt="Vista previa de la foto de perfil" 
+              class="profile-image-preview">
           </div>
         </ion-item>
-        <ion-button expand="block" (click)="triggerImageInput()">Subir Imagen</ion-button>
-        <input type="file" id="imageInput" accept="image/*" (change)="onImageSelected($event)" hidden>
+        <ion-button 
+          expand="block" 
+          (click)="triggerImageInput()" 
+          aria-label="Subir una nueva imagen para el perfil">
+          Subir Imagen
+        </ion-button>
+        <input 
+          type="file" 
+          id="imageInput" 
+          accept="image/*" 
+          (change)="onImageSelected($event)" 
+          hidden 
+          aria-hidden="true">
       </ion-col>
     </ion-row>
+    
 
     <!-- Contraseña -->
     <h2>Contraseña</h2>
@@ -68,22 +110,31 @@
             [(ngModel)]="adminProfe.contrasena" 
             name="contrasena" 
             [type]="passwordVisible ? 'text' : 'password'" 
-            placeholder="Ingrese su contraseña">
+            placeholder="Ingrese su contraseña" 
+            aria-label="Campo para ingresar la contraseña del perfil">
           </ion-input>
           <ion-icon 
             slot="end" 
             [name]="passwordVisible ? 'eye' : 'eye-off'" 
-            (click)="togglePasswordVisibility()">
+            (click)="togglePasswordVisibility()" 
+            [attr.aria-label]="passwordVisible ? 'Ocultar contraseña' : 'Mostrar contraseña'">
           </ion-icon>
         </ion-item>
       </ion-col>
     </ion-row>
+    
 
     <!-- Botón Guardar -->
     <ion-row>
       <ion-col size="12" class="ion-text-right">
-        <ion-button expand="block" (click)="guardarPerfil()">GUARDAR</ion-button>
+        <ion-button 
+          expand="block" 
+          (click)="guardarPerfil()" 
+          aria-label="Guardar los cambios realizados en el perfil">
+          GUARDAR
+        </ion-button>
       </ion-col>
     </ion-row>
+    
   </ion-grid>
 </ion-content>

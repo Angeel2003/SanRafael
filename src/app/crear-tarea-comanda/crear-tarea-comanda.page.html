@@ -1,35 +1,67 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/perfil-admin-profesor"></ion-back-button>
+      <ion-back-button 
+        defaultHref="/perfil-admin-profesor" 
+        aria-label="Volver al perfil de administrador o profesor">
+      </ion-back-button>
     </ion-buttons>
     <ion-title>CREAR TAREA COMANDA</ion-title>
   </ion-toolbar>
 </ion-header>
 
+
 <ion-content>
 
   <ion-item>
     <ion-label>Nombre de la tarea</ion-label>
-    <ion-input type="text" label="Ingresa el nombre de la tarea" label-placement="floating"
-      [(ngModel)]="task.name"></ion-input>
+    <ion-input 
+      type="text" 
+      label="Ingresa el nombre de la tarea" 
+      label-placement="floating" 
+      aria-label="Campo para ingresar el nombre de la tarea" 
+      [(ngModel)]="task.name">
+    </ion-input>
   </ion-item>
+  
 
   <ion-item>
     <ion-label>Foto de la tarea</ion-label>
     <div *ngIf="localImageURL">
-      <img [src]="localImageURL" alt="Vista previa de la tarea" style="width: 100px; height: auto;" />
+      <img 
+        [src]="localImageURL" 
+        alt="Vista previa de la tarea" 
+        style="width: 100px; height: auto;" 
+        aria-label="Vista previa de la imagen seleccionada para la tarea" />
     </div>
-    <input type="file" accept="image/*" (change)="loadFile($event)" />
+    <input 
+      type="file" 
+      accept="image/*" 
+      (change)="loadFile($event)" 
+      aria-label="Seleccionar una imagen para la tarea" />
   </ion-item>
+  
 
   <ion-item>
     <ion-label>Aula</ion-label>
-    <ion-input type="text" label="Ingresa la aula" label-placement="floating" [(ngModel)]="task.room"></ion-input>
+    <ion-input 
+      type="text" 
+      label="Ingresa la aula" 
+      label-placement="floating" 
+      aria-label="Campo para ingresar el aula donde se realizará la tarea" 
+      [(ngModel)]="task.room">
+    </ion-input>
   </ion-item>
+  
 
 </ion-content>
 
 <ion-footer>
-  <ion-button class="save-button" expand="full" (click)="saveTask()">GUARDAR</ion-button>
+  <ion-button 
+    class="save-button" 
+    expand="full" 
+    (click)="saveTask()" 
+    aria-label="Guardar la nueva tarea comanda">
+    GUARDAR
+  </ion-button>
 </ion-footer>
