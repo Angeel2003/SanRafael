@@ -8,15 +8,21 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <h3>Puntuacion de {{this.user.nombre}}: {{this.puntuacion}}/{{this.puntuacionMax}}</h3>
+  <div class="icon-container">
+    <ion-icon *ngFor="let item of createRange(this.numEstrellasEnteras)" name="star"></ion-icon> <!--Pintar estrellas enteras-->
+    <ion-icon *ngIf="this.mitadEstrella" name="star-half"></ion-icon> <!--Pintar estrella mitad-->
+    <ion-icon *ngFor="let item of createRange(this.numEstrellasRestantes)" name="star-outline"></ion-icon> <!--Pintar estrellas vacias-->
+  </div>
   <ion-grid>
     <ion-row>
       <ion-col>
         <p><strong>Tareas completadas</strong></p>
         <ul class="no-dot"> <!-- Tareas pendientes -->
-          <li class="pending-border" *ngFor="let pending of this.pendingTask">
+          <li class="pending-border" *ngFor="let pending of this.pendingTask; let i = index">
             <span class="inside-border">{{pending.nombreTarea}}</span>
-            <ion-button (click)="accept()" class="accept">Aceptar</ion-button>
-            <ion-button (click)="denied()" class="decline">Rechazar</ion-button>
+            <ion-button (click)="gestionarTarea(pending, i, true)" class="accept">Aceptar</ion-button>
+            <ion-button (click)="gestionarTarea(pending, i, false)" class="decline">Rechazar</ion-button>
           </li> 
         </ul>
         <ul class="no-dot"> <!-- Tareas completadas -->
@@ -26,7 +32,7 @@
       <ion-col>
         <p><strong>Tareas no completadas</strong></p>
         <ul class="no-dot"> <!-- Tareas no completadas -->
-          <li *ngFor="let finished of this.finishedTask"><p *ngIf="finished.completada == true">{{finished.nombreTarea}}</p></li> 
+          <li *ngFor="let finished of this.finishedTask"><p *ngIf="finished.completada == false">{{finished.nombreTarea}}</p></li> 
         </ul>
       </ion-col>
       <ion-col>
