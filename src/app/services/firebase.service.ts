@@ -5,7 +5,7 @@ import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { from, map, Observable } from 'rxjs';
 import { Asignacion } from '../asignar-tarea/asignar-tarea.page';
-import { addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
+import { addDoc, arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from "firebase/firestore"; // Para Firestore Database
 import { deleteObject, getDownloadURL, getStorage, ref, listAll, uploadBytes } from "firebase/storage"; // Para Firebase Storage
 import { OrderTask } from '../crear-tarea-comanda/crear-tarea-comanda.page';
 import { Tarea } from '../agenda/agenda.page';
@@ -609,5 +609,30 @@ export class FirebaseService {
     }
   }
   
-  
+  async eliminarTareaPendiente(tarea: any, userId: string){
+    const documentRef = doc(this.db, 'alumnos', userId);
+
+    try {
+      await updateDoc(documentRef, {
+        tareasPendientes: arrayRemove(tarea)
+      });
+      console.log('Elemento eliminado del array con éxito');
+    } catch (error) {
+      console.error('Error al eliminar el elemento:', error);
+    }
+
+  }
+
+  async añadirTareaTerminada(tarea: any, userId: string){
+    const documentRef = doc(this.db, 'alumnos', userId);
+
+    try {
+      await updateDoc(documentRef, {
+        tareasTermin: arrayUnion(tarea)
+      });
+      console.log('Elemento añadido exitosamente');
+    } catch (error) {
+      console.error('Error al añadir el elemento:', error);
+    }
+  }
 }

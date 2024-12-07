@@ -41,3 +41,14 @@ ion-row, ion-col{
     margin-left: 7%;
     margin-right: 10%;
 }
+
+h3{
+    text-align: center;
+}
+
+.icon-container {
+    display: flex;           /* Usamos Flexbox */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;     /* Centra verticalmente */
+    font-size: 250%
+  }
