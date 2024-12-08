@@ -278,46 +278,53 @@ export class FirebaseService {
 
   //Agenda
   async getTareasForUser(userId: string): Promise<Tarea[]> {
-    const alumnoDocRef = doc(this.db, 'alumnos', userId); // Referencia al documento del alumno
+    const alumnoDocRef = doc(this.db, 'alumnos', userId);
   
     try {
-      const alumnoDocSnapshot = await getDoc(alumnoDocRef); // Obtiene el documento del alumno
+      const alumnoDocSnapshot = await getDoc(alumnoDocRef);
   
       if (!alumnoDocSnapshot.exists()) {
         console.warn("No se encontró el alumno con ID:", userId);
-        return []; // Devuelve un array vacío si el documento no existe
+        return [];
       }
   
-      const alumnoData = alumnoDocSnapshot.data(); // Datos del alumno
-      const tareasAsignadas = alumnoData?.['tareasAsig'] || []; // Obtén las tareas asignadas, si existen
+      const alumnoData = alumnoDocSnapshot.data();
+      const tareasAsignadas = alumnoData?.['tareasAsig'] || [];
   
       if (!Array.isArray(tareasAsignadas) || tareasAsignadas.length === 0) {
-        return []; // Devuelve un array vacío si no hay tareas
+        return [];
       }
   
-      // Obtener la fecha actual
       const today = new Date();
+      today.setHours(0, 0, 0, 0);
   
-      // Filtrar las tareas para las que la fecha actual está dentro del intervalo
+      // Filtrar y mapear tareas
       const tareasFiltradas: Tarea[] = tareasAsignadas
         .filter((tarea: any) => {
-          const fechaInicio = new Date(tarea.fechaInicio); // Convertir fechaInicio a objeto Date
-          const fechaFin = new Date(tarea.fechaFin);       // Convertir fechaFin a objeto Date
-          return today >= fechaInicio && today <= fechaFin; // Verificar si hoy está dentro del rango
+          const fechaInicio = new Date(tarea.fechaInicio);
+          const fechaFin = new Date(tarea.fechaFin);
+  
+          fechaInicio.setHours(0, 0, 0, 0);
+          fechaFin.setHours(0, 0, 0, 0);
+  
+          // Tareas del día actual
+          return today >= fechaInicio && today <= fechaFin;
         })
         .map((tarea: any) => ({
           nombre: tarea.nombreTarea || 'Sin nombre',
           imagen: tarea.preview || '',
           fechaInicio: tarea.fechaInicio,
-          fechaFin: tarea.fechaFin
+          fechaFin: tarea.fechaFin,
+          fueraDeTiempo: new Date(tarea.fechaFin) < new Date(), // Verificar si ha pasado la hora de fin
         }));
   
       return tareasFiltradas;
     } catch (error) {
       console.error("Error al obtener las tareas del alumno:", error);
-      return []; // En caso de error, devuelve un array vacío
+      return [];
     }
   }
+  
   
   async getStudentDocAcces(userId: string): Promise<string> {  // Retornamos un string
     const docRef = doc(this.db, 'alumnos', userId); // Referencia al documento del alumno
@@ -534,7 +541,7 @@ export class FirebaseService {
     try {
       const alumnoDocRef = doc(this.db, 'alumnos', id); // Referencia al documento del alumno
       const alumnoDocSnapshot = await getDoc(alumnoDocRef); // Verifica si el documento existe
-  
+
       if (alumnoDocSnapshot.exists()) {
         await updateDoc(alumnoDocRef, data); // Actualiza el documento con los datos proporcionados
         return true; // Retorna true si la actualización fue exitosa
@@ -560,24 +567,33 @@ export class FirebaseService {
   }
 
   // Modificar usuario principal
-  getNotificacionesAdmin(): Observable<any[]> {
-    const collectionRef = collection(this.db, 'notificacionesAdmin');
-    
+  getPendientesAdmin(userId: string): Observable<number> {
+    const alumnoRef = doc(this.db, 'alumnos', userId); // Referencia al documento del alumno
+  
     return new Observable(observer => {
-      getDocs(collectionRef)
-        .then(snapshot => {
-          // Extraemos los datos de los documentos y los devolvemos como un array
-          const notificaciones = snapshot.docs.map(doc => doc.data());
-          observer.next(notificaciones);  // Emite las notificaciones
+      getDoc(alumnoRef)
+        .then(docSnapshot => {
+          if (docSnapshot.exists()) {
+            // Extraemos el array de tareasPendientes
+            const data = docSnapshot.data();
+            const tareasPendientes = data?.['tareasPendientes'] || []; // Por defecto un array vacío si no existe
+            
+            // Emitimos el número de tareas pendientes
+            observer.next(tareasPendientes.length);
+          } else {
+            console.error(`El documento para el alumno ${userId} no existe.`);
+            observer.next(0); // Si no existe el documento, asumimos 0 tareas pendientes
+          }
           observer.complete();
         })
         .catch(error => {
-          console.error('Error al recuperar las notificaciones:', error);
-          observer.next([]);  // Devuelve un array vacío en caso de error
+          console.error(`Error al obtener las tareas pendientes para el usuario ${userId}:`, error);
+          observer.next(0); // En caso de error, asumimos 0 tareas pendientes
           observer.complete();
         });
     });
   }
+  
 
   async enviarNotificacion(notificacion: any) {
     try {
@@ -616,7 +632,19 @@ export class FirebaseService {
       await updateDoc(documentRef, {
         tareasPendientes: arrayRemove(tarea)
       });
-      console.log('Elemento eliminado del array con éxito');
+    } catch (error) {
+      console.error('Error al eliminar el elemento:', error);
+    }
+
+  }
+
+  async eliminarTareaAsignada(tarea: any, userId: string){
+    const documentRef = doc(this.db, 'alumnos', userId);
+
+    try {
+      await updateDoc(documentRef, {
+        tareasAsig: arrayRemove(tarea)
+      });
     } catch (error) {
       console.error('Error al eliminar el elemento:', error);
     }
@@ -630,7 +658,6 @@ export class FirebaseService {
       await updateDoc(documentRef, {
         tareasTermin: arrayUnion(tarea)
       });
-      console.log('Elemento añadido exitosamente');
     } catch (error) {
       console.error('Error al añadir el elemento:', error);
     }
