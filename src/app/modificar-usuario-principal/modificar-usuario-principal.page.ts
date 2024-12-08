@@ -90,31 +90,19 @@ export class ModificarUsuarioPrincipalPage implements OnInit {
   }
 
   checkCollectionStatus() {
-    this.firebaseService.getNotificacionesAdmin().subscribe({
-      next: (notificaciones) => {
-        // Verifica que las notificaciones son un array
-        if (Array.isArray(notificaciones)) {
-          this.notificaciones = notificaciones;
-  
-          // Asumimos que tienes una lista de usuarios (esto depende de tu estructura de datos)
-          for (let user of this.users) {
-            // Contar las notificaciones de cada alumno
-            const notificacionesPorAlumno = this.notificaciones.filter(
-              (notificacion: any) => notificacion.alumnoId === user.id
-            );
-  
-            // Añadir el contador de notificaciones a cada alumno
-            user.notificacionesCount = notificacionesPorAlumno.length;
-          }
-  
-        } else {
-          console.error('Las notificaciones no son un array:', notificaciones);
-        }
-      },
-      error: (error) => {
-        console.error('Error al obtener las notificaciones:', error);
-      },
-    });
+    // Aquí usamos el método `getPendientesAdmin` para obtener el número de tareas pendientes
+    for (let user of this.users) {
+      this.firebaseService.getPendientesAdmin(user.id).subscribe({
+        next: (numTareasPendientes) => {
+          // Asumimos que numTareasPendientes es el número de tareas pendientes de cada alumno
+          user.notificacionesCount = numTareasPendientes;
+        },
+        error: (error) => {
+          console.error(`Error al obtener tareas pendientes para el usuario ${user.id}:`, error);
+          user.notificacionesCount = 0;  // En caso de error, asignamos 0
+        },
+      });
+    }
   }
   
   historialTareas(user: any){

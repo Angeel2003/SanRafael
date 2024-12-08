@@ -4,6 +4,7 @@ import { addIcons } from 'ionicons';
 import { Router } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton} from '@ionic/angular/standalone';
 import { FirebaseService } from '../services/firebase.service';
+import { TareasVencidasService } from '../services/tareas-vencidas.service';
 
 @Component({
   selector: 'app-home',
@@ -15,7 +16,7 @@ import { FirebaseService } from '../services/firebase.service';
 export class HomePage {
 
   imagen: string = '';
-  constructor(private router: Router, private firebaseService: FirebaseService){
+  constructor(private router: Router, private firebaseService: FirebaseService, private tareasVencidasService: TareasVencidasService){
     addIcons({
       personOutline
     })
@@ -23,8 +24,10 @@ export class HomePage {
 
   async ngOnInit() {
     this.imagen = await this.firebaseService.getImageUrl('pictogramas/niña.png');
+    await this.tareasVencidasService.moverTareasVencidas();
   }
-
+  
+  
   goToUserLogin() {
     this.router.navigate(['/user-list']);
   }

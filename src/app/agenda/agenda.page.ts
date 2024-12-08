@@ -6,6 +6,7 @@ import { addIcons } from 'ionicons';
 import { closeOutline } from 'ionicons/icons';
 import { FirebaseService } from '../services/firebase.service';
 import { NavigationExtras, Router } from '@angular/router';
+import { TareasVencidasService } from '../services/tareas-vencidas.service';
 
 export interface Tarea {
   nombre: string;
@@ -39,7 +40,7 @@ export class AgendaPage implements OnInit {
   fullUser: any;
   fechaHoy: Date | undefined;
 
-  constructor(private firebaseService: FirebaseService, private router: Router) {
+  constructor(private firebaseService: FirebaseService, private router: Router, private tareasVencidasService: TareasVencidasService) {
     this.cargarTareasCompletas();
 
     addIcons({
@@ -78,48 +79,9 @@ export class AgendaPage implements OnInit {
     } catch (error) {
       console.error('Error al cargar los niveles de accesibilidad:', error);
     }
-
-    for (let tarea of this.tareas) {
-      if (tarea.fechaFin) {  
-        const fechaFin = new Date(tarea.fechaFin);
-
-        if (fechaFin >= this.fechaHoy) {
-          this.enviarNotificacion(tarea);
-        }
-      }
-    }
-
+    await this.tareasVencidasService.moverTareasVencidas();
 
   }
-
-  async enviarNotificacion(tarea: any) {
-    const notificacion = {
-      alumnoId: this.fullUser.id,  // ID del usuario asociado
-      tipoNotificacion: 'FechaFinalizada',
-      fechaFin: tarea.fechaFin,
-      fechaInicio: tarea.fechaInicio,
-      nombreTarea: tarea.nombre
-    };
-  
-    try {
-      // Verificar si ya existe una notificación similar en la base de datos
-      const notificacionExistente = await this.firebaseService.verificarNotificacionExistente(
-        notificacion.alumnoId,
-        notificacion.tipoNotificacion,
-        notificacion.fechaFin,
-        notificacion.fechaInicio,
-        notificacion.nombreTarea
-      );
-  
-      if (!notificacionExistente) {
-        await this.firebaseService.enviarNotificacion(notificacion);
-      }
-    } catch (error) {
-      console.error('Error al verificar o enviar la notificación:', error);
-    }
-  }
-  
-
 
   getPreviewFromTask(taskName: string){
     let preview = '';
@@ -153,16 +115,17 @@ export class AgendaPage implements OnInit {
       console.error('User ID not found in localStorage');
       return;
     }
-
+  
     this.loading = true;
-
+  
     try {
       const tareasFromFirebase = await this.firebaseService.getTareasForUser(userId);
       this.tareas = tareasFromFirebase.map((tarea: any) => ({
         nombre: tarea.nombre || '',
         imagen: this.getPreviewFromTask(tarea.nombre),
         fechaInicio: tarea.fechaInicio ? new Date(tarea.fechaInicio) : null,
-        fechaFin: tarea.fechaFin ? new Date(tarea.fechaFin) : null
+        fechaFin: tarea.fechaFin ? new Date(tarea.fechaFin) : null,
+        fueraDeTiempo: tarea.fueraDeTiempo || false, // Mantén el estado de fueraDeTiempo
       }));
     } catch (error) {
       console.error('Error al cargar las tareas:', error);
@@ -170,7 +133,7 @@ export class AgendaPage implements OnInit {
       this.loading = false;
     }
   }
-
+  
 
   async getTareaByNombre(nombre: string) {
     try {
@@ -208,4 +171,11 @@ export class AgendaPage implements OnInit {
     };
     this.router.navigate(['/realizar-tarea'], navigationExtras);
   }
+
+  isPastEndTime(fechaFin: string | Date): boolean {
+    const now = new Date(); // Fecha y hora actuales
+    const endTime = new Date(fechaFin); // Convertir fecha de fin
+    return now > endTime; // Comparar si ya pasó la hora de fin
+  }
+  
 }

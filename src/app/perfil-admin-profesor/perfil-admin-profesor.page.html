@@ -29,7 +29,10 @@
       <ion-col class="users-buttons" size="3">
         <ion-button (click)="crearUsuario()" expand="block">Crear Nuevo Usuario</ion-button>
         <ion-button (click)="crearAdminProfe()" expand="block">Crear Nuevo Admin/Profesor</ion-button>
-        <ion-button (click)="gestionarUsuarios()" expand="block">Gestionar Usuarios</ion-button>
+        <ion-button (click)="gestionarUsuarios()" expand="block">
+          Gestionar Usuarios
+          <ion-badge *ngIf="showBadge" slot="end"><ion-icon name="alert-outline"></ion-icon></ion-badge>
+        </ion-button>
       </ion-col>
 
       <ion-col class="tasks-buttons" size="3">

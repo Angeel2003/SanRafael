@@ -19,10 +19,10 @@
       <ion-col>
         <p><strong>Tareas completadas</strong></p>
         <ul class="no-dot"> <!-- Tareas pendientes -->
-          <li class="pending-border" *ngFor="let pending of this.pendingTask; let i = index">
+          <li class="pending-border" *ngFor="let pending of this.pendingTaskFinished; let i = index">
             <span class="inside-border">{{pending.nombreTarea}}</span>
-            <ion-button (click)="gestionarTarea(pending, i, true)" class="accept">Aceptar</ion-button>
-            <ion-button (click)="gestionarTarea(pending, i, false)" class="decline">Rechazar</ion-button>
+            <ion-button (click)="gestionarTareaFinished(pending, i, true)" class="accept">Aceptar</ion-button>
+            <ion-button (click)="gestionarTareaFinished(pending, i, false)" class="decline">Rechazar</ion-button>
           </li> 
         </ul>
         <ul class="no-dot"> <!-- Tareas completadas -->
@@ -37,6 +37,13 @@
       </ion-col>
       <ion-col>
         <p><strong>Tareas asignadas</strong></p>
+        <ul class="no-dot"> <!-- Tareas pendientes -->
+          <li class="pending-border" *ngFor="let pending of this.pendingTaskUnfinished; let i = index">
+            <span class="inside-border">{{pending.nombreTarea}}</span>
+            <ion-button (click)="gestionarTareaUnfinished(pending, i, true)" class="accept">Reasignar</ion-button>
+            <ion-button (click)="gestionarTareaUnfinished(pending, i, false)" class="decline">Eliminar</ion-button>
+          </li> 
+        </ul>
         <ul class="no-dot"> <!-- Tareas asignadas -->
           <li *ngFor="let assigned of this.assignedTask"><p>{{assigned.nombreTarea}}</p></li> 
         </ul>  
