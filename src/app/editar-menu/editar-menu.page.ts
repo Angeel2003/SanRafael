@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 
 export interface MenuItem {
   id?: string;
-  name: string;
+  nombre: string;
   pictogram: {
     url: string,
     path: string,
@@ -44,7 +44,7 @@ export class EditarMenuPage implements OnInit {
     // Example of a menu item
     // {
     //   id: '1173419Y7',
-    //   name: 'Vegetariano',
+    //   nombre: 'Vegetariano',
     //   pictogram: {
     //     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Soy-whey-protein-diet.jpg/1024px-Soy-whey-protein-diet.jpg",
     //     path: "",
@@ -64,7 +64,7 @@ export class EditarMenuPage implements OnInit {
   addMenu() {
     this.menus.push(
       {
-        name: '',
+        nombre: '',
         pictogram: {
           url: "",
           path: "",
@@ -148,7 +148,7 @@ export class EditarMenuPage implements OnInit {
     // Loop to save edited/new menus
     for (const [index, menu] of this.menus.filter(m => m.edited).entries()) {
 
-      if (!menu.name) {
+      if (!menu.nombre) {
         this.errorFormNotFilled();
         return
       }

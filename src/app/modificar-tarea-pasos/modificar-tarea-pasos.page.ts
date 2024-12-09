@@ -54,6 +54,11 @@ export class ModificarTareaPasosPage implements OnInit {
 
   
   ngOnInit() {
+    this.task.pasosTexto = this.task.pasosTexto.filter((step: string) => step && step.trim() !== '');
+    this.task.pasosPicto = this.task.pasosPicto.filter((step: any) => step !== null && step !== undefined);
+    this.task.pasosImagenes = this.task.pasosImagenes.filter((step: any) => step !== null && step !== undefined);
+    this.task.pasosVideos = this.task.pasosVideos.filter((step: any) => step !== null && step !== undefined);
+
     const maxSteps = Math.max(
       this.task.pasosTexto.length,
       this.task.pasosPicto.length,
@@ -233,7 +238,6 @@ export class ModificarTareaPasosPage implements OnInit {
     }
   }
   
-
   async modificarTarea() {
     const timestamp = new Date().getTime();
 
@@ -260,7 +264,7 @@ export class ModificarTareaPasosPage implements OnInit {
 
     // Subir nuevos pictogramas
     for (const [index, file] of this.selectedPicto.entries()) {
-      const path = `pictograma/picto_${index}_${timestamp}.png`;
+      const path = `pictogramas/picto_${index}_${timestamp}.png`;
       await this.firebaseService.uploadFile(file, path);
       const downloadUrl = await this.firebaseService.getDownloadURL(path);
       dataToSave.pasosPicto.push(downloadUrl);
@@ -329,5 +333,8 @@ export class ModificarTareaPasosPage implements OnInit {
     this.goBackToGestionarTareas();
   }
   
+  trackByIndex(index: number): number {
+    return index;
+  }
 
 }

@@ -41,7 +41,6 @@ export class AgendaPage implements OnInit {
   fechaHoy: Date | undefined;
 
   constructor(private firebaseService: FirebaseService, private router: Router, private tareasVencidasService: TareasVencidasService) {
-    this.cargarTareasCompletas();
 
     addIcons({
       closeOutline
@@ -50,21 +49,26 @@ export class AgendaPage implements OnInit {
   
   async cargarTareasCompletas(): Promise<void> {
     const collectionNames = ['tarea-por-pasos', 'tarea-material', 'tarea-comanda'];
-  
+
     for (const collectionName of collectionNames) {
-      // Obtiene todas las tareas de la colección
-      const tareas = await this.firebaseService.getTareasDeColeccion(collectionName);
-  
-      // Combina las tareas obtenidas con las ya existentes
-      this.tareasCompletas = this.tareasCompletas.concat(tareas);
+      try {
+        // Obtiene todas las tareas de la colección
+        const tareas = await this.firebaseService.getTareasDeColeccion(collectionName);
+        // Concatenar las tareas obtenidas con las tareasCompletas
+        this.tareasCompletas = [...this.tareasCompletas, ...tareas];
+      } catch (error) {
+        console.error('Error al cargar tareas de la colección', collectionName, error);
+      }
     }
   }
 
 
   async ngOnInit() {
+
     this.previewAgenda = await this.firebaseService.getImageUrl('pictogramas/agenda.png');
     this.fechaHoy = new Date();
 
+    await this.cargarTareasCompletas();
     await this.loadTareas();
     
     const userId = localStorage.getItem('userId');
@@ -79,34 +83,22 @@ export class AgendaPage implements OnInit {
     } catch (error) {
       console.error('Error al cargar los niveles de accesibilidad:', error);
     }
-    await this.tareasVencidasService.moverTareasVencidas();
+    
+    console.log('Descomentar para presentacion');
+    
+    // await this.tareasVencidasService.moverTareasVencidas();
 
   }
 
   getPreviewFromTask(taskName: string){
     let preview = '';
-
     for(let i = 0; i < this.tareasCompletas.length; i++){
       if(this.tareasCompletas[i].nombre == taskName){
         preview = this.tareasCompletas[i].previewUrl;
       }
     }
-
     return preview;
   }
-
-  getIdFromTask(taskName: string){
-    let preview = '';
-
-    for(let i = 0; i < this.tareasCompletas.length; i++){
-      if(this.tareasCompletas[i].nombre == taskName){
-        preview = this.tareasCompletas[i].previewUrl;
-      }
-    }
-
-    return preview;
-  }
-
 
   // Carga las tareas asignadas al usuario actual
   async loadTareas() {
@@ -117,7 +109,6 @@ export class AgendaPage implements OnInit {
     }
   
     this.loading = true;
-  
     try {
       const tareasFromFirebase = await this.firebaseService.getTareasForUser(userId);
       this.tareas = tareasFromFirebase.map((tarea: any) => ({
@@ -125,7 +116,6 @@ export class AgendaPage implements OnInit {
         imagen: this.getPreviewFromTask(tarea.nombre),
         fechaInicio: tarea.fechaInicio ? new Date(tarea.fechaInicio) : null,
         fechaFin: tarea.fechaFin ? new Date(tarea.fechaFin) : null,
-        fueraDeTiempo: tarea.fueraDeTiempo || false, // Mantén el estado de fueraDeTiempo
       }));
     } catch (error) {
       console.error('Error al cargar las tareas:', error);
@@ -159,7 +149,7 @@ export class AgendaPage implements OnInit {
     }
   }
 
-  async realizarTarea(tareaPulsada: Tarea){
+  async realizarTareaPrincipal(tareaPulsada: Tarea){
     await this.getTareaByNombre(tareaPulsada.nombre);
 
     const navigationExtras: NavigationExtras = {
@@ -169,7 +159,7 @@ export class AgendaPage implements OnInit {
         nivelesAccesibilidad: this.nivelesAccesibilidad
       }
     };
-    this.router.navigate(['/realizar-tarea'], navigationExtras);
+    this.router.navigate(['/realizar-tarea-principal'], navigationExtras);
   }
 
   isPastEndTime(fechaFin: string | Date): boolean {

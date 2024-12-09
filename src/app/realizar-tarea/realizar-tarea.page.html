@@ -8,31 +8,133 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div *ngIf="nivelAccesibilidad == 'Pictograma'">
+  <div *ngIf="nivelAccesibilidad == 'Pictograma' && tipoTarea == 'tarea-por-pasos'">
     <ion-grid>
       <ion-row>
         <ion-col size="12" class="image-container">
           <img [src]="tarea.pasosPicto[currentIndex]" alt="PASO {{ currentIndex + 1 }}" class="task-image" />
+          <p class="task-pictoText">{{ tarea.pasosTexto[currentIndex] | uppercase}}</p>
+          
+          <img [src]="imageOk" alt="Imagen de bien" class="task-image" *ngIf="finTarea"/>
+          <p class="task-pictoText" *ngIf="finTarea">FIN DE LA TAREA</p>
+          <ion-button 
+            *ngIf="finTarea" 
+            (click)="irAPagPrincipalTarea(tarea, '/agenda')"
+            class="finish-task-button">
+            TERMINAR TAREA
+          </ion-button>
         </ion-col>
       </ion-row>
     </ion-grid>
   </div>
 
-  <div *ngIf="nivelAccesibilidad == 'Texto'">
+  <div *ngIf="nivelAccesibilidad == 'Imagen' && tipoTarea == 'tarea-por-pasos'">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" class="image-container">
+          <img [src]="tarea.pasosImagenes[currentIndex]" alt="PASO {{ currentIndex + 1 }}" class="task-image" *ngIf="!finTarea"/>
+          <p class="task-pictoText" *ngIf="!finTarea">{{ tarea.pasosTexto[currentIndex] | uppercase }}</p>
+          
+          <img [src]="imageOk" alt="Imagen de bien" class="task-image" *ngIf="finTarea"/>
+          <p class="task-pictoText" *ngIf="finTarea">FIN DE LA TAREA</p>
+          <ion-button 
+            *ngIf="finTarea" 
+            (click)="irAPagPrincipalTarea(tarea, '/agenda')"
+            class="finish-task-button">
+            TERMINAR TAREA
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <div *ngIf="nivelAccesibilidad == 'Texto' && tipoTarea == 'tarea-por-pasos'">
     <ion-grid>
       <ion-row>
         <ion-col class="text-container">
-          <p class="task-text">{{ tarea.pasosTexto[currentIndex] }}</p>
+          <p class="task-text" *ngIf="!finTarea">{{ tarea.pasosTexto[currentIndex] | uppercase }}</p>
+          <p class="task-text" *ngIf="finTarea">FIN DE LA TAREA</p>
+          <ion-button 
+            *ngIf="finTarea" 
+            (click)="irAPagPrincipalTarea(tarea, '/agenda')"
+            class="finish-task-button">
+            TERMINAR TAREA
+          </ion-button>
         </ion-col>
       </ion-row>
     </ion-grid>
   </div>
 
+  <div *ngIf="nivelAccesibilidad == 'Video' && tipoTarea == 'tarea-por-pasos'">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" class="image-container">
+          <div class="video-container" *ngIf="!finTarea">
+            <video 
+              [src]="tarea.pasosVideos[currentIndex]"
+              class="task-video" 
+              #videoPlayer
+              (click)="togglePlay(videoPlayer, currentIndex)">
+            </video>
+  
+            <button 
+              class="play-button" 
+              [class.hidden]="!showPlayButton[currentIndex]" 
+              (click)="togglePlay(videoPlayer, currentIndex)">
+            <ion-icon name="play-outline"></ion-icon>
+          </button>
+          </div>
+  
+          <p class="task-pictoText" *ngIf="!finTarea">{{ tarea.pasosTexto[currentIndex] | uppercase }}</p>
+  
+          <img [src]="imageOk" alt="Imagen de bien" class="task-image" *ngIf="finTarea"/>
+          <p class="task-pictoText" *ngIf="finTarea">FIN DE LA TAREA</p>
+  
+          <ion-button 
+            *ngIf="finTarea" 
+            (click)="irAPagPrincipalTarea(tarea, '/agenda')"
+            class="finish-task-button">
+            TERMINAR TAREA
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <div *ngIf="nivelAccesibilidad == 'Audio' && tipoTarea == 'tarea-por-pasos'">
+    <ion-grid>
+      <ion-row>
+        <ion-col class="text-container">
+          <!-- Botón de altavoz grande -->
+          <ion-button 
+            *ngIf="!finTarea" 
+            (click)="toggleAudio(audioElement)"
+            class="audio-button">
+            <ion-icon class="volume-icon" name="volume-high" size="large"></ion-icon> <!-- Icono de altavoz -->
+          </ion-button>
+  
+          <!-- Mensaje de fin de tarea y botón para terminar -->
+          <p class="task-text" *ngIf="finTarea">FIN DE LA TAREA</p>
+          <ion-button 
+            *ngIf="finTarea" 
+            (click)="irAPagPrincipalTarea(tarea, '/agenda')"
+            class="finish-task-button">
+            TERMINAR TAREA
+          </ion-button>
+  
+          <!-- Elemento de audio oculto, pero accesible para la función -->
+          <audio #audioElement [src]="tarea.audioCompletoUrl"></audio>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+  
+
   <div class="pagination-buttons">
-    <ion-button class="custom-button" (click)="prevIndex()" [disabled]="currentIndex === 0">
+    <ion-button class="custom-button" (click)="prevIndex(tarea)">
       <ion-icon name="arrow-back-outline"></ion-icon>
     </ion-button>
-    <ion-button class="custom-button" (click)="nextIndex()" [disabled]="currentIndex === tarea.pasosPicto.length - 1">
+    <ion-button class="custom-button" (click)="nextIndex()" [disabled]="finTarea === true">
       <ion-icon name="arrow-forward-outline"></ion-icon>
     </ion-button>
   </div>

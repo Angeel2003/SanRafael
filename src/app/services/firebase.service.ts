@@ -353,9 +353,6 @@ export class FirebaseService {
     }
   }
 
-  
-  
-
   // Bajar iamgen de Firebase
   async getImageUrl(path: string): Promise<string>{
     const storageRef = ref(this.storage, path);
@@ -381,7 +378,6 @@ export class FirebaseService {
   
     return tareas;
   }
-
 
   async getPictogramImagesFromStorage(): Promise<string[]> {
   
@@ -462,7 +458,6 @@ export class FirebaseService {
     await deleteDoc(docRef);
   }
   
-
   //Obtener Peticiones Material
   async getMaterialRequest(): Promise<any[]>{
     try{
@@ -593,7 +588,6 @@ export class FirebaseService {
         });
     });
   }
-  
 
   async enviarNotificacion(notificacion: any) {
     try {

@@ -49,7 +49,7 @@ export class AsignarTarea {
     try {
       this.taskNames = await this.firebaseService.getAllTaskNames();
       this.studentNames = await this.firebaseService.getAllStudentsNames();
-      this.filteredTasks = [...this.taskNames]; // Inicializa filteredTasks con todas las tareas
+      this.filteredTasks = [...this.taskNames]; 
     } catch (error) {
       console.error("Error al cargar los nombres de las tareas:", error);
     }
@@ -104,12 +104,10 @@ export class AsignarTarea {
 
   onDateInitChange(event: any){
     this.dateInit = event.detail.value;
-    console.log('Guardado inicio', this.dateInit);
   }
 
   onDateEndChange(event: any){
     this.dateEnd = event.detail.value;
-    console.log('Guardado fin', this.dateEnd);
 
   }
 

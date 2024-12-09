@@ -35,6 +35,7 @@ export class TareaMaterialPage implements OnInit {
   aula: string = '';
   items: MaterialItem[] = [];
   task: any = [];
+  taskPreviewImg: File | null = null;
 
 
   constructor(private firebaseService: FirebaseService, private router: Router, private toastController: ToastController) {
@@ -150,8 +151,8 @@ export class TareaMaterialPage implements OnInit {
   imgTareaPreview(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
-      const file = input.files[0];
-      this.previewUrl = URL.createObjectURL(file);
+      this.taskPreviewImg = input.files[0];
+      this.previewUrl = URL.createObjectURL(this.taskPreviewImg);
     }
   }
 
@@ -343,12 +344,12 @@ export class TareaMaterialPage implements OnInit {
       };
 
 
-      if (this.previewUrl){
+      if (this.taskPreviewImg){
         const path = `imagenes/imagen_tarea_material_${this.taskName}.png`;
-        const fileBlob = await fetch(this.previewUrl).then(r => r.blob());
-        await this.firebaseService.uploadFile(new File([fileBlob], `${this.previewUrl}.png`), path); // Sube el archivo con el nombre del material
+        await this.firebaseService.uploadFile(this.taskPreviewImg, path);
         const downloadUrl = await this.firebaseService.getDownloadURL(path);
-        dataToSave.previewUrl = downloadUrl; // Guarda la URL descargable
+        dataToSave.previewUrl = downloadUrl;
+        
       }
       // Subir las imágenes a Firebase antes de guardar
       for (let i = 0; i < this.items.length; i++) {

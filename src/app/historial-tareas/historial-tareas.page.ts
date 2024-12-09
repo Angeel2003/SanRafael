@@ -144,6 +144,7 @@ export class HistorialTareasPage implements OnInit {
     this.pendingTaskFinished.splice(index, 1);
 
     this.recalcularPuntuacion();
+    this.initializeValues(this.navigation);
 
     this.cdr.detectChanges();
 
@@ -200,6 +201,7 @@ export class HistorialTareasPage implements OnInit {
   
     // Recalcular la puntuación y actualizar las listas
     this.recalcularPuntuacion();
+    this.initializeValues(this.navigation);
     this.cdr.detectChanges();
   }
   

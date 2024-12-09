@@ -105,6 +105,10 @@ export const routes: Routes = [
     path: 'historial-tareas',
     loadComponent: () => import('./historial-tareas/historial-tareas.page').then( m => m.HistorialTareasPage)
   },
+  {
+    path: 'realizar-tarea-principal',
+    loadComponent: () => import('./realizar-tarea-principal/realizar-tarea-principal.page').then( m => m.RealizarTareaPrincipalPage)
+  },
 
 
 

@@ -36,18 +36,19 @@ export class PerfilAdminProfesorPage implements OnInit {
     this.showBadge = false;
   
     this.users = await this.firebaseService.getCollection('alumnos');
-    if (this.adminProfe.tipoUsuario === 'administrador') {
-      this.checkCollectionStatus(); // Primera carga
-      this.intervalId = setInterval(() => {
-        this.checkCollectionStatus(); // Actualizaciones periódicas
-      }, 100);
-    }
-
+    await this.tareasVencidasService.moverTareasVencidas();
+    console.log('Descomentar para presentacion');
+    // if (this.adminProfe.tipoUsuario === 'administrador') {
+    //   this.checkCollectionStatus(); // Primera carga
+    //   this.intervalId = setInterval(() => {
+    //     this.checkCollectionStatus(); // Actualizaciones periódicas
+    //   }, 100);
+    // }
+    this.checkCollectionStatus();
   }
 
   async checkCollectionStatus() {
     
-    await this.tareasVencidasService.moverTareasVencidas();
     this.firebaseService.isCollectionEmpty('peticionesMaterial').subscribe({
       next: peticiones => {
         this.peticiones = peticiones;

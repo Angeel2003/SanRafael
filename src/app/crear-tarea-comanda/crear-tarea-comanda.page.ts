@@ -8,9 +8,9 @@ import { FirebaseService } from '../services/firebase.service';
 import { Router } from '@angular/router';
 
 export interface OrderTask {
-  name: string;
+  nombre: string;
   previewUrl: string;
-  room: string;
+  aula: string;
 }
 
 @Component({
@@ -23,9 +23,9 @@ export interface OrderTask {
 
 export class CrearTareaComandaPage implements OnInit {
   task: OrderTask = {
-    name: '',
+    nombre: '',
     previewUrl: '',
-    room: ''
+    aula: ''
   };
   imageFile: File | undefined;
   localImageURL: string | undefined;
@@ -51,7 +51,7 @@ export class CrearTareaComandaPage implements OnInit {
   }
 
   async saveTask() {
-    if (!this.task.name || !this.task.room || !this.imageFile) {
+    if (!this.task.nombre || !this.task.aula || !this.imageFile) {
       throw new Error('Missing data. Please file all fields');
     }
 
