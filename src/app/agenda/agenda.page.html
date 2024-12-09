@@ -38,7 +38,7 @@
     <ng-container *ngIf="tareas && tareas.length > 0; else noTareas">
       <div class="tareas-container">
         <div 
-          (click)="realizarTarea(tarea)" 
+          (click)="realizarTareaPrincipal(tarea)" 
           class="tarea-card" 
           *ngFor="let tarea of tareas; let i = index" 
           role="button" 

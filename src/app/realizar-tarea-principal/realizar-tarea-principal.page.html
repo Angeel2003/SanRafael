@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/agenda"></ion-back-button> 
+    </ion-buttons>
+    <ion-title>{{ tarea.nombre | uppercase }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" class="image-container">
+          <img [src]="tarea.previewUrl" alt="Previsualización {{tarea.nombre}}" class="task-image" />
+        </ion-col>
+      </ion-row>
+
+      <!-- Condición para mostrar el video solo si el tipo de tarea es 'tarea-por-pasos' -->
+      <ion-row *ngIf="tipoTarea === 'tarea-por-pasos'">
+        <ion-col size="12" class="video-container">
+          <div class="video-container">
+            <video 
+              [src]="tarea.videoCompletoUrl" 
+              class="task-video" 
+              #videoPlayer 
+              (click)="togglePlay(videoPlayer)">
+            </video>
+            <button 
+              class="play-button" 
+              [class.hidden]="!showPlayButton" 
+              (click)="togglePlay(videoPlayer)">
+              <ion-icon name="play-outline"></ion-icon>
+            </button>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="tipoTarea === 'tarea-comanda'">
+        <ion-col *ngFor="let aula of aulas" class="aula-button-col">
+          <ion-button class="aula-button" (click)="entrarAula(aula)">
+            {{ aula.nombre }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <div class="pagination-buttons">
+    <ion-button *ngIf="tipoTarea !== 'tarea-comanda'" class="custom-button" [disabled]="true">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="tipoTarea === 'tarea-por-pasos'" class="custom-button" (click)="realizarTareaPasos(tarea, videoPlayer.nativeElement)">
+      <ion-icon name="arrow-forward-outline"></ion-icon>
+    </ion-button>
+    <ion-button *ngIf="tipoTarea === 'tarea-material'" class="custom-button" (click)="realizarTarea(tarea)">
+      <ion-icon name="arrow-forward-outline"></ion-icon>
+    </ion-button>
+  </div>
+</ion-content>

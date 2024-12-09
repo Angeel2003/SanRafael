@@ -1,12 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { arrowBackOutline, arrowForwardOutline, playOutline, volumeHigh } from 'ionicons/icons';
+import { arrowBackOutline, arrowForwardOutline, playOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonCol, IonBackButton, IonButtons, IonRow, IonIcon, IonButton, IonGrid } from '@ionic/angular/standalone';
 import { NavigationExtras, Router } from '@angular/router';
 import { FirebaseService } from '../services/firebase.service';
-
 
 export interface Tarea {
   nombre: string;
@@ -21,57 +20,54 @@ interface TareaDevolver {
   tipoTarea: string;
 }
 
+
 @Component({
-  selector: 'app-realizar-tarea',
-  templateUrl: './realizar-tarea.page.html',
-  styleUrls: ['./realizar-tarea.page.scss'],
+  selector: 'app-realizar-tarea-principal',
+  templateUrl: './realizar-tarea-principal.page.html',
+  styleUrls: ['./realizar-tarea-principal.page.scss'],
   standalone: true,
   imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonCol, IonBackButton, IonButtons, IonRow, IonIcon, IonButton, IonGrid]
 })
 
-export class RealizarTareaPage implements OnInit {
+export class RealizarTareaPrincipalPage implements OnInit {
   tarea: any;
   tipoTarea: string = '';
+  nivelAccesibilidad: string = '';
   tareas: Tarea[] = [];
   tareaADevolver: TareaDevolver = { tarea: null, tipoTarea: '' };
-  currentIndex: number = 0;
-  nivelAccesibilidad: string = '';
-  finTarea: boolean = false;
-  imageOk: string = 'https://static.arasaac.org/pictograms/5397/5397_300.png';
-  showPlayButton: boolean[] = [];
+  showPlayButton = true;
   timeoutId: any;
-  videoStates: { [index: number]: boolean } = {};
-
+  @ViewChild('videoPlayer', { static: false })
+  videoPlayer!: ElementRef<HTMLVideoElement>; // Referencia del video
+  aulas: any[] = [];
 
   constructor(private router: Router, private firebaseService: FirebaseService) {
     addIcons({
       arrowBackOutline,
       arrowForwardOutline,
-      playOutline,
-      volumeHigh
+      playOutline
     })
 
     const navigation = this.router.getCurrentNavigation();
     this.tarea = navigation?.extras.state?.['tarea'];
     this.tipoTarea = navigation?.extras.state?.['tipoTarea'];
     this.nivelAccesibilidad = navigation?.extras.state?.['nivelesAccesibilidad'];
-  }
+    this.showPlayButton = true;
 
-  ngOnInit() {
-    this.initializeArrays();  
+  }
+  async ngOnInit() {
+    if(this.tipoTarea == 'tarea-comanda') {
+      this.aulas = await this.firebaseService.getCollection('aulas');
+      console.log(this.aulas);
+    }
     
   }
+  
 
-  initializeArrays() {
-    if(this.tipoTarea == 'tarea-por-pasos'){
-      for (let i = 0; i < this.tarea.pasosVideos.length; i++) {
-        this.videoStates[i] = false;
-        this.showPlayButton[i] = true;
-      }
+  async realizarTareaPasos(tareaPulsada: Tarea, video: HTMLVideoElement){
+    if (!video.paused) {
+      video.pause();
     }
-  }
-
-  async irAPagPrincipalTarea(tareaPulsada: Tarea, nombrePagina: string){
     await this.getTareaByNombre(tareaPulsada.nombre);
 
     const navigationExtras: NavigationExtras = {
@@ -81,33 +77,21 @@ export class RealizarTareaPage implements OnInit {
         nivelesAccesibilidad: this.nivelAccesibilidad
       }
     };
-    this.router.navigate([nombrePagina], navigationExtras);
+    this.router.navigate(['/realizar-tarea'], navigationExtras);
   }
 
-  prevIndex(tareaPulsada: Tarea) {
-    this.finTarea = false;
-    const nombrePagina = '/realizar-tarea-principal';
-
-    if(this.currentIndex > 0) {
-      this.currentIndex--;
-    }else if(this.currentIndex == 0) {
-      this.irAPagPrincipalTarea(tareaPulsada, nombrePagina);
-    }
-  }
-
-  nextIndex() {
-    if(this.nivelAccesibilidad == 'Audio'){
-      this.currentIndex++;
-      this.finTarea = true;
-    }else{
-      if(this.currentIndex < this.tarea.pasosPicto.length - 1) {
-        this.currentIndex++;
-      }else{
-        this.currentIndex++;
-        this.finTarea = true;
-      }
-    }
+  async realizarTarea(tareaPulsada: Tarea){
     
+    await this.getTareaByNombre(tareaPulsada.nombre);
+
+    const navigationExtras: NavigationExtras = {
+      state: {
+        tarea: this.tareaADevolver.tarea,
+        tipoTarea: this.tareaADevolver.tipoTarea,
+        nivelesAccesibilidad: this.nivelAccesibilidad
+      }
+    };
+    this.router.navigate(['/realizar-tarea'], navigationExtras);
   }
 
   async getTareaByNombre(nombre: string) {
@@ -134,38 +118,35 @@ export class RealizarTareaPage implements OnInit {
     }
   }
 
-  togglePlay(video: HTMLVideoElement, index: number) {
+  togglePlay(video: HTMLVideoElement) {
     if (video.paused) {
       video.play();
-
-      if(this.nivelAccesibilidad == 'Video'){
-        this.videoStates[index] = true;
-        this.showPlayButton[index] = false;
-      }
-
+      this.hidePlayButtonAfterDelay(); // Oculta el botón tras reproducir
     } else {
       video.pause();
-
-      if(this.nivelAccesibilidad == 'Video'){
-        this.videoStates[index] = false;
-        this.showPlayButton[index] = true;
-      }
-
+      this.showPlayButton = true; // Muestra el botón al pausar
     }
   }
 
-  hidePlayButtonAfterDelay(index:number) {
+
+  hidePlayButtonAfterDelay() {
+    this.showPlayButton = false;
     if (this.timeoutId) {
       clearTimeout(this.timeoutId); // Limpia cualquier temporizador previo
     }
     
   }
 
-  toggleAudio(audioElement: HTMLAudioElement) {
-    if (audioElement.paused) {
-      audioElement.play();  // Reproduce el audio si está pausado
-    } else {
-      audioElement.pause();  // Pausa el audio si está reproduciéndose
-    }
+  entrarAula(aula: any) {
+    const navigationExtras: NavigationExtras = {
+      state: {
+        tarea: this.tareaADevolver.tarea,
+        tipoTarea: this.tareaADevolver.tipoTarea,
+        nivelesAccesibilidad: this.nivelAccesibilidad,
+        aula: aula
+      }
+    };
+    this.router.navigate(['/tarea-comanda'], navigationExtras);
   }
 }
+

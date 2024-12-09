@@ -204,7 +204,7 @@ export class TareaPasosPage {
     }
 
     for (const [index, file] of this.selectedPicto.entries()) {
-      const path = `pictograma/picto_${index}_${timestamp}.png`;
+      const path = `pictogramas/picto_${index}_${timestamp}.png`;
       await this.firebaseService.uploadFile(file, path);
       const downloadUrl = await this.firebaseService.getDownloadURL(path);
       dataToSave.pasosPicto.push(downloadUrl);

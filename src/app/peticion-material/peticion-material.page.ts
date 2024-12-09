@@ -1,7 +1,7 @@
 import { NgFor, NgIf, NgClass } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { addIcons } from 'ionicons';
-import { addOutline, chevronDownOutline, chevronUpOutline } from 'ionicons/icons';
+import {  chevronDownOutline, chevronUpOutline } from 'ionicons/icons';
 import { FormsModule } from '@angular/forms';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonIcon, IonButton, 
@@ -9,7 +9,6 @@ import {
   IonToast, IonSelectOption, IonSelect, IonRadio, IonRadioGroup, IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/angular/standalone';
 import { FirebaseService } from '../services/firebase.service';
 import { NavigationExtras, Router } from '@angular/router';
-import {ToastController} from '@ionic/angular';
 
 
 @Component({

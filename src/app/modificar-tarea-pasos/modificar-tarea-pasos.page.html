@@ -97,7 +97,7 @@
       <ion-col>
         <ng-container *ngIf="currentTab === 'texto'">
           <ion-list>
-            <ion-item *ngFor="let step of task.pasosTexto; let i = index">
+            <ion-item *ngFor="let step of task.pasosTexto; let i = index; trackBy: trackByIndex">
               <ion-input 
                 label="Paso {{ i+1 }}" 
                 placeholder="Escribe el paso {{ i+1 }}" 
