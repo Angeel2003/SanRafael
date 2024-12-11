@@ -134,7 +134,7 @@
     <ion-button class="custom-button" (click)="prevIndex(tarea)">
       <ion-icon name="arrow-back-outline"></ion-icon>
     </ion-button>
-    <ion-button class="custom-button" (click)="nextIndex()" [disabled]="finTarea === true">
+    <ion-button class="custom-button" (click)="nextIndex()" *ngIf="finTarea === true">
       <ion-icon name="arrow-forward-outline"></ion-icon>
     </ion-button>
   </div>

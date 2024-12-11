@@ -92,13 +92,24 @@ ion-icon {
 }
 
 .aula-button {
-    font-size: 100px;
-    padding: 20px;
-    margin: 20px;
+    font-size: 60px;
+    padding: 10px;
+    margin: 10px;
     text-transform: uppercase;
     --background: #005682;
     width: 100%;
     height: 150%;
+}
+
+.label-aula {
+    background-color: #005682;
+    color: #ffffff;
+    font-size: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px;
+    padding: 10px;
 }
 
 .aula-button-col {

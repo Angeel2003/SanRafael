@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { arrowBackOutline, arrowForwardOutline, playOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonCol, IonBackButton, IonButtons, IonRow, IonIcon, IonButton, IonGrid } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonLabel, IonCol, IonBackButton, IonButtons, IonRow, IonIcon, IonButton, IonGrid } from '@ionic/angular/standalone';
 import { NavigationExtras, Router } from '@angular/router';
 import { FirebaseService } from '../services/firebase.service';
 
@@ -26,7 +26,7 @@ interface TareaDevolver {
   templateUrl: './realizar-tarea-principal.page.html',
   styleUrls: ['./realizar-tarea-principal.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonCol, IonBackButton, IonButtons, IonRow, IonIcon, IonButton, IonGrid]
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonLabel, CommonModule, FormsModule, IonCol, IonBackButton, IonButtons, IonRow, IonIcon, IonButton, IonGrid]
 })
 
 export class RealizarTareaPrincipalPage implements OnInit {
@@ -55,6 +55,7 @@ export class RealizarTareaPrincipalPage implements OnInit {
     this.showPlayButton = true;
 
   }
+
   async ngOnInit() {
     if(this.tipoTarea == 'tarea-comanda') {
       this.aulas = await this.firebaseService.getCollection('aulas');
@@ -77,7 +78,7 @@ export class RealizarTareaPrincipalPage implements OnInit {
         nivelesAccesibilidad: this.nivelAccesibilidad
       }
     };
-    this.router.navigate(['/realizar-tarea'], navigationExtras);
+    this.router.navigate(['/realizar-tarea-pasos'], navigationExtras);
   }
 
   async realizarTarea(tareaPulsada: Tarea){
@@ -91,7 +92,7 @@ export class RealizarTareaPrincipalPage implements OnInit {
         nivelesAccesibilidad: this.nivelAccesibilidad
       }
     };
-    this.router.navigate(['/realizar-tarea'], navigationExtras);
+    this.router.navigate(['/realizar-tarea-comanda-material'], navigationExtras);
   }
 
   async getTareaByNombre(nombre: string) {
@@ -140,8 +141,8 @@ export class RealizarTareaPrincipalPage implements OnInit {
   entrarAula(aula: any) {
     const navigationExtras: NavigationExtras = {
       state: {
-        tarea: this.tareaADevolver.tarea,
-        tipoTarea: this.tareaADevolver.tipoTarea,
+        tarea: this.tarea,
+        tipoTarea: this.tipoTarea,
         nivelesAccesibilidad: this.nivelAccesibilidad,
         aula: aula
       }

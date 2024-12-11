@@ -36,7 +36,7 @@ export const routes: Routes = [
   },
   {
     path: 'tarea-comanda',
-    loadComponent: () => import('./tarea-comanda/tarea-comanda.page').then(m => m.TareaComandaPage)
+    loadComponent: () => import('./realizar-tarea-comanda-material/realizar-tarea-comanda-material.page').then(m => m.TareaComandaPage)
   },
   {
     path: 'asignar-tarea',
@@ -97,9 +97,10 @@ export const routes: Routes = [
   {
     path: 'modificar-usuario/:id',
     loadComponent: () => import('./modificar-usuario/modificar-usuario.page').then(m => m.ModificarUsuarioPage)
-  },  {
-    path: 'realizar-tarea',
-    loadComponent: () => import('./realizar-tarea/realizar-tarea.page').then( m => m.RealizarTareaPage)
+  },
+  {
+    path: 'realizar-tarea-pasos',
+    loadComponent: () => import('./realizar-tarea-pasos/realizar-tarea-pasos.page').then( m => m.RealizarTareaPage)
   },
   {
     path: 'historial-tareas',
