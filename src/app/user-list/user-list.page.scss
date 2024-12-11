@@ -49,10 +49,6 @@ ion-icon {
     height: 50px;
 }
 
-.custom-button[disabled] {
-    --background: #cccccc; /* Color de fondo para el botón deshabilitado */
-    --color: #666666;      /* Color del texto e icono para el botón deshabilitado */
-}
 
 .header-row {
     display: flex;

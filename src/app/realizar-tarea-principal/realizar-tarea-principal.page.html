@@ -43,13 +43,16 @@
           </ion-button>
         </ion-col>
       </ion-row>
+
+      <ion-row *ngIf="tipoTarea === 'tarea-material'">
+        <ion-col>
+          <ion-label class="label-aula">MATERIAL&nbsp; PARA&nbsp; EL&nbsp; AULA:&nbsp;&nbsp;{{ tarea.aula | uppercase}}</ion-label>
+        </ion-col>
+      </ion-row>
     </ion-grid>
   </div>
 
   <div class="pagination-buttons">
-    <ion-button *ngIf="tipoTarea !== 'tarea-comanda'" class="custom-button" [disabled]="true">
-      <ion-icon name="arrow-back-outline"></ion-icon>
-    </ion-button>
     <ion-button *ngIf="tipoTarea === 'tarea-por-pasos'" class="custom-button" (click)="realizarTareaPasos(tarea, videoPlayer.nativeElement)">
       <ion-icon name="arrow-forward-outline"></ion-icon>
     </ion-button>

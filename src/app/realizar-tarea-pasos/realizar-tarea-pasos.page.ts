@@ -22,9 +22,9 @@ interface TareaDevolver {
 }
 
 @Component({
-  selector: 'app-realizar-tarea',
-  templateUrl: './realizar-tarea.page.html',
-  styleUrls: ['./realizar-tarea.page.scss'],
+  selector: 'app-realizar-tarea-pasos',
+  templateUrl: './realizar-tarea-pasos.page.html',
+  styleUrls: ['./realizar-tarea-pasos.page.scss'],
   standalone: true,
   imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonCol, IonBackButton, IonButtons, IonRow, IonIcon, IonButton, IonGrid]
 })

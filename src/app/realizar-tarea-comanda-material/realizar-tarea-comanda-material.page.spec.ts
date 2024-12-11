@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TareaComandaPage } from './tarea-comanda.page';
+import { TareaComandaPage } from './realizar-tarea-comanda-material.page';
 
 describe('TareaComandaPage', () => {
   let component: TareaComandaPage;
