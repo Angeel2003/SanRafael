@@ -22,9 +22,9 @@ interface TareaDevolver {
 }
 
 @Component({
-  selector: 'app-realizar-tarea',
-  templateUrl: './realizar-tarea.page.html',
-  styleUrls: ['./realizar-tarea.page.scss'],
+  selector: 'app-realizar-tarea-pasos',
+  templateUrl: './realizar-tarea-pasos.page.html',
+  styleUrls: ['./realizar-tarea-pasos.page.scss'],
   standalone: true,
   imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonCol, IonBackButton, IonButtons, IonRow, IonIcon, IonButton, IonGrid]
 })
@@ -34,13 +34,20 @@ export class RealizarTareaPage implements OnInit {
   tipoTarea: string = '';
   tareas: Tarea[] = [];
   tareaADevolver: TareaDevolver = { tarea: null, tipoTarea: '' };
-  currentIndex: number = 0;
+  currentPage: number = 0;
   nivelAccesibilidad: string = '';
   finTarea: boolean = false;
   imageOk: string = 'https://static.arasaac.org/pictograms/5397/5397_300.png';
   showPlayButton: boolean[] = [];
   timeoutId: any;
   videoStates: { [index: number]: boolean } = {};
+
+  nombreTarea: string = "Nombe de la tarea/aula";
+  menus: any[] = [];
+  aula: string = '';
+  thingsPerPage:number = 4;
+
+  numberImages: { [key: number]: string } = {};
 
 
   constructor(private router: Router, private firebaseService: FirebaseService) {
@@ -55,11 +62,22 @@ export class RealizarTareaPage implements OnInit {
     this.tarea = navigation?.extras.state?.['tarea'];
     this.tipoTarea = navigation?.extras.state?.['tipoTarea'];
     this.nivelAccesibilidad = navigation?.extras.state?.['nivelesAccesibilidad'];
+    this.aula = navigation?.extras.state?.['aula'];
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.initializeArrays();  
     
+    addIcons({
+      arrowBackOutline,
+      arrowForwardOutline
+    })
+    
+    if(this.tipoTarea == 'tarea-comanda'){
+      this.menus = await this.firebaseService.getCollection('menus');
+    }
+
+    this.loadNumberImages();
   }
 
   initializeArrays() {
@@ -70,6 +88,18 @@ export class RealizarTareaPage implements OnInit {
       }
     }
   }
+
+  async loadNumberImages() {
+    for (let i = 0; i <= 10; i++) { 
+      const path = `pictogramas/numeros/${i}.png`;
+      this.numberImages[i] = await this.firebaseService.getDownloadURL(path);
+    }
+  }
+
+  getNumberImage(num: number): string {
+    return this.numberImages[num] || ''; 
+  }
+
 
   async irAPagPrincipalTarea(tareaPulsada: Tarea, nombrePagina: string){
     await this.getTareaByNombre(tareaPulsada.nombre);
@@ -84,28 +114,70 @@ export class RealizarTareaPage implements OnInit {
     this.router.navigate([nombrePagina], navigationExtras);
   }
 
-  prevIndex(tareaPulsada: Tarea) {
+  aumentar(index: number){
+    this.menus[index].num++;
+    
+  }
+
+  decrementar(index: number){
+    if(this.menus[index].num > 0){
+      this.menus[index].num--;
+    }
+  }
+
+  get paginatedUsers() {
+    const start = this.currentPage * this.thingsPerPage;
+    const end = start + this.thingsPerPage;
+
+    if(this.tipoTarea == 'tarea-comanda') {
+      return this.menus.slice(start, end);
+    }else {
+      return this.tarea.items.slice(start, end);
+    }
+    
+  }
+
+  get maxPage() {
+    if(this.tipoTarea == 'tarea-comanda') {
+      return Math.ceil(this.menus.length / this.thingsPerPage) - 1;
+    } else {
+      console.log(this.tarea.items.length);
+      return Math.ceil(this.tarea.items.length / this.thingsPerPage) - 1;
+    }
+  }
+
+  prevPage(tareaPulsada: Tarea) {
     this.finTarea = false;
     const nombrePagina = '/realizar-tarea-principal';
 
-    if(this.currentIndex > 0) {
-      this.currentIndex--;
-    }else if(this.currentIndex == 0) {
+    if(this.currentPage > 0) {
+      this.currentPage--;
+    }else if(this.currentPage == 0) {
       this.irAPagPrincipalTarea(tareaPulsada, nombrePagina);
     }
   }
 
-  nextIndex() {
-    if(this.nivelAccesibilidad == 'Audio'){
-      this.currentIndex++;
-      this.finTarea = true;
-    }else{
-      if(this.currentIndex < this.tarea.pasosPicto.length - 1) {
-        this.currentIndex++;
-      }else{
-        this.currentIndex++;
+  nextPage() {
+    if(this.tipoTarea == 'tarea-por-pasos'){
+      if(this.nivelAccesibilidad == 'Audio') {
+        this.currentPage++;
         this.finTarea = true;
+      }else{
+        if(this.currentPage < this.tarea.pasosPicto.length - 1) {
+          this.currentPage++;
+        }else{
+          this.currentPage++;
+          this.finTarea = true;
+        }
       }
+    }else {
+      console.log(this.currentPage, this.maxPage);
+      if (this.currentPage < this.maxPage) {
+        this.currentPage++;
+      }else {
+        this.currentPage++;
+        this.finTarea = true;
+      }      
     }
     
   }
@@ -168,4 +240,6 @@ export class RealizarTareaPage implements OnInit {
       audioElement.pause();  // Pausa el audio si está reproduciéndose
     }
   }
+
+
 }

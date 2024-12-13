@@ -2,7 +2,7 @@ ion-toolbar {
     display: flex;
     justify-content: center; /* Centra horizontalmente el contenido */
 }
-  
+
 ion-title {
     text-align: center; /* Asegura que el texto esté centrado */
     width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
@@ -16,11 +16,33 @@ ion-title {
 }
 
 .task-image {
-    width: 500px; /* Ancho fijo */
-    height: 500px; /* Alto fijo */
+    width: 300px; /* Ancho fijo */
+    height: 300px; /* Alto fijo */
     object-fit: cover;
     border: 2px solid #ccc;
     border-radius: 10px;
+}
+
+.tarea-preview-image {
+    width: 100px; /* Tamaño fijo de la imagen */
+    height: auto;
+    border-radius: 5px;
+}
+
+.image-col {
+    display: flex;
+    justify-content: center; /* Centra la imagen dentro de su columna */
+}
+
+
+.header-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    margin-right: 10px; /* Ajusta el espacio entre el título y la imagen */
 }
 
 .text-container {
@@ -86,9 +108,9 @@ ion-icon {
 }
 
 .task-video {
-    width: 50%;
+    width: 70%;
     border-radius: 10px;
-    border: 5px solid #007bff; 
+    border: 5px solid #005682; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer; 
     display: block;
@@ -141,4 +163,80 @@ ion-icon {
     height: 500px; /* Alto fijo */
     object-fit: cover;
     color: #005682;
+}
+
+.menu-col {
+    padding: 10px;
+}
+
+.menu-container {
+    text-align: center;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.menu-image {
+    width: 100%;
+    max-width: 120px;
+    height: auto;
+    margin: 10px auto;
+}
+
+.menu-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.numButton {
+    margin: 0 5px;
+    padding: 5px 10px;
+    font-size: 1.2rem;
+    border: 2px #005682 solid;
+    color: #FFFFFF;
+    background-color: #005682;
+}
+
+.numBox {
+    display: inline-block;
+    width: 40px;
+    text-align: center;
+    font-size: 1.2rem;
+    border: 2px #005682 solid;
+}
+
+.guardar {
+    --background: #005682;
+    --color: #FFFFFF;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 150%;
+    margin-top: 4%;
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pagination-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 32px; /* Espaciado entre los botones */
+}
+
+.custom-button {
+    --background: #005682; /* Cambia el color de fondo */
+    --color: #ffffff;      /* Cambia el color del texto y el icono */
+    width: 100px;
+    height: 50px;
+}
+
+
+
+.container-row {
+    border-radius: 10px;
+    border: 2px solid #005682;
 }

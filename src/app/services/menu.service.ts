@@ -38,7 +38,6 @@ export class MenuService {
     }
 
     async removeMenu(menuId: any): Promise<void> {
-        const menusCollection = collection(this.firebaseService.db, 'menus');
 
         try {
             const menuDoc = doc(this.firebaseService.db, 'menus', menuId);

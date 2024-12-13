@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 export interface OrderTask {
   nombre: string;
   previewUrl: string;
-  aula: string;
 }
 
 @Component({
@@ -24,8 +23,7 @@ export interface OrderTask {
 export class CrearTareaComandaPage implements OnInit {
   task: OrderTask = {
     nombre: '',
-    previewUrl: '',
-    aula: ''
+    previewUrl: ''
   };
   imageFile: File | undefined;
   localImageURL: string | undefined;
@@ -51,7 +49,7 @@ export class CrearTareaComandaPage implements OnInit {
   }
 
   async saveTask() {
-    if (!this.task.nombre || !this.task.aula || !this.imageFile) {
+    if (!this.task.nombre || !this.imageFile) {
       throw new Error('Missing data. Please file all fields');
     }
 

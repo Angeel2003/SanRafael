@@ -1,9 +1,23 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/agenda"></ion-back-button> 
+      <ion-back-button 
+        defaultHref="/agenda" 
+        aria-label="Volver a la agenda">
+      </ion-back-button>
     </ion-buttons>
-    <ion-title>{{ tarea.nombre | uppercase }}</ion-title>
+    <ion-row class="header-row">
+      <ion-col size="auto">
+        <ion-title class="title">{{ tarea.nombre | uppercase }}</ion-title>
+      </ion-col>
+      <ion-col size="auto" class="image-col">
+        <img 
+          [src]="tarea.previewUrl" 
+          alt="Pictograma de previsualización de tarea" 
+          class="tarea-preview-image" 
+        />
+      </ion-col>
+    </ion-row>
   </ion-toolbar>
 </ion-header>
 
@@ -43,13 +57,16 @@
           </ion-button>
         </ion-col>
       </ion-row>
+
+      <ion-row *ngIf="tipoTarea === 'tarea-material'">
+        <ion-col>
+          <ion-label class="label-aula">MATERIAL&nbsp; PARA&nbsp; EL&nbsp; AULA:&nbsp;&nbsp;{{ tarea.aula | uppercase}}</ion-label>
+        </ion-col>
+      </ion-row>
     </ion-grid>
   </div>
 
   <div class="pagination-buttons">
-    <ion-button *ngIf="tipoTarea !== 'tarea-comanda'" class="custom-button" [disabled]="true">
-      <ion-icon name="arrow-back-outline"></ion-icon>
-    </ion-button>
     <ion-button *ngIf="tipoTarea === 'tarea-por-pasos'" class="custom-button" (click)="realizarTareaPasos(tarea, videoPlayer.nativeElement)">
       <ion-icon name="arrow-forward-outline"></ion-icon>
     </ion-button>

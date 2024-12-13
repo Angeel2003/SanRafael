@@ -25,6 +25,7 @@ export interface MenuItem {
     file?: File
   };
   edited?: boolean;
+  num?: number;
 }
 
 @Component({
@@ -41,22 +42,7 @@ export class EditarMenuPage implements OnInit {
   previewUrl: string | null = null;
 
   menus: MenuItem[] = [
-    // Example of a menu item
-    // {
-    //   id: '1173419Y7',
-    //   nombre: 'Vegetariano',
-    //   pictogram: {
-    //     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Soy-whey-protein-diet.jpg/1024px-Soy-whey-protein-diet.jpg",
-    //     path: "",
-    //     file: undefined
-    //   },
-    //   image: {
-    //     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Soy-whey-protein-diet.jpg/1024px-Soy-whey-protein-diet.jpg",
-    //     path: "",
-    //     file: undefined
-    //   },
-    //   edited: undefined
-    // }
+    
   ];
 
   removedMenus: MenuItem[] = [];
@@ -74,7 +60,8 @@ export class EditarMenuPage implements OnInit {
           url: "",
           path: "",
           file: undefined
-        }
+        },
+        num: 0
       });
   }
 

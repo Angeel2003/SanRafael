@@ -45,7 +45,7 @@ export class FirebaseService {
   }
 
   async getDownloadURL(path: string): Promise<string> {
-    const storageRef = ref(this.storage, path); // Crea una referencia a la ubicación del archivo
+    const storageRef = ref(this.storage, path); 
 
     try {
       const url = await getDownloadURL(storageRef);
