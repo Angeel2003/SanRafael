@@ -1,0 +1,21 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/perfil-admin-profesor"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Gestionar Profe/Admin</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="profiles-container">
+    <div *ngFor="let perfil of perfiles" class="profile-card">
+      <ion-avatar class="avatar">
+        <img [src]="perfil.imagen || 'assets/default-avatar.png'" alt="Foto de perfil" />
+      </ion-avatar>
+      <ion-button expand="block" color="primary" (click)="modificarPerfil(perfil.id)">
+        Modificar
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

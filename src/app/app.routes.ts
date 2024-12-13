@@ -94,9 +94,12 @@ export const routes: Routes = [
     path: 'modificar-usuario/:id',
     loadComponent: () => import('./modificar-usuario/modificar-usuario.page').then(m => m.ModificarUsuarioPage)
   },
-  {
+
+
+ {
     path: 'realizar-tarea-pasos',
     loadComponent: () => import('./realizar-tarea-pasos/realizar-tarea-pasos.page').then( m => m.RealizarTareaPage)
+
   },
   {
     path: 'historial-tareas',
@@ -106,9 +109,16 @@ export const routes: Routes = [
     path: 'realizar-tarea-principal',
     loadComponent: () => import('./realizar-tarea-principal/realizar-tarea-principal.page').then( m => m.RealizarTareaPrincipalPage)
   },
+  {
+    path: 'modificar-admin-principal',
+    loadComponent: () => import('./modificar-admin-principal/modificar-admin-principal.page').then( m => m.ModificarAdminPrincipalPage)
+  },
+  {
+    path: 'modificar-admin',
+    loadComponent: () => import('./modificar-admin/modificar-admin.page').then( m => m.ModificarAdminPage)
+  },
 
-
-
-
+  { path: 'modificar-admin/:id', 
+    loadComponent: () => import('./modificar-admin/modificar-admin.page').then(m => m.ModificarAdminPage) },
 
 ];

@@ -1,0 +1,34 @@
+ion-toolbar {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente el contenido */
+}
+
+ion-title {
+  text-align: center; /* Asegura que el texto esté centrado */
+  width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
+  font-size: 24px;
+  color: #005682;
+}
+
+.profiles-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .profile-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 120px;
+  }
+  
+  .avatar img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }

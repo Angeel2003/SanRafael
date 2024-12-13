@@ -656,4 +656,34 @@ export class FirebaseService {
       console.error('Error al añadir el elemento:', error);
     }
   }
+
+  getAdministradores(): Observable<any[]> {
+    const adminCollection = collection(this.db, 'administradores'); // Referencia a la colección
+    return from(getDocs(adminCollection)).pipe(
+      map(snapshot => 
+        snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+      )
+    );
+  }
+
+  actualizarPerfil(id: string, perfil: any): Promise<void> {
+    const perfilRef = doc(this.db, 'administradores', id);
+    return updateDoc(perfilRef, perfil);
+  }
+
+  subirImagen(file: File, ruta: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const storageRef = ref(this.storage, ruta); // Crear referencia en Firebase Storage
+      uploadBytes(storageRef, file) // Subir el archivo
+        .then(() => {
+          // Obtener la URL de descarga una vez que el archivo esté subido
+          getDownloadURL(storageRef)
+            .then((url) => resolve(url))
+            .catch((error) => reject('Error al obtener la URL: ' + error));
+        })
+        .catch((error) => reject('Error al subir la imagen: ' + error));
+    });
+  }
+
+  
 }

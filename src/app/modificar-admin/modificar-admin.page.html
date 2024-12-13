@@ -1,0 +1,40 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="//modificar-admin-principal"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Perfil Profe/Admin</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="modificar()">
+    <ion-item>
+      <ion-label position="stacked">Nombre</ion-label>
+      <ion-input [(ngModel)]="perfil.nombre" name="nombre" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Correo</ion-label>
+      <ion-input [(ngModel)]="perfil.correo" name="correo" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Foto de perfil</ion-label>
+      <div class="photo-container">
+        <img [src]="perfil.foto || 'assets/default-avatar.png'" alt="Foto de perfil" class="profile-photo">
+        <ion-button (click)="subirFoto()">Cargar</ion-button>
+      </div>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Tipo de usuario</ion-label>
+      <ion-select [(ngModel)]="perfil.tipoUsuario" name="tipoUsuario" placeholder="Seleccionar" [value]="perfil.tipoUsuario">
+        <ion-select-option value="administrador">Administrador</ion-select-option>
+        <ion-select-option value="profesor">Profesor</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" color="primary">Modificar</ion-button>
+  </form>
+</ion-content>

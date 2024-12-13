@@ -1,0 +1,24 @@
+ion-toolbar {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente el contenido */
+}
+
+ion-title {
+  text-align: center; /* Asegura que el texto esté centrado */
+  width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
+  font-size: 24px;
+  color: #005682;
+}
+
+.photo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .profile-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+  }

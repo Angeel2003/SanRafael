@@ -95,7 +95,7 @@ export class PerfilAdminProfesorPage implements OnInit {
   }
 
   crearAdminProfe() {
-    this.router.navigate(['/crear-profe-admin']);
+    this.router.navigate(['/modificar-admin-principal']);
   }
 
   gestionarUsuarios() {
