@@ -3,19 +3,34 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/perfil-admin-profesor"></ion-back-button>
     </ion-buttons>
-    <ion-title>Gestionar Profe/Admin</ion-title>
+    <ion-title>PERFILES DEL ADMIN/PROFESORES</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <div class="profiles-container">
-    <div *ngFor="let perfil of perfiles" class="profile-card">
-      <ion-avatar class="avatar">
-        <img [src]="perfil.imagen || 'assets/default-avatar.png'" alt="Foto de perfil" />
-      </ion-avatar>
-      <ion-button expand="block" color="primary" (click)="modificarPerfil(perfil.id)">
-        Modificar
-      </ion-button>
-    </div>
-  </div>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-row class="admin-profe-functions">
+    <ion-col size="3">
+      <ion-button class="asignar-tarea" (click)="crearPerfil()" expand="block">Crear Perfil Admin/Profe</ion-button>
+    </ion-col>
+  </ion-row>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="2.4" *ngFor="let perfil of perfiles">
+        <ion-card>
+          <div class="card-image-container">
+            <ion-badge class="card-badge">{{ perfil.notificacionesCount }}</ion-badge>
+            <img [src]="perfil.imagen || 'assets/default-avatar.png'" alt="{{ perfil.nombre }}" />
+          </div>
+          <ion-card-header>
+            <ion-card-title>{{ perfil.nombre }}</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+
+        <ion-button (click)="modificarPerfil(perfil.id)" expand="block">MODIFICAR</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
 </ion-content>

@@ -28,7 +28,7 @@
     <ion-row class="admin-profe-functions" *ngIf="adminProfe.tipoUsuario == 'administrador'">
       <ion-col class="users-buttons" size="3">
         <ion-button (click)="crearUsuario()" expand="block">Crear Nuevo Usuario</ion-button>
-        <ion-button (click)="crearAdminProfe()" expand="block">Crear Nuevo Admin/Profesor</ion-button>
+        <ion-button (click)="gestionarAdminProfe()" expand="block">Gestionar Admin/Profesor</ion-button>
         <ion-button (click)="gestionarUsuarios()" expand="block">
           Gestionar Usuarios
           <ion-badge *ngIf="showBadge" slot="end"><ion-icon name="alert-outline"></ion-icon></ion-badge>

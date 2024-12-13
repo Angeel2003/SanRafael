@@ -2,7 +2,7 @@ ion-toolbar {
   display: flex;
   justify-content: center; /* Centra horizontalmente el contenido */
 }
-
+  
 ion-title {
   text-align: center; /* Asegura que el texto esté centrado */
   width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
@@ -10,25 +10,82 @@ ion-title {
   color: #005682;
 }
 
-.profiles-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    padding: 20px;
-  }
-  
-  .profile-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 120px;
-  }
-  
-  .avatar img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 10px;
-  }
+ion-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 80px;
+  background-color: #005682;
+  padding: 16px;
+  border-radius: 18px;  
+}
+
+ion-card-title {
+  color: #fff;
+  font-size: 20px; /* Tamaño del texto */
+}
+
+ion-card img {
+  border-radius: 18px;
+  width: 250px;
+  height: 250px;
+  object-fit: cover; /* Asegura que la imagen se ajuste dentro del contenedor */
+  aspect-ratio: 1/1;
+}
+
+ion-button {
+  --background: #005682; /* Cambia el color de fondo */
+  --color: #ffffff;      /* Cambia el color del texto y el icono */
+  font-size: 20px;
+}
+
+ion-icon {
+  font-size: 50px;
+}
+
+.pagination-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 32px; /* Espaciado entre los botones */
+  margin-top: 100px;
+}
+
+.admin-profe-functions {
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap; /* Permite que los botones se ajusten si exceden el espacio */
+  gap: 50px; /* Espaciado entre columnas */
+}
+
+.custom-button {
+  --background: #005682; /* Cambia el color de fondo */
+  --color: #ffffff;      /* Cambia el color del texto y el icono */
+  width: 100px;
+  height: 50px;
+}
+
+.custom-button[disabled] {
+  --background: #cccccc; /* Color de fondo para el botón deshabilitado */
+  --color: #666666;      /* Color del texto e icono para el botón deshabilitado */
+}
+
+.asignar-tarea {
+  --background: #606a6e; /* Cambia el color de fondo */
+  --color: #ffffff;      /* Cambia el color del texto y el icono */
+}
+
+.card-image-container {
+  position: relative;
+}
+
+.card-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  --background: #ff4c4c;
+  --color: #ffffff;
+  font-size: 30px;
+}
