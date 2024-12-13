@@ -112,6 +112,29 @@ ion-icon {
     padding: 10px;
 }
 
+
+.tarea-preview-image {
+    width: 100px; /* Tamaño fijo de la imagen */
+    height: auto;
+    border-radius: 5px;
+}
+
+.image-col {
+    display: flex;
+    justify-content: center; /* Centra la imagen dentro de su columna */
+}
+
+
+.header-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    margin-right: 10px; /* Ajusta el espacio entre el título y la imagen */
+}
+
 .aula-button-col {
     margin-bottom: 50px;
     display: flex;

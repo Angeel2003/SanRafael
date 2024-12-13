@@ -1,9 +1,23 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/agenda"></ion-back-button> 
+      <ion-back-button 
+        defaultHref="/agenda" 
+        aria-label="Volver a la agenda">
+      </ion-back-button>
     </ion-buttons>
-    <ion-title>{{ tarea.nombre | uppercase }}</ion-title>
+    <ion-row class="header-row">
+      <ion-col size="auto">
+        <ion-title class="title">{{ tarea.nombre | uppercase }}</ion-title>
+      </ion-col>
+      <ion-col size="auto" class="image-col">
+        <img 
+          [src]="tarea.previewUrl" 
+          alt="Pictograma de previsualización de tarea" 
+          class="tarea-preview-image" 
+        />
+      </ion-col>
+    </ion-row>
   </ion-toolbar>
 </ion-header>
 
