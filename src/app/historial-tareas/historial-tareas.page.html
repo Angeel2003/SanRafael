@@ -40,7 +40,7 @@
         <ul class="no-dot"> <!-- Tareas pendientes -->
           <li class="pending-border" *ngFor="let pending of this.pendingTaskUnfinished; let i = index">
             <span class="inside-border">{{pending.nombreTarea}}</span>
-            <ion-button (click)="gestionarTareaUnfinished(pending, i, true)" class="accept">Reasignar</ion-button>
+            <ion-button (click)="gestionarTareaUnfinished(pending, i, true)" class="accept">Posponer</ion-button>
             <ion-button (click)="gestionarTareaUnfinished(pending, i, false)" class="decline">Eliminar</ion-button>
           </li> 
         </ul>

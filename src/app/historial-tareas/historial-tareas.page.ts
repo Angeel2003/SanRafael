@@ -18,11 +18,8 @@ import { Navigation, Router } from '@angular/router';
 })
 export class HistorialTareasPage implements OnInit {
 
-  //Tareas cuyo plazo de tiempo para ser completadas ya ha pasado.
   finishedTask: any = [];
-  //Tareas que estan asignadas a un alumno.
   assignedTask: any = [];
-  //TAreas pendientes de revision por el administrador para ver si estan comletadas.
   pendingTasks: any;
   pendingTaskFinished: any = [];
   pendingTaskUnfinished: any = [];
@@ -94,7 +91,7 @@ export class HistorialTareasPage implements OnInit {
   pintarEstrellas(){
     this.numEstrellasEnteras = Math.trunc(this.puntuacion); //Sacamos la parte entera
     this.mitadEstrella = this.puntuacion - this.numEstrellasEnteras  == 0 ? false : true; //Si el resto es 0 no hay mitad estrella
-    //Calculamos las estrellas restantes para dibujarlas vacias. si tiene estrella mitd se resta uno.
+
     this.numEstrellasRestantes = this.mitadEstrella ? this.puntuacionMax - this.numEstrellasEnteras - 1 : this.puntuacionMax - this.numEstrellasEnteras;
 
     if(this.numEstrellasRestantes < 0){
@@ -119,14 +116,11 @@ export class HistorialTareasPage implements OnInit {
       this.puntuacion = 0;
     }
     else{
-      //this.puntuacion = (tareasCompletadas/this.finishedTask.length) * this.puntuacionMax;
       this.puntuacion = (tareasCompletadas/this.finishedTask.length) * this.puntuacionMax;
     }
 
-    //Redondeamos el valor de la puntuacion para que tome valores enteros y valores terminados en .5
     this.puntuacion = Math.round(this.puntuacion * 2)/2;
-    console.log("Puntuacion Total: ",this.puntuacion, "Tareas finalizadas: ",this.finishedTask.length, "Tareas completadas: ", tareasCompletadas);
-
+    
     this.pintarEstrellas();
   }
 

@@ -92,7 +92,7 @@ export class RealizarTareaPrincipalPage implements OnInit {
         nivelesAccesibilidad: this.nivelAccesibilidad
       }
     };
-    this.router.navigate(['/realizar-tarea-comanda-material'], navigationExtras);
+    this.router.navigate(['/realizar-tarea-pasos'], navigationExtras);
   }
 
   async getTareaByNombre(nombre: string) {
@@ -147,7 +147,7 @@ export class RealizarTareaPrincipalPage implements OnInit {
         aula: aula
       }
     };
-    this.router.navigate(['/tarea-comanda'], navigationExtras);
+    this.router.navigate(['/realizar-tarea-pasos'], navigationExtras);
   }
 }
 
