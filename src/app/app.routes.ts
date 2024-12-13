@@ -121,5 +121,4 @@ export const routes: Routes = [
   { path: 'modificar-admin/:id', 
     loadComponent: () => import('./modificar-admin/modificar-admin.page').then(m => m.ModificarAdminPage) },
 
-
 ];
