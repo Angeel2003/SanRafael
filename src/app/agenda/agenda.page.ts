@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonSpinner, IonContent, IonHeader, IonTitle, IonToolbar, IonCol, IonButton, IonIcon, IonGrid, IonRow, IonItem, IonLabel, IonButtons, IonBackButton } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { closeOutline } from 'ionicons/icons';
+import { closeOutline, checkmarkOutline } from 'ionicons/icons';
 import { FirebaseService } from '../services/firebase.service';
 import { NavigationExtras, Router } from '@angular/router';
 import { TareasVencidasService } from '../services/tareas-vencidas.service';
@@ -36,14 +36,15 @@ export class AgendaPage implements OnInit {
   loading: boolean = true;
   tareasCompletas: any[] = [];
   previewAgenda: any;
-  tareaADevolver: TareaDevolver = { tarea: null, tipoTarea: '' };
+  tareaADevolver: TareaDevolver = { tarea: null, tipoTarea: ''};
   fullUser: any;
   fechaHoy: Date | undefined;
 
   constructor(private firebaseService: FirebaseService, private router: Router, private tareasVencidasService: TareasVencidasService) {
 
     addIcons({
-      closeOutline
+      closeOutline,
+      checkmarkOutline
     })
   }
   
@@ -56,6 +57,19 @@ export class AgendaPage implements OnInit {
         const tareas = await this.firebaseService.getTareasDeColeccion(collectionName);
         // Concatenar las tareas obtenidas con las tareasCompletas
         this.tareasCompletas = [...this.tareasCompletas, ...tareas];
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+          console.error('User ID not found in localStorage');
+          return;
+        }
+
+        try {
+          this.fullUser = await this.firebaseService.obtenerUsuario(userId);
+          this.nivelesAccesibilidad = this.fullUser.nivelAccesibilidad;
+        } catch (error) {
+          console.error('Error al cargar los niveles de accesibilidad:', error);
+        }
+        
       } catch (error) {
         console.error('Error al cargar tareas de la colección', collectionName, error);
       }
@@ -71,18 +85,6 @@ export class AgendaPage implements OnInit {
     await this.cargarTareasCompletas();
     await this.loadTareas();
     
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
-      console.error('User ID not found in localStorage');
-      return;
-    }
-
-    try {
-      this.fullUser = await this.firebaseService.obtenerUsuario(userId);
-      this.nivelesAccesibilidad = this.fullUser.nivelAccesibilidad;
-    } catch (error) {
-      console.error('Error al cargar los niveles de accesibilidad:', error);
-    }
     
     console.log('Descomentar para presentacion');
     
@@ -156,7 +158,10 @@ export class AgendaPage implements OnInit {
       state: {
         tarea: this.tareaADevolver.tarea,
         tipoTarea: this.tareaADevolver.tipoTarea,
-        nivelesAccesibilidad: this.nivelesAccesibilidad
+        fechaInicio: tareaPulsada.fechaInicio ? new Date(tareaPulsada.fechaInicio) : null,
+        fechaFin: tareaPulsada.fechaFin ? new Date(tareaPulsada.fechaFin) : null,
+        nivelesAccesibilidad: this.nivelesAccesibilidad,
+        usuario: this.fullUser
       }
     };
     this.router.navigate(['/realizar-tarea-principal'], navigationExtras);
@@ -166,6 +171,16 @@ export class AgendaPage implements OnInit {
     const now = new Date(); // Fecha y hora actuales
     const endTime = new Date(fechaFin); // Convertir fecha de fin
     return now > endTime; // Comparar si ya pasó la hora de fin
+  }
+
+  isFinished(tarea: any): boolean {
+    
+    let tareasPendientes = this.fullUser.tareasPendientes || [];
+    const existeEnPendientes = tareasPendientes.some(
+      (t: any) => t.nombreTarea === tarea.nombre
+    );
+    
+    return existeEnPendientes; // Comparar si ya pasó la hora de fin
   }
   
 }

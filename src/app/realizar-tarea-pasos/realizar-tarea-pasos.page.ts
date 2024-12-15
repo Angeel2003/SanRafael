@@ -6,6 +6,8 @@ import { addIcons } from 'ionicons';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonCol, IonBackButton, IonButtons, IonRow, IonIcon, IonButton, IonGrid } from '@ionic/angular/standalone';
 import { NavigationExtras, Router } from '@angular/router';
 import { FirebaseService } from '../services/firebase.service';
+import { AulasGuardadasService } from '../services/aulas-guardadas.service';
+import { TareasVencidasService } from '../services/tareas-vencidas.service';
 
 
 export interface Tarea {
@@ -19,6 +21,8 @@ export interface Tarea {
 interface TareaDevolver {
   tarea: any;
   tipoTarea: string;
+  fechaInicio: any; 
+  fechaFin: any; 
 }
 
 @Component({
@@ -31,9 +35,8 @@ interface TareaDevolver {
 
 export class RealizarTareaPage implements OnInit {
   tarea: any;
-  tipoTarea: string = '';
-  tareas: Tarea[] = [];
-  tareaADevolver: TareaDevolver = { tarea: null, tipoTarea: '' };
+  tipoTarea: string = '';  
+  tareaADevolver: TareaDevolver = { tarea: null, tipoTarea: '', fechaInicio: null, fechaFin: null };
   currentPage: number = 0;
   nivelAccesibilidad: string = '';
   finTarea: boolean = false;
@@ -46,11 +49,13 @@ export class RealizarTareaPage implements OnInit {
   menus: any[] = [];
   aula: string = '';
   thingsPerPage:number = 4;
-
+  usuario: any;
   numberImages: { [key: number]: string } = {};
+  aulaGuardada: boolean = false;
 
-
-  constructor(private router: Router, private firebaseService: FirebaseService) {
+  constructor(private router: Router, private firebaseService: FirebaseService, 
+              private tareasVencidasService: TareasVencidasService,
+              private aulaService: AulasGuardadasService) {
     addIcons({
       arrowBackOutline,
       arrowForwardOutline,
@@ -61,8 +66,13 @@ export class RealizarTareaPage implements OnInit {
     const navigation = this.router.getCurrentNavigation();
     this.tarea = navigation?.extras.state?.['tarea'];
     this.tipoTarea = navigation?.extras.state?.['tipoTarea'];
+    this.tareaADevolver.fechaInicio = navigation?.extras.state?.['fechaInicio'];
+    this.tareaADevolver.fechaFin = navigation?.extras.state?.['fechaFin'];
     this.nivelAccesibilidad = navigation?.extras.state?.['nivelesAccesibilidad'];
     this.aula = navigation?.extras.state?.['aula'];
+    this.usuario = navigation?.extras.state?.['usuario'];
+    this.aulaGuardada = navigation?.extras.state?.['aulaGuardada'];
+
   }
 
   async ngOnInit() {
@@ -103,12 +113,32 @@ export class RealizarTareaPage implements OnInit {
 
   async irAPagPrincipalTarea(tareaPulsada: Tarea, nombrePagina: string){
     await this.getTareaByNombre(tareaPulsada.nombre);
-
+    
     const navigationExtras: NavigationExtras = {
       state: {
         tarea: this.tareaADevolver.tarea,
         tipoTarea: this.tareaADevolver.tipoTarea,
-        nivelesAccesibilidad: this.nivelAccesibilidad
+        nivelesAccesibilidad: this.nivelAccesibilidad,
+        fechaInicio: this.tareaADevolver.fechaInicio,
+        fechaFin: this.tareaADevolver.fechaFin,
+        usuario: this.usuario
+      }
+    };
+    this.router.navigate([nombrePagina], navigationExtras);
+  }
+
+  async tareaTerminada(tareaPulsada: Tarea, nombrePagina: string){
+    await this.getTareaByNombre(tareaPulsada.nombre);
+    
+    await this.tareasVencidasService.tareaTerminada(this.usuario, this.tareaADevolver);
+    const navigationExtras: NavigationExtras = {
+      state: {
+        tarea: this.tareaADevolver.tarea,
+        tipoTarea: this.tareaADevolver.tipoTarea,
+        nivelesAccesibilidad: this.nivelAccesibilidad,
+        fechaInicio: this.tareaADevolver.fechaInicio,
+        fechaFin: this.tareaADevolver.fechaFin,
+        usuario: this.usuario
       }
     };
     this.router.navigate([nombrePagina], navigationExtras);
@@ -241,5 +271,13 @@ export class RealizarTareaPage implements OnInit {
     }
   }
 
+  guardarComanda(tarea: Tarea, ruta: string) {
+    this.aulaGuardada = true;
+    // Actualizar el estado en el servicio
+    this.aulaService.guardarComanda(this.aula);
+    this.irAPagPrincipalTarea(tarea, ruta)
+  }
+
+  
 
 }

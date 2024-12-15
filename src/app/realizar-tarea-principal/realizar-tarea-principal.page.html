@@ -50,11 +50,12 @@
         </ion-col>
       </ion-row>
 
-      <ion-row *ngIf="tipoTarea === 'tarea-comanda'">
-        <ion-col *ngFor="let aula of aulas" class="aula-button-col">
+      <ion-row *ngIf="tipoTarea === 'tarea-comanda'" >
+        <ion-col  size="3" *ngFor="let aula of aulas" class="aula-button-col">
           <ion-button class="aula-button" (click)="entrarAula(aula)">
             {{ aula.nombre }}
           </ion-button>
+          <ion-icon *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio' && aulaGuardada(aula.nombre)" name="checkmark-outline" class="check-overlay"></ion-icon>
         </ion-col>
       </ion-row>
 
@@ -72,6 +73,14 @@
     </ion-button>
     <ion-button *ngIf="tipoTarea === 'tarea-material'" class="custom-button" (click)="realizarTarea(tarea)">
       <ion-icon name="arrow-forward-outline"></ion-icon>
+    </ion-button>
+    <ion-button 
+      *ngIf="tipoTarea == 'tarea-comanda' && todasAulasGuardadas()"
+      (click)="finalizarTarea(tarea, '/agenda')"
+      class="custom-button">
+      FINALIZAR TAREA
+      <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="imageOk" alt="Imagen de bien" class="task-image"/>
+      
     </ion-button>
   </div>
 </ion-content>

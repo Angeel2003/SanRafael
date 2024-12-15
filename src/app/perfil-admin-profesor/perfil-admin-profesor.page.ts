@@ -42,7 +42,7 @@ export class PerfilAdminProfesorPage implements OnInit {
     //   this.checkCollectionStatus(); // Primera carga
     //   this.intervalId = setInterval(() => {
     //     this.checkCollectionStatus(); // Actualizaciones periódicas
-    //   }, 100);
+    //   }, 5000);
     // }
     this.checkCollectionStatus();
   }

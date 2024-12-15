@@ -126,19 +126,24 @@ export class HistorialTareasPage implements OnInit {
 
   gestionarTareaFinished(task: any, index: number, done: boolean){
     const completedTask: any = {nombreTarea: task.nombreTarea, fechaInicio: task.fechaInicio, fechaFin: task.fechaFin, completada: done};
-    
+    const asignedTask: any = {
+      nombreTarea: task.nombreTarea,
+      fechaInicio: task.fechaInicio,
+      fechaFin: task.fechaFin,
+    };
+
     //Incluimos la tarea completada en la base de datos (en tareasTermin)
     this.firebaseService.añadirTareaTerminada(completedTask, this.user.id);
     //Incluimos la tarea completada en el array finishedTask
     this.finishedTask.push(completedTask);
 
-    //Eliminamos la tarea de la base de datos (en tareasPendientes)
-    this.firebaseService.eliminarTareaPendiente(task, this.user.id);
     //Eliminamos la tarea del array pendingTask
     this.pendingTaskFinished.splice(index, 1);
+    //Eliminamos la tarea de la base de datos (en tareasPendientes)
+    this.firebaseService.eliminarTareaAsignada(asignedTask, this.user.id);
+    this.firebaseService.eliminarTareaPendiente(task, this.user.id);
 
     this.recalcularPuntuacion();
-    this.initializeValues(this.navigation);
 
     this.cdr.detectChanges();
 
@@ -152,50 +157,43 @@ export class HistorialTareasPage implements OnInit {
     };
   
     if (!reasign) {
-      // Eliminar tarea asignada de la base de datos
       this.firebaseService.eliminarTareaAsignada(asignedTask, this.user.id);
   
       const asignedTaskUnfinished: any = {
         nombreTarea: task.nombreTarea,
         fechaInicio: task.fechaInicio,
         fechaFin: task.fechaFin,
-        completada: reasign, // Marcar como completada
+        completada: reasign,
       };
   
-      // Añadir tarea a terminadas en la base de datos
       this.firebaseService.añadirTareaTerminada(asignedTaskUnfinished, this.user.id).then(() => {
         this.finishedTask.push(asignedTaskUnfinished);
     
         this.firebaseService.eliminarTareaPendiente(task, this.user.id).then(() => {
           this.pendingTaskFinished.splice(index, 1);
           this.recalcularPuntuacion();
-          this.cdr.detectChanges(); // Forzar actualización de la vista
+          this.cdr.detectChanges(); 
         }).catch((error) => console.error('Error eliminando tarea pendiente:', error));
       }).catch((error) => console.error('Error añadiendo tarea terminada:', error));
+
     } else {
-      // Sumar 1 hora a la fecha de fin
       if (asignedTask.fechaFin) {
-        const hoy = new Date(); // Obtén la fecha y hora actual
-        hoy.setHours(hoy.getHours() + 1); // Suma 1 hora
-        asignedTask.fechaFin = hoy.toISOString();
+        const hoy = new Date();
+        hoy.setHours(hoy.getHours() + 2);
+        asignedTask.fechaFin = hoy.toISOString().slice(0, -5);
       }
   
-      // Actualizamos la tarea en la base de datos (en tareas asignadas)
       this.firebaseService.actualizarAlumno(this.user.id, {
-        tareasAsig: [asignedTask], // Asignamos la tarea actualizada
+        tareasAsig: [...this.assignedTask, asignedTask],
       });
   
-      // Añadimos la tarea a la lista de asignadas
       this.assignedTask.push(asignedTask);
     }
   
-    // Eliminar tarea pendiente de la base de datos y del array local
     this.firebaseService.eliminarTareaPendiente(task, this.user.id);
     this.pendingTaskUnfinished.splice(index, 1);
   
-    // Recalcular la puntuación y actualizar las listas
     this.recalcularPuntuacion();
-    this.initializeValues(this.navigation);
     this.cdr.detectChanges();
   }
   

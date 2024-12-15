@@ -51,9 +51,36 @@ export class TareasVencidasService {
           await this.firebaseService.actualizarAlumno(usuario.id, {
             tareasPendientes: tareasPendientes,
           });
-          console.log(`Tareas vencidas movidas a pendientes para el usuario ${usuario.id}`);
         }
       }
+    } catch (error) {
+      console.error('Error al procesar las tareas vencidas:', error);
+    }
+  }
+
+  async tareaTerminada(usuario: any, tareaTermin: any){
+    try {
+      
+      let tareasPendientes = usuario.tareasPendientes || [];
+      
+      const existeEnPendientes = tareasPendientes.some(
+        (t: any) => t.nombreTarea === tareaTermin.tarea.nombre
+      );
+
+      if (!existeEnPendientes) {
+        // Agregar la tarea al array de pendientes
+        tareasPendientes.push({
+          nombreTarea: tareaTermin.tarea.nombre,
+          fechaInicio: tareaTermin.fechaInicio.toISOString().slice(0, -5),
+          fechaFin: tareaTermin.fechaFin.toISOString().slice(0, -5),
+          completada: true,
+        });
+      }
+      
+      await this.firebaseService.actualizarAlumno(usuario.id, {
+        tareasPendientes: tareasPendientes,
+      });
+      
     } catch (error) {
       console.error('Error al procesar las tareas vencidas:', error);
     }
