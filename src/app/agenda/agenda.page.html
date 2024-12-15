@@ -71,11 +71,16 @@
             </ng-template>
           </div>
   
-          <!-- Mostrar X si la tarea está fuera de tiempo -->
           <ion-icon 
             *ngIf="tarea.fechaFin && isPastEndTime(tarea.fechaFin)" 
             name="close-outline" 
             class="cross-overlay">
+          </ion-icon>
+
+          <ion-icon 
+            *ngIf="isFinished(tarea)" 
+            name="checkmark-outline" 
+            class="check-overlay">
           </ion-icon>
         </div>
       </div>

@@ -632,17 +632,34 @@ export class FirebaseService {
 
   }
 
-  async eliminarTareaAsignada(tarea: any, userId: string){
+  async eliminarTareaAsignada(tarea: any, userId: string) {
     const documentRef = doc(this.db, 'alumnos', userId);
-
+  
     try {
-      await updateDoc(documentRef, {
-        tareasAsig: arrayRemove(tarea)
-      });
-    } catch (error) {
-      console.error('Error al eliminar el elemento:', error);
-    }
+      const docSnap = await getDoc(documentRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        
+        // Filtrar las tareas asignadas comparando las tres propiedades
+        const nuevasTareas = data['tareasAsig'].filter((t: any) => {
+          const fechaInicioComparacion = new Date(t.fechaInicio).toISOString().slice(0, -5);
+          const fechaFinComparacion = new Date(t.fechaFin).toISOString().slice(0, -5);
 
+          // Comparar las fechas y el nombre de la tarea
+          return !(tarea.fechaInicio === fechaInicioComparacion &&
+            tarea.fechaFin === fechaFinComparacion &&
+                   tarea.nombreTarea === t.nombreTarea);
+        });
+  
+        await updateDoc(documentRef, {
+          tareasAsig: nuevasTareas, // Reemplazar el array de tareas asignadas
+        });
+      } else {
+        console.warn('El documento no existe.');
+      }
+    } catch (error) {
+      console.error('Error al eliminar la tarea asignada:', error);
+    }
   }
 
   async añadirTareaTerminada(tarea: any, userId: string){

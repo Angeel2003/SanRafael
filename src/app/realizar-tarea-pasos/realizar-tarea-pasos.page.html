@@ -29,7 +29,7 @@
           <img *ngIf="nivelAccesibilidad == 'Pictograma'" [src]="tarea.pasosPicto[currentPage]" alt="PASO {{ currentPage + 1 }}" class="task-image" />
           <img *ngIf="nivelAccesibilidad == 'Imagen'" [src]="tarea.pasosImagenes[currentPage]" alt="PASO {{ currentPage + 1 }}" class="task-image"/>
           
-          <div *ngIf="nivelAccesibilidad == 'Video'" class="video-container">
+          <div *ngIf="nivelAccesibilidad == 'Video'">
             <video 
               [src]="tarea.pasosVideos[currentPage]"
               class="task-video" 
@@ -41,8 +41,8 @@
               class="play-button" 
               [class.hidden]="!showPlayButton[currentPage]" 
               (click)="togglePlay(videoPlayer, currentPage)">
-            <ion-icon name="play-outline"></ion-icon>
-          </button>
+              <ion-icon name="play-outline"></ion-icon>
+            </button>
           </div> 
 
 
@@ -125,12 +125,20 @@
     <ion-row >
       <ion-col size="12" class="image-container">
         <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="imageOk" alt="Imagen de bien" class="task-image"/>
-          <p class="task-pictoText">FIN DE LA TAREA</p>
-          <ion-button 
-            (click)="irAPagPrincipalTarea(tarea, '/agenda')"
-            class="finish-task-button">
-            TERMINAR TAREA
-          </ion-button>
+        <p class="task-pictoText">FIN DE LA TAREA</p>
+        <ion-button 
+          *ngIf="tipoTarea != 'tarea-comanda'"
+          (click)="tareaTerminada(tarea, '/agenda')"
+          class="finish-task-button">
+          TERMINAR TAREA
+        </ion-button>
+
+        <ion-button 
+          *ngIf="tipoTarea == 'tarea-comanda'"
+          (click)="guardarComanda(tarea, '/realizar-tarea-principal')"
+          class="finish-task-button">
+          GUARDAR COMANDA DE LA CLASE {{aula}}
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
