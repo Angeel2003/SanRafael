@@ -43,4 +43,8 @@ export class ModificarAdminPrincipalPage implements OnInit {
   modificarPerfil(id: number) {
     this.router.navigate(['/modificar-admin', id]);
   }
+
+  crearPerfil() {
+    this.router.navigate(['/modificar-admin']);
+  }
 }
