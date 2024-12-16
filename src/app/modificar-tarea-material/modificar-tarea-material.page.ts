@@ -45,6 +45,9 @@ export class ModificarTareaMaterialPage implements OnInit {
   imgCantidadPreview: File[] = [];
   imageMaterialPreview: File[] = [];
   originalItems: MaterialItem[] = [];
+  isToastOpen = false; // Controla la visibilidad del toast
+  toastMessage = ''; // Mensaje dinámico del toast
+  toastClass = '';
 
   constructor(
     private firebaseService: FirebaseService,
@@ -77,7 +80,7 @@ export class ModificarTareaMaterialPage implements OnInit {
       }
     } catch (error) {
       console.error('Error al cargar la tarea:', error);
-      this.mostrarToast('Error al cargar la tarea', false);
+      this.showToast('Error al cargar la tarea', false); 
     }
   }
 
@@ -157,10 +160,11 @@ export class ModificarTareaMaterialPage implements OnInit {
         cantidad: 0,
         imgCantidad: ''
       });
-      this.mostrarToast('Nuevo item', true);
+      this.showToast('Nuevo item', true); 
+
     } else {
-      this.mostrarToast('Faltan campos por rellenar (debe haber nombre e imagen de la tarea y nombre, aula y cantidad de cada item)', false);
-      console.log("Faltan campos por rellenar");
+      this.showToast('Faltan campos por rellenar (debe haber nombre e imagen de la tarea y nombre, aula y cantidad de cada item)', false); 
+    
     }
   }
 
@@ -183,6 +187,17 @@ export class ModificarTareaMaterialPage implements OnInit {
     toast.style.setProperty('border-radius', '10px');
     toast.style.marginTop = '50px';
     await toast.present();
+  }
+
+  showToast(message: string, success: boolean = true) {
+    this.toastMessage = message;
+    this.toastClass = success ? 'toast-success' : 'toast-error';
+    this.isToastOpen = true;
+  }
+
+  // Método llamado al cerrarse el toast
+  onToastDismiss() {
+    this.isToastOpen = false;
   }
 
   eliminarMaterial(index: number) {
@@ -271,10 +286,12 @@ export class ModificarTareaMaterialPage implements OnInit {
   
       // Guardar en Firebase
       await this.firebaseService.actualizarTarea(this.tarea.id, dataToSave, 'tarea-material');
-      this.mostrarToast('Tarea material guardada', true);
+      this.showToast('Tarea material guardada', true); 
+
       this.router.navigate(['/perfil-admin-profesor']);
     } else {
-      this.mostrarToast('Por favor, completa todos los campos requeridos.', false);
+      this.showToast('Por favor, completa todos los campos requeridos.', false); 
+
     }
   }
   

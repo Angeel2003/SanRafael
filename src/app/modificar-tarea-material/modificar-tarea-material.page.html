@@ -119,6 +119,15 @@
       <ion-label>Añadir material</ion-label>
     </ion-button>
   </ion-col>
+
+  <ion-toast
+    [isOpen]="isToastOpen"
+    [message]="toastMessage"
+    [duration]="2000"
+    [position]="'top'"
+    [cssClass]="toastClass"
+    (didDismiss)="onToastDismiss()">
+  </ion-toast>
 </ion-content>
 
 <ion-footer>

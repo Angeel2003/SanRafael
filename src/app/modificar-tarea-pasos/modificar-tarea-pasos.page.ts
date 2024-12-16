@@ -34,9 +34,9 @@ export class ModificarTareaPasosPage implements OnInit {
   selectedImages: File[] = [];
   selectedVideos: File[] = [];
 
-  showToast: boolean = false;
-  toastMessage: string = '';
-  toastClass: string = '';
+  isToastOpen = false; // Controla la visibilidad del toast
+  toastMessage = ''; // Mensaje dinámico del toast
+  toastClass = '';
 
   task: any;
 
@@ -100,10 +100,7 @@ export class ModificarTareaPasosPage implements OnInit {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.selectedPicto[index] = file; // Almacena el archivo
-      this.task.pasosPicto[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
-      console.log('Archivo seleccionado:', file); // Verifica que el archivo se ha seleccionado
-    } else {
-      console.log('No se seleccionó ningún archivo'); // Mensaje si no hay archivos
+      this.task.pasosPicto[index] = URL.createObjectURL(file);
     }
   }
   
@@ -113,10 +110,7 @@ export class ModificarTareaPasosPage implements OnInit {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.selectedImages[index] = file; // Almacena el archivo
-      this.task.pasosImagenes[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
-      console.log('Archivo seleccionado:', file); // Verifica que el archivo se ha seleccionado
-    } else {
-      console.log('No se seleccionó ningún archivo'); // Mensaje si no hay archivos
+      this.task.pasosImagenes[index] = URL.createObjectURL(file);
     }
   }
 
@@ -125,10 +119,7 @@ export class ModificarTareaPasosPage implements OnInit {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       this.selectedVideos[index] = file; // Almacena el archivo
-      this.task.pasosVideos[index] = URL.createObjectURL(file); // Crea una URL para mostrar la imagen
-      console.log('Archivo seleccionado:', file); // Verifica que el archivo se ha seleccionado
-    } else {
-      console.log('No se seleccionó ningún archivo'); // Mensaje si no hay archivos
+      this.task.pasosVideos[index] = URL.createObjectURL(file);
     }
   }
 
@@ -166,25 +157,16 @@ export class ModificarTareaPasosPage implements OnInit {
   }
   
 
-  async mostrarToast(mensaje: string, exito: boolean) {
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      position: 'top'
-    });
-    if(exito){
-      toast.style.setProperty('--background', '#4caf50');
-    }else{
-      toast.style.setProperty('--background', '#fa3333');
-    }
-    toast.style.setProperty('--color', '#ffffff');
-    toast.style.setProperty('font-weight', 'bold');
-    toast.style.setProperty('font-size', 'xx-large');
-    toast.style.setProperty('text-align', 'center');
-    toast.style.setProperty('box-shadow', '0px 0px 10px rgba(0, 0, 0, 0.7)');
-    toast.style.setProperty('border-radius', '10px');
-    toast.style.marginTop = '50px';
-    await toast.present();
+
+  showToast(message: string, success: boolean = true) {
+    this.toastMessage = message;
+    this.toastClass = success ? 'toast-success' : 'toast-error';
+    this.isToastOpen = true;
+  }
+
+  // Método llamado al cerrarse el toast
+  onToastDismiss() {
+    this.isToastOpen = false;
   }
 
   eliminarPaso(index: number, tipo: string): void {
@@ -322,12 +304,13 @@ export class ModificarTareaPasosPage implements OnInit {
       }
 
       if (guardadoExitoso) {
-        this.mostrarToast('Modificado con éxito', true);
+        this.showToast('Modificado con éxito', true); 
       } else {
-        this.mostrarToast('Error al modificar', false);
+        this.showToast('Error al modificar', false); 
       }
     } else {
-      this.mostrarToast('Error al modificar: Verifica los datos', false);
+      this.showToast('Error al modificar: Verifica los datos', false); 
+
     }
 
     this.goBackToGestionarTareas();

@@ -5,7 +5,7 @@ import { eye } from 'ionicons/icons';
 import { lockClosedOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton, IonButtons,
-          IonInput, IonItem, IonLabel, IonBackButton } from '@ionic/angular/standalone';
+          IonInput, IonItem, IonLabel, IonBackButton, IonToast } from '@ionic/angular/standalone';
 
 import { FirebaseService } from '../services/firebase.service';
 import { NavigationExtras, Router } from '@angular/router';
@@ -17,10 +17,13 @@ import {ToastController} from '@ionic/angular';
   templateUrl: './admin-login.page.html',
   styleUrls: ['./admin-login.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton, IonButtons, IonInput, IonItem, IonLabel, IonBackButton]
+  imports: [IonHeader, IonToolbar,IonToast, IonTitle, IonContent, IonIcon, IonButton, IonButtons, IonInput, IonItem, IonLabel, IonBackButton]
 })
 export class AdminLoginPage implements OnInit {
   private passwordVisible = false;
+  isToastOpen = false; // Controla la visibilidad del toast
+  toastMessage = ''; // Mensaje dinámico del toast
+  toastClass = '';
 
   constructor(private firebaseService: FirebaseService, private router: Router, private toastController: ToastController) {
     addIcons({
@@ -49,25 +52,15 @@ export class AdminLoginPage implements OnInit {
     }
   }
 
-  async mostrarToast(mensaje: string, exito: boolean){
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      position: 'middle'
-    });
-    if (exito){
-      toast.style.setProperty('--background', '#4caf50');
-    } else {
-      toast.style.setProperty('--background', '#fa3333');
-    }
-    toast.style.setProperty('--color', '#ffffff');
-    toast.style.setProperty('font-weight', 'bold');
-    toast.style.setProperty('font-size', 'xx-large');
-    toast.style.setProperty('text-align', 'center');
-    toast.style.setProperty('box-shadow', '0px 0px 10px rgba(0, 0, 0, 0.7)');
-    toast.style.setProperty('border-radius', '10px');
-    toast.style.marginTop = '50px';
-    await toast.present();
+  showToast(message: string, success: boolean = true) {
+    this.toastMessage = message;
+    this.toastClass = success ? 'toast-success' : 'toast-error';
+    this.isToastOpen = true;
+  }
+
+  // Método llamado al cerrarse el toast
+  onToastDismiss() {
+    this.isToastOpen = false;
   }
 
   async onSubmit() {
@@ -78,7 +71,7 @@ export class AdminLoginPage implements OnInit {
     const isAuthenticated = await this.firebaseService.loginUser(email, password);
   
     if (isAuthenticated) {
-      this.mostrarToast('Inicio de sesión exitoso.', true);
+      this.showToast('Inicio de sesión exitoso', true); 
       // Buscar al administrador en la base de datos
       const adminProfe = await this.firebaseService.getAdminByEmail(email);
       if (adminProfe) {
@@ -90,12 +83,11 @@ export class AdminLoginPage implements OnInit {
         };
         this.router.navigate(['/perfil-admin-profesor'], navigationExtras);
       } else {
-        this.mostrarToast('No se encontró ningún administrador o profesor con el correo proporcionado', false);
-        console.error("No se encontró ningún administrador con el correo proporcionado.");
+        this.showToast('No se encontró ningún administrador o profesor con el correo proporcionado', false); 
       }
     } else {
-      this.mostrarToast('Error en las credenciales. Inténtalo de nuevo.', false);
-      // Muestra un mensaje de error en la interfaz
+      this.showToast('Error en las credenciales, inténtelo de nuevo', false); 
+
     }
   }
 

@@ -7,6 +7,7 @@ import { closeOutline, checkmarkOutline } from 'ionicons/icons';
 import { FirebaseService } from '../services/firebase.service';
 import { NavigationExtras, Router } from '@angular/router';
 import { TareasVencidasService } from '../services/tareas-vencidas.service';
+import { arrowBackOutline, arrowForwardOutline } from 'ionicons/icons';
 
 export interface Tarea {
   nombre: string;
@@ -39,6 +40,9 @@ export class AgendaPage implements OnInit {
   tareaADevolver: TareaDevolver = { tarea: null, tipoTarea: ''};
   fullUser: any;
   fechaHoy: Date | undefined;
+  currentPage = 1;
+  tareasPerPage = 4;
+  finTarea = false;
 
   constructor(private firebaseService: FirebaseService, private router: Router, private tareasVencidasService: TareasVencidasService) {
 
@@ -78,6 +82,10 @@ export class AgendaPage implements OnInit {
 
 
   async ngOnInit() {
+    addIcons({
+      arrowBackOutline,
+      arrowForwardOutline
+    })
 
     this.previewAgenda = await this.firebaseService.getImageUrl('pictogramas/agenda.png');
     this.fechaHoy = new Date();
@@ -182,5 +190,34 @@ export class AgendaPage implements OnInit {
     
     return existeEnPendientes; // Comparar si ya pasó la hora de fin
   }
-  
+  get paginatedUsers() {
+    const start = this.currentPage * this.tareasPerPage;
+    const end = start + this.tareasPerPage;
+
+    return this.tareas.slice(start, end);
+    
+  }
+
+  get maxPage() {
+    return Math.ceil(this.tareas.length) - 1;
+    
+  }
+
+  prevPage() {
+    this.finTarea = false;
+    
+    if (this.currentPage > 0) {
+      this.currentPage--;
+    } 
+  }
+
+  nextPage() {
+    if (this.currentPage < this.maxPage) {
+      this.currentPage++;
+    } else {
+      this.currentPage++;
+      this.finTarea = true;
+    }
+  }
+
 }

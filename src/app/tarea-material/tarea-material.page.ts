@@ -36,6 +36,9 @@ export class TareaMaterialPage implements OnInit {
   items: MaterialItem[] = [];
   task: any = [];
   taskPreviewImg: File | null = null;
+  isToastOpen = false; // Controla la visibilidad del toast
+  toastMessage = ''; // Mensaje dinámico del toast
+  toastClass = '';
 
 
   constructor(private firebaseService: FirebaseService, private router: Router, private toastController: ToastController) {
@@ -274,9 +277,9 @@ export class TareaMaterialPage implements OnInit {
         cantidad: 0,
         imgCantidad: ''
       });
-      this.mostrarToast('Nuevo item', true);
+      this.showToast('Nuevo item', true);
     } else {
-      this.mostrarToast('Faltan campos por rellenar (debe haber nombre e imagen de la tarea y nombre, aula y cantidad de cada item)', false);
+      this.showToast('Faltan campos por rellenar (debe haber nombre e imagen de la tarea y nombre, aula y cantidad de cada item)', false);
     }
   }
 
@@ -311,6 +314,17 @@ export class TareaMaterialPage implements OnInit {
     toast.style.setProperty('border-radius', '10px');
     toast.style.marginTop = '50px';
     await toast.present();
+  }
+
+  showToast(message: string, success: boolean = true) {
+    this.toastMessage = message;
+    this.toastClass = success ? 'toast-success' : 'toast-error';
+    this.isToastOpen = true;
+  }
+
+  // Método llamado al cerrarse el toast
+  onToastDismiss() {
+    this.isToastOpen = false;
   }
 
   async uploadMaterialImage(index: number) {
@@ -358,9 +372,9 @@ export class TareaMaterialPage implements OnInit {
 
       await this.firebaseService.guardarTareaMaterial(dataToSave);
       this.router.navigate(['/peticion-material']);
-      this.mostrarToast('Tarea material guardada', true);
+      this.showToast('Tarea material guardada', true);
     } else {
-      this.mostrarToast('Faltan campos por rellenar (debe haber nombre e imagen de la tarea y nombre, aula y cantidad de cada item)', false);
+      this.showToast('Faltan campos por rellenar (debe haber nombre e imagen de la tarea y nombre, aula y cantidad de cada item)', false);
     }
 
 

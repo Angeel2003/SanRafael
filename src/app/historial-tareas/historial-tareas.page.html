@@ -14,10 +14,11 @@
     <ion-icon *ngIf="this.mitadEstrella" name="star-half"></ion-icon> <!--Pintar estrella mitad-->
     <ion-icon *ngFor="let item of createRange(this.numEstrellasRestantes)" name="star-outline"></ion-icon> <!--Pintar estrellas vacias-->
   </div>
+  
   <ion-grid>
     <ion-row>
       <ion-col>
-        <p><strong>Tareas completadas</strong></p>
+        <p class="col-title"><strong>Tareas completadas</strong></p>
         <ul class="no-dot"> <!-- Tareas pendientes -->
           <li class="pending-border" *ngFor="let pending of this.pendingTaskFinished; let i = index">
             <span class="inside-border">{{pending.nombreTarea}}</span>
@@ -26,17 +27,21 @@
           </li> 
         </ul>
         <ul class="no-dot"> <!-- Tareas completadas -->
-          <li *ngFor="let finished of this.finishedTask"><p *ngIf="finished.completada == true">{{finished.nombreTarea}}</p></li> 
+          <li *ngFor="let finished of this.finishedTask">
+            <p *ngIf="finished.completada == true" class="col-text">{{finished.nombreTarea}}</p>
+          </li> 
         </ul>
       </ion-col>
       <ion-col>
-        <p><strong>Tareas no completadas</strong></p>
+        <p class="col-title"><strong>Tareas no completadas</strong></p>
         <ul class="no-dot"> <!-- Tareas no completadas -->
-          <li *ngFor="let finished of this.finishedTask"><p *ngIf="finished.completada == false">{{finished.nombreTarea}}</p></li> 
+          <li *ngFor="let finished of this.finishedTask">
+            <p *ngIf="finished.completada == false" class="col-text">{{finished.nombreTarea}}</p>
+          </li> 
         </ul>
       </ion-col>
       <ion-col>
-        <p><strong>Tareas asignadas</strong></p>
+        <p class="col-title"><strong>Tareas asignadas</strong></p>
         <ul class="no-dot"> <!-- Tareas pendientes -->
           <li class="pending-border" *ngFor="let pending of this.pendingTaskUnfinished; let i = index">
             <span class="inside-border">{{pending.nombreTarea}}</span>
@@ -45,7 +50,9 @@
           </li> 
         </ul>
         <ul class="no-dot"> <!-- Tareas asignadas -->
-          <li *ngFor="let assigned of this.assignedTask"><p>{{assigned.nombreTarea}}</p></li> 
+          <li *ngFor="let assigned of this.assignedTask">
+            <p class="col-text">{{assigned.nombreTarea}}</p>
+          </li> 
         </ul>  
       </ion-col>
     </ion-row>

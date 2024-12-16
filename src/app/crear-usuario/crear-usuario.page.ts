@@ -166,7 +166,6 @@ export class CrearUsuarioPage implements OnInit {
     try {
       await this.firebaseService.guardarPerfil(perfilData); // Guarda el perfil en Firebase
       await this.showToast('Perfil guardado con éxito.', 'success');
-      console.log('Perfil guardado con éxito en Firestore');
     } catch (error) {
       console.error('Error al guardar el perfil:', error);
       await this.showToast('Error al guardar el perfil. Inténtalo de nuevo.', 'danger');
@@ -262,7 +261,6 @@ async uploadProfileImage(file: File) {
     await this.firebaseService.uploadFile(file, filePath);
     const downloadUrl = await this.firebaseService.getDownloadURL(filePath);
     this.profileImageUrl = downloadUrl;
-    console.log('Imagen de perfil subida:', downloadUrl);
   } catch (error) {
     console.error('Error al subir la imagen de perfil:', error);
   }

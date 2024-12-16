@@ -37,7 +37,7 @@ export class PeticionMaterialPage implements OnInit {
     for(let peticion of this.peticionesMaterial){
       this.desplegarMateriales.push(false);
     }
-    console.log("Peticiones: " + this.peticionesMaterial.length + "  Booleanos: " + this.desplegarMateriales.length);
+    
   }
 
   desplegarMaterial(index: number){

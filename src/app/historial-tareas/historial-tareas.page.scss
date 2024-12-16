@@ -1,54 +1,96 @@
 ion-toolbar {
     display: flex;
-    justify-content: center; /* Centra horizontalmente el contenido */
+    justify-content: center;
 }
-  
+
 ion-title {
-    text-align: center; /* Asegura que el texto esté centrado */
-    width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
+    text-align: center; 
+    width: 100%; 
     font-size: 24px;
     color: #005682;
 }
 
-p{
-    margin-left: 3%;
+.col-text {
     text-align: center;
+    font-size: 25px;
 }
 
-ion-row, ion-col{
+.col-title {
+    text-align: center;
+    font-size: 35px;
+}
+
+ion-row, ion-col {
     justify-content: center;
 }
 
-.no-dot{
-    list-style-type: none; /* Quita los puntos */
-    padding: 0; /* Opcional: elimina el relleno izquierdo */
-    margin: 0; /* Opcional: elimina el margen */
+ion-grid {
+    margin: 20px 0;
 }
 
-.pending-border{
-    border: 2px black solid;
+.no-dot {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
 }
 
-.accept{
+.pending-border {
+    border: 2px solid #005682;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.pending-border:hover {
+    background-color: #005682;
+}
+
+.accept {
     --background: green;
+    --color: white;
+    font-size: 20px;
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 
-.decline{
+.decline {
     --background: red;
+    --color: white;
+    font-size: 20px;
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 
-.inside-border{
-    margin-left: 7%;
-    margin-right: 10%;
+.inside-border {
+    margin-right: 10px;
+    flex-grow: 1;
+    text-align: left;
+    color: #333; 
+    font-size: 25px;
+    font-weight: bold;
 }
 
-h3{
+h3 {
     text-align: center;
+    color: #005682; 
+    font-size: 50px;
+    margin: 16px 0;
 }
 
 .icon-container {
-    display: flex;           /* Usamos Flexbox */
-    justify-content: center; /* Centra horizontalmente */
-    align-items: center;     /* Centra verticalmente */
-    font-size: 250%
-  }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: rgb(219, 188, 9);
+    margin-bottom: 20px;
+}
+
+ion-icon{
+    font-size: 50px;
+}

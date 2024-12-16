@@ -156,3 +156,21 @@ ion-item {
   white-space: nowrap;
   border: 0;
 }
+
+
+.custom-button {
+  --background: #005682; /* Cambia el color de fondo */
+  --color: #ffffff;      /* Cambia el color del texto y el icono */
+  width: 200px;
+  height: 50px;
+}
+
+ion-icon {
+  font-size: 32px;
+  color: white;
+}
+.pagination-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 150px; /* Espaciado entre los botones */
+}

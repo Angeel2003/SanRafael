@@ -28,6 +28,9 @@ import {ToastController} from '@ionic/angular';
 export class GestionarMaterialAdminPage implements OnInit{
   materials: { nombreMaterial: string }[] = [];
   materialsExistentes: { nombreMaterial: string }[] = [];
+  isToastOpen = false; // Controla la visibilidad del toast
+  toastMessage = ''; // Mensaje dinámico del toast
+  toastClass = '';
 
   constructor(private firebaseService: FirebaseService, private toastController: ToastController) {
     addIcons({
@@ -76,13 +79,13 @@ export class GestionarMaterialAdminPage implements OnInit{
   
       // Mostrar mensaje de éxito
       if (nuevosMateriales.length > 0) {
-        this.mostrarToast('Guardado con éxito', true);
+        this.showToast('Guardado con éxito', true); 
       } else {
-        this.mostrarToast('No hay nuevos materiales para guardar', true);
+        this.showToast('no hay nuevos materiales para guardar', false); 
       }
     } catch (error) {
       console.error('Error al guardar materiales:', error);
-      this.mostrarToast('Error al guardar', false);
+      this.showToast('Error al guardar', false); 
     }
   }
   
@@ -91,17 +94,15 @@ export class GestionarMaterialAdminPage implements OnInit{
     this.materials.splice(index, 1);
   }
 
-  async mostrarToast(mensaje: string, exito: boolean) {
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      position: 'middle',
-    });
-    toast.style.setProperty(
-      '--background',
-      exito ? '#4caf50' : '#fa3333'
-    );
-    await toast.present();
+  showToast(message: string, success: boolean = true) {
+    this.toastMessage = message;
+    this.toastClass = success ? 'toast-success' : 'toast-error';
+    this.isToastOpen = true;
+  }
+
+  // Método llamado al cerrarse el toast
+  onToastDismiss() {
+    this.isToastOpen = false;
   }
 
   trackByIndex(index: number): number {

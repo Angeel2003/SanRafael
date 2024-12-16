@@ -46,9 +46,9 @@ export class TareaPasosPage {
   stepVideoValues: (File | null | string)[] = []; // Almacena los videos de los pasos
   videoPreviewUrl: string | null = null;
   previewUrl: string | null = null;
-  showToast: boolean = false;
-  toastMessage: string = '';
-  toastClass: string = '';
+  isToastOpen = false; // Controla la visibilidad del toast
+  toastMessage = ''; // Mensaje dinámico del toast
+  toastClass = '';
 
   constructor(private firebaseService: FirebaseService, private router: Router, private toastController: ToastController) {
     addIcons({
@@ -78,7 +78,6 @@ export class TareaPasosPage {
     this.stepVideoValues = []; // Almacena los videos de los pasos
     this.videoPreviewUrl = null;
     this.previewUrl = null;
-    this.showToast = false;
   }
 
   goBackToAdmin() {
@@ -159,26 +158,15 @@ export class TareaPasosPage {
 
   }
   
+  showToast(message: string, success: boolean = true) {
+    this.toastMessage = message;
+    this.toastClass = success ? 'toast-success' : 'toast-error';
+    this.isToastOpen = true;
+  }
 
-  async mostrarToast(mensaje: string, exito: boolean) {
-    const toast = await this.toastController.create({
-      message: mensaje,
-      duration: 2000,
-      position: 'top'
-    });
-    if(exito){
-      toast.style.setProperty('--background', '#4caf50');
-    }else{
-      toast.style.setProperty('--background', '#fa3333');
-    }
-    toast.style.setProperty('--color', '#ffffff');
-    toast.style.setProperty('font-weight', 'bold');
-    toast.style.setProperty('font-size', 'xx-large');
-    toast.style.setProperty('text-align', 'center');
-    toast.style.setProperty('box-shadow', '0px 0px 10px rgba(0, 0, 0, 0.7)');
-    toast.style.setProperty('border-radius', '10px');
-    toast.style.marginTop = '50px';
-    await toast.present();
+  // Método llamado al cerrarse el toast
+  onToastDismiss() {
+    this.isToastOpen = false;
   }
 
   async guardarTarea() {
@@ -247,13 +235,12 @@ export class TareaPasosPage {
       const guardadoExitoso = await this.firebaseService.guardarTareaPorPasos(dataToSave);
       
       if (guardadoExitoso) {
-        this.mostrarToast('Guardado con éxito', true);
+        this.showToast('Guardado con éxito', true); 
       } else {
-        this.mostrarToast('Error al guardar', false);
-
+        this.showToast('Error al guardar', false); 
       }
     }else{
-      this.mostrarToast('Error al guardar', false);
+      this.showToast('Error al guardar', false); 
 
     }
     

@@ -84,6 +84,23 @@
           </ion-icon>
         </div>
       </div>
+
+      <div class="pagination-buttons">
+        <ion-button 
+          (click)="prevPage()" 
+          *ngIf="currentPage > 1" 
+          class="custom-button"
+          aria-label="Página anterior">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </ion-button>
+        <ion-button 
+          (click)="nextPage()" 
+          *ngIf="finTarea !== true && tareas.length > 4"
+          class="custom-button"
+          aria-label="Página siguiente">
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </ion-button>
+      </div>
     </ng-container>
   
 
@@ -93,4 +110,5 @@
       </div>
     </ng-template>
   </ng-template>
+
 </ion-content>

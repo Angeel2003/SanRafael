@@ -170,34 +170,35 @@ ion-icon {
 }
 
 .menu-image {
-    width: 100%;
-    max-width: 120px;
-    height: auto;
+    width: 200px;
+    max-width: 500px;
     margin: 10px auto;
+
 }
 
 .menu-controls {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 .numButton {
-    margin: 0 5px;
-    padding: 5px 10px;
-    font-size: 1.2rem;
-    border: 2px #005682 solid;
-    color: #FFFFFF;
+    font-size: 1.5rem;
+    padding: 10px 20px;
+    border-radius: 5px;
     background-color: #005682;
+    color: white;
+    border: none;
 }
 
 .numBox {
     display: inline-block;
     width: 40px;
     text-align: center;
-    font-size: 1.2rem;
     border: 2px #005682 solid;
+    font-size: 2rem;
+    margin: 0 15px;
 }
 
 .guardar {
@@ -229,6 +230,27 @@ ion-icon {
 
 
 .container-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
     border-radius: 10px;
     border: 2px solid #005682;
+    margin-top: 150px;
+    margin-bottom: 50px;
+}
+
+.item-title {
+    font-size: 3rem; /* Tamaño grande del texto */
+    font-weight: bold;
+    color: #005682;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.button-content {
+    display: flex; /* Contenedor del texto y la imagen */
+    flex-direction: column; /* Coloca el texto debajo de la imagen */
+    align-items: center;
+    gap: 10px; /* Espacio entre la imagen y el texto */
 }
