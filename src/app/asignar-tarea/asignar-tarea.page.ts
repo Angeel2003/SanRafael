@@ -68,13 +68,11 @@ export class AsignarTarea {
 
   onItemChange(event: any) {
     this.selectedTask = event.detail.value;
-    console.log(event.detail.value);
   }
 
   async onSelectStudent(event: any) {
     const studentName = event.detail.value;
     this.selectedValueAcces = await this.firebaseService.getAllDefaultAccesValues(studentName);
-    console.log(event.detail.value);
   }
 
   initializeComponents(){

@@ -74,8 +74,6 @@ export class CrearProfeAdminPage implements OnInit {
       return;
     }
 
-    console.log('Datos guardados:', this.adminProfe);
-
     // Resetea el formulario
     this.adminProfe = {
       nombre: '',

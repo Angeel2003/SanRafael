@@ -196,7 +196,6 @@ export class EditarMenuPage implements OnInit {
       }
     }
 
-    console.log('Datos guardados en Firestore con éxito');
     this.goBackToAdmin();
   }
 

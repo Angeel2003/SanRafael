@@ -19,7 +19,6 @@ export class MenuService {
 
         try {
             await addDoc(menusCollection, menuData);
-            console.log('Menu guardado con éxito');
         } catch (error) {
             console.error('Error al guardar el menu: ', error);
             throw new Error('Error al guardar el menu');
@@ -30,7 +29,6 @@ export class MenuService {
         try {
             const menuDoc = doc(this.firebaseService.db, 'menus', menuId);
             await updateDoc(menuDoc, menuData);
-            console.log('Menu guardado con éxito');
         } catch (error) {
             console.error('Error al guardar el menu: ', error);
             throw new Error('Error al guardar el menu');
@@ -42,7 +40,6 @@ export class MenuService {
         try {
             const menuDoc = doc(this.firebaseService.db, 'menus', menuId);
             await deleteDoc(menuDoc);
-            console.log('Menu eliminado con éxito');
         } catch (error) {
             console.error('Error al guardar el menu: ', error);
             throw new Error('Error al guardar el menu');
@@ -62,7 +59,6 @@ export class MenuService {
                 ...(doc.data() as MenuItem)
             }));
 
-            console.log('Menus retrieved successfully');
             return menus;
         } catch (error) {
             console.error('Error retrieving menus: ', error);

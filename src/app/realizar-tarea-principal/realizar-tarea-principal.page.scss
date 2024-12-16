@@ -149,3 +149,9 @@ ion-icon {
     margin-top: 1rem;
 }
   
+.button-content {
+    display: flex; /* Contenedor del texto y la imagen */
+    flex-direction: column; /* Coloca el texto debajo de la imagen */
+    align-items: center;
+    gap: 10px; /* Espacio entre la imagen y el texto */
+}

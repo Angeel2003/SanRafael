@@ -48,7 +48,6 @@ export class RealizarTareaPage implements OnInit {
   nombreTarea: string = "Nombe de la tarea/aula";
   menus: any[] = [];
   aula: string = '';
-  thingsPerPage:number = 4;
   usuario: any;
   numberImages: { [key: number]: string } = {};
   aulaGuardada: boolean = false;
@@ -156,8 +155,8 @@ export class RealizarTareaPage implements OnInit {
   }
 
   get paginatedUsers() {
-    const start = this.currentPage * this.thingsPerPage;
-    const end = start + this.thingsPerPage;
+    const start = this.currentPage;
+    const end = start + 1;
 
     if(this.tipoTarea == 'tarea-comanda') {
       return this.menus.slice(start, end);
@@ -169,10 +168,9 @@ export class RealizarTareaPage implements OnInit {
 
   get maxPage() {
     if(this.tipoTarea == 'tarea-comanda') {
-      return Math.ceil(this.menus.length / this.thingsPerPage) - 1;
+      return Math.ceil(this.menus.length) - 1;
     } else {
-      console.log(this.tarea.items.length);
-      return Math.ceil(this.tarea.items.length / this.thingsPerPage) - 1;
+      return Math.ceil(this.tarea.items.length) - 1;
     }
   }
 
@@ -201,7 +199,6 @@ export class RealizarTareaPage implements OnInit {
         }
       }
     }else {
-      console.log(this.currentPage, this.maxPage);
       if (this.currentPage < this.maxPage) {
         this.currentPage++;
       }else {

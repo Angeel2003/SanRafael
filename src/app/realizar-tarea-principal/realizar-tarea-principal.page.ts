@@ -199,9 +199,7 @@ export class RealizarTareaPrincipalPage implements OnInit {
     if (this.aulaService.todasAulasGuardadas()) {
       // Lógica para finalizar la tarea
       this.tareaTerminada(tareaPulsada, nombrePagina);
-      console.log('Tarea finalizada');
-    } else {
-      console.log('Debe guardar las comandas antes de finalizar');
+      
     }
   }
 

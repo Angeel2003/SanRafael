@@ -48,7 +48,6 @@ export class GestionarTareasPage implements OnInit {
             try {
               // Llamada al servicio de Firebase para eliminar la tarea
               await this.firebaseService.deleteDocument('tarea-por-pasos', taskId);
-              console.log(`Tarea con ID ${taskId} eliminada correctamente.`);
               this.loadTasks(); // Refrescar la lista de tareas
             } catch (error) {
               console.error('Error al eliminar la tarea:', error);

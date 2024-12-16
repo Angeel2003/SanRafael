@@ -72,72 +72,78 @@
   </div>
 
 
-  <ion-grid  *ngIf="tipoTarea === 'tarea-comanda' && !finTarea"  style="text-align: center;">
-    <ion-row *ngFor="let menu of menus; let i = index" >
+  <ion-grid *ngIf="tipoTarea === 'tarea-comanda' && !finTarea" style="text-align: center;">
+    <ion-row *ngFor="let menu of paginatedUsers; let i = index" class="container-row">
       <ion-col>
-          <p style="font-size: 150%;">{{ menu.nombre | uppercase}}</p>
+        <p class="item-title">{{ menu.nombre | uppercase }}</p>
       </ion-col>
-
+  
       <ion-col *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'">
-        <img [src]="menu.image.url" alt="Imagen de {{ menu.nombre | uppercase}}" class="menu-image" />
+        <img [src]="menu.image.url" alt="Imagen de {{ menu.nombre | uppercase }}" class="menu-image" />
       </ion-col>
-
+  
       <ion-col>
-          <div class="menu-controls">
-            <button class="numButton" (click)="decrementar(i)">-</button>
-            <span class="numBox">{{ menu.num }}</span>
-            <button class="numButton" (click)="aumentar(i)">+</button>
-          </div>
+        <div class="menu-controls">
+          <button class="numButton" (click)="decrementar(i)">-</button>
+          <span class="numBox">{{ menu.num }}</span>
+          <button class="numButton" (click)="aumentar(i)">+</button>
+        </div>
       </ion-col>
-
+  
       <ion-col *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'">
         <img [src]="numberImages[menu.num]" alt="Imagen del numero {{ menu.num }}" class="menu-image" />
       </ion-col>
     </ion-row>
   </ion-grid>
-
-  <ion-grid *ngIf="tipoTarea === 'tarea-material' && !finTarea"  style="text-align: center;">
-    <ion-row *ngFor="let item of tarea.items; let i = index" class="container-row">
+  
+  <ion-grid *ngIf="tipoTarea === 'tarea-material' && !finTarea" style="text-align: center;">
+    <ion-row *ngFor="let item of paginatedUsers; let i = index" class="container-row">
       <ion-col>
         <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="item.imagen" alt="Imagen de {{ item.material }}" class="menu-image" />
-        <p style="font-size: 150%;">{{ item.material | uppercase}}</p>
+        <p class="item-title">{{ item.material | uppercase }}</p>
       </ion-col>
-
+  
       <ion-col>
         <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="item.imgColor" alt="Imagen del color {{ item.color }}" class="menu-image" />
-        <p style="font-size: 150%;">{{ item.color | uppercase}}</p>
+        <p class="item-title">{{ item.color | uppercase }}</p>
       </ion-col>
-
+  
       <ion-col>
         <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="item.imgTam" alt="Imagen del tamanño {{ item.tamanio }}" class="menu-image" />
-        <p style="font-size: 150%;">{{ item.tamanio | uppercase}}</p>
+        <p class="item-title">{{ item.tamanio | uppercase }}</p>
       </ion-col>
-
+  
       <ion-col>
         <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="numberImages[item.cantidad]" alt="Imagen de la cantidad {{ item.cantidad }}" class="menu-image" />
-        <p style="font-size: 150%;">{{ item.cantidad }}</p>
+        <p class="item-title">{{ item.cantidad }}</p>
       </ion-col>
     </ion-row>
   </ion-grid>
+  
   
 
   <ion-grid  *ngIf="finTarea">
     <ion-row >
       <ion-col size="12" class="image-container">
-        <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="imageOk" alt="Imagen de bien" class="task-image"/>
-        <p class="task-pictoText">FIN DE LA TAREA</p>
+        
         <ion-button 
           *ngIf="tipoTarea != 'tarea-comanda'"
           (click)="tareaTerminada(tarea, '/agenda')"
           class="finish-task-button">
-          TERMINAR TAREA
+          <div class="button-content">
+            <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="imageOk" alt="Imagen de bien" class="task-image"/>
+            <span>TERMINAR TAREA</span>
+          </div>
         </ion-button>
 
         <ion-button 
           *ngIf="tipoTarea == 'tarea-comanda'"
           (click)="guardarComanda(tarea, '/realizar-tarea-principal')"
           class="finish-task-button">
-          GUARDAR COMANDA DE LA CLASE {{aula}}
+          <div class="button-content">
+            <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="imageOk" alt="Imagen de bien" class="task-image"/>
+            <span>GUARDAR COMANDA DE LA CLASE {{ aula }}</span>
+          </div>
         </ion-button>
       </ion-col>
     </ion-row>

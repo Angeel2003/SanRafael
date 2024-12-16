@@ -75,12 +75,13 @@
       <ion-icon name="arrow-forward-outline"></ion-icon>
     </ion-button>
     <ion-button 
-      *ngIf="tipoTarea == 'tarea-comanda' && todasAulasGuardadas()"
-      (click)="finalizarTarea(tarea, '/agenda')"
-      class="custom-button">
-      FINALIZAR TAREA
-      <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="imageOk" alt="Imagen de bien" class="task-image"/>
-      
+      *ngIf="tipoTarea != 'tarea-comanda'"
+      (click)="tareaTerminada(tarea, '/agenda')"
+      class="finish-task-button">
+      <div class="button-content">
+        <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="imageOk" alt="Imagen de bien" class="task-image"/>
+        <span>TERMINAR TAREA</span>
+      </div>
     </ion-button>
   </div>
 </ion-content>
