@@ -85,8 +85,13 @@ export class ModificarUsuarioPrincipalPage implements OnInit {
     this.router.navigate(['/asignar-tarea']);
   }
 
-  modificarUsuario(id: string) {
-    this.router.navigate(['/modificar-usuario', id]); // Correctamente pasa el parámetro dinámico
+  modificarUsuario(user: any) {
+    const navigationExtras: NavigationExtras = {
+      state: {
+        user: user
+      }
+    };
+    this.router.navigate(['/modificar-usuario'], navigationExtras);
   }
 
   checkCollectionStatus() {

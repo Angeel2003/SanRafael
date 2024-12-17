@@ -14,7 +14,12 @@ ion-title {
     display: flex;
     align-items: center;
     gap: 10px;
-  }
+}
+
+ion-button {
+    --background: #005682; /* Cambia el color de fondo */
+    --color: #ffffff;      /* Cambia el color del texto y el icono */
+}
   
   .profile-photo {
     width: 100px;

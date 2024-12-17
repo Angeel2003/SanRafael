@@ -147,6 +147,7 @@
 
 
       <!-- Sección de imágenes, visible solo para pictogramas -->
+       
       <div *ngIf="tipoContrasena === 'Pictograma'">
         <div class="image-selection">
           <div class="image-row">
@@ -158,6 +159,13 @@
                   [disabled]="isCheckboxDisabled(i)" 
                   (ionChange)="onCheckboxChange(i)">
                 </ion-checkbox>
+
+                
+                <!-- Input file oculto para cambiar la imagen -->
+                <input type="file" accept="image/*" (change)="cambiarImagen($event, i)" hidden #fileInput>
+    
+                <!-- Botón para abrir el input file -->
+                <ion-button size="small" (click)="fileInput.click()">Cambiar Imagen</ion-button>
               </div>
             </ng-container>
           </div>
@@ -170,6 +178,12 @@
                   [disabled]="isCheckboxDisabled(i)" 
                   (ionChange)="onCheckboxChange(i)">
                 </ion-checkbox>
+
+                <!-- Input file oculto para cambiar la imagen -->
+                <input type="file" accept="image/*" (change)="cambiarImagen($event, i)" hidden #fileInput>
+    
+                <!-- Botón para abrir el input file -->
+                <ion-button size="small" (click)="fileInput.click()">Cambiar Imagen</ion-button>
               </div>
             </ng-container>
           </div>
@@ -177,20 +191,29 @@
       </div>
 
       <!-- Sección para mostrar los pictogramas seleccionados en orden -->
-<div *ngIf="selectedImagesOrder.length > 0">
-  <h3>Pictogramas seleccionados:</h3>
-  <div class="selected-images">
-    <div *ngFor="let imageUrl of selectedImagesOrder; let i = index" class="selected-image-container">
-      <img [src]="imageUrl" alt="Pictograma seleccionado {{ i + 1 }}" class="selected-image">
-    </div>
-  </div>
-</div>
+      <div *ngIf="selectedImagesOrder.length > 0">
+        <h3>Pictogramas seleccionados:</h3>
+        <div class="selected-images">
+          <div *ngFor="let imageUrl of selectedImagesOrder; let i = index" class="selected-image-container">
+            <img [src]="imageUrl" alt="Pictograma seleccionado {{ i + 1 }}" class="selected-image">
+          </div>
+        </div>
+      </div>
 
       <!-- Botones Guardar -->
       <ion-row>
         <ion-col size="12" class="ion-text-right">
-          <ion-button (click)="guardarPerfil()">GUARDAR</ion-button>
+          <ion-button expand="block" (click)="guardarPerfil()">GUARDAR</ion-button>
         </ion-col>
       </ion-row>
   </ion-grid>
+
+  <ion-toast
+    [isOpen]="isToastOpen"
+    [message]="toastMessage"
+    [duration]="2000"
+    [position]="'top'"
+    [cssClass]="toastClass"
+    (didDismiss)="onToastDismiss()">
+  </ion-toast>
 </ion-content>

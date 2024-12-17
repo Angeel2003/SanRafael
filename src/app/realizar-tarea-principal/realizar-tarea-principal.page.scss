@@ -153,5 +153,16 @@ ion-icon {
     display: flex; /* Contenedor del texto y la imagen */
     flex-direction: column; /* Coloca el texto debajo de la imagen */
     align-items: center;
-    gap: 10px; /* Espacio entre la imagen y el texto */
+    gap: 10px;
+}
+
+.finish-task-button {
+    font-size: 2.5em; 
+    padding: 20px;
+    margin-top: 20px; 
+    --background: #005682; 
+    color: white;
+    width: 100%; 
+    max-width: 350px; 
+    border-radius: 10px; 
 }

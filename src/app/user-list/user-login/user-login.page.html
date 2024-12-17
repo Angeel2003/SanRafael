@@ -54,7 +54,7 @@
         <ion-row>
           <ion-col size="4" *ngFor="let image of images; let i = index">
             <ion-button class="pictogram" (click)="selectButton(i)">
-              <img [src]="image" />
+              <img [src]="image" alt="Pictograma de contraseña {{i}}"/>
             </ion-button>
           </ion-col>
         </ion-row>
@@ -63,7 +63,7 @@
       <!-- Indicadores que muestran la imagen seleccionada -->
       <div class="indicator-container">
         <div *ngFor="let indicator of indicators; let i = index" class="indicator">
-          <img [src]="indicator" />
+          <img [src]="indicator" alt="Imagen seleccionada para la contraseña en la posición {{i}}"/>
           
           <!-- Mostrar la cruz solo si incorrectPictogram[i] es true -->
           <ion-icon *ngIf="incorrectPictogram[i] == 1" name="close-outline" class="cross-overlay"></ion-icon>
