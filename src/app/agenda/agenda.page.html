@@ -72,7 +72,7 @@
           </div>
   
           <ion-icon 
-            *ngIf="tarea.fechaFin && isPastEndTime(tarea.fechaFin)" 
+            *ngIf="tarea.fechaFin && isPastEndTime(tarea.fechaFin) && !isFinished(tarea)" 
             name="close-outline" 
             class="cross-overlay">
           </ion-icon>
