@@ -33,12 +33,12 @@
     <ion-row *ngFor="let materialPet of materialesPeticion; let i = index">
       <ion-col size="3" offset="1">
         <ion-item>
-          <ion-label>Material</ion-label>
-          <ion-select [(ngModel)]="selectedMaterial[i]" interface="popover" (ionChange)="onSelectMaterial($event, i)"  (ionBlur)="handleBlur()">
+          <ion-select [(ngModel)]="selectedMaterial[i]" placeholder="Material" interface="popover" (ionChange)="onSelectMaterial($event, i)"  (ionBlur)="handleBlur()">
             <ion-select-option *ngFor="let material of materialsAlmacen" [value]="material">{{ material }}</ion-select-option>
           </ion-select>
         </ion-item>
       </ion-col>
+
       <ion-col size="5">
         <ion-row>
           <!-- Tamaños -->
