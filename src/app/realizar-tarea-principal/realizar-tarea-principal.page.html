@@ -24,13 +24,24 @@
 <ion-content [fullscreen]="true">
   <div>
     <ion-grid>
-      <ion-row>
-        <ion-col size="12" class="image-container">
+      <ion-row [ngClass]="{'horizontal-container': (tipoTarea === 'tarea-comanda' && todasAulasGuardadas()), 'center-container': (tipoTarea === 'tarea-comanda' && !todasAulasGuardadas())}">
+        <ion-col [ngClass]="{'size=12': (tipoTarea === 'tarea-comanda' && todasAulasGuardadas()), 'size=6': (tipoTarea === 'tarea-comanda' && !todasAulasGuardadas())}" class="image-container">
           <img [src]="tarea.previewUrl" alt="Previsualización {{tarea.nombre}}" class="task-image" />
+        </ion-col>
+        
+        <ion-col *ngIf="tipoTarea === 'tarea-comanda' && todasAulasGuardadas()"  size="6" class="image-container">
+          <ion-button 
+            (click)="finalizarTarea(tarea, '/agenda')"
+            class="finish-task-button"
+            >
+            <div class="button-content">
+              <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="imageOk" alt="Imagen de terminar tarea" class="task-image" />
+              <h1>TERMINAR TAREA</h1>
+            </div>
+          </ion-button>
         </ion-col>
       </ion-row>
 
-      <!-- Condición para mostrar el video solo si el tipo de tarea es 'tarea-por-pasos' -->
       <ion-row *ngIf="tipoTarea === 'tarea-por-pasos'">
         <ion-col size="12" class="video-container">
           <div class="video-container">
@@ -74,14 +85,6 @@
     <ion-button *ngIf="tipoTarea === 'tarea-material'" class="custom-button" (click)="realizarTarea(tarea)">
       <ion-icon name="arrow-forward-outline"></ion-icon>
     </ion-button>
-    <ion-button 
-      *ngIf="tipoTarea != 'tarea-comanda'"
-      (click)="tareaTerminada(tarea, '/agenda')"
-      class="finish-task-button">
-      <div class="button-content">
-        <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="imageOk" alt="Imagen de bien" class="task-image"/>
-        <span>TERMINAR TAREA</span>
-      </div>
-    </ion-button>
+    
   </div>
 </ion-content>

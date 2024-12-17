@@ -46,9 +46,9 @@
           tabindex="0"
         >
           <div class="tarea-content">
-            <p class="tarea-title">
+            <h1 class="tarea-title">
               TAREA {{ i + 1 }}: {{ tarea.nombre | uppercase }}
-            </p>
+            </h1>
           </div>
           <div 
             *ngIf="nivelesAccesibilidad == 'Pictograma' || nivelesAccesibilidad == 'Imagen' || nivelesAccesibilidad == 'Video'" 

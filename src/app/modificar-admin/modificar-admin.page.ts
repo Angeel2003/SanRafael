@@ -1,13 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
-import { QueryList, ViewChildren, ElementRef } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
 import { FirebaseService } from '../services/firebase.service';
 import { Router } from '@angular/router';
-import { eyeOff, eye } from 'ionicons/icons';
-import { lockClosedOutline } from 'ionicons/icons';
-import { addIcons } from 'ionicons';
 import { ActivatedRoute } from '@angular/router';
 
 

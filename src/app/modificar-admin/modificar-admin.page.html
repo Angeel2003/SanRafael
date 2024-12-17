@@ -22,7 +22,8 @@
     <ion-item>
       <ion-label position="stacked">Foto de perfil</ion-label>
       <div class="photo-container">
-        <img [src]="perfil.foto || 'assets/default-avatar.png'" alt="Foto de perfil" class="profile-photo">
+        <img *ngIf="perfil.foto " [src]="perfil.foto" alt="Foto de perfil" class="profile-photo">
+        <img *ngIf="!perfil.foto " [src]="'assets/default-avatar.png'" alt="Foto de perfil" class="profile-photo">
         <ion-button (click)="subirFoto()">Cargar</ion-button>
       </div>
     </ion-item>

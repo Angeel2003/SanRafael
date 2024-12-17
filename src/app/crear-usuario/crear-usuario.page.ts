@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { QueryList, ViewChildren, ElementRef } from '@angular/core';
 import { FirebaseService } from '../services/firebase.service';
-import { Router } from '@angular/router';
 import { eyeOff, eye } from 'ionicons/icons';
 import { lockClosedOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
@@ -55,6 +54,13 @@ export class CrearUsuarioPage implements OnInit {
 
   nombre: string = '';
   usuario: string = '';
+
+  pictogramasDisponibles: string[] = [];
+  pictogramasSeleccionados: string[] = [];
+  nuevosPictogramas: File[] = []; 
+  isToastOpen = false; // Controla la visibilidad del toast
+  toastMessage = ''; // Mensaje dinámico del toast
+  toastClass = '';
 
   // Referencia a los inputs de archivo
   @ViewChildren('fileInput') fileInputs!: QueryList<ElementRef<HTMLInputElement>>;
@@ -115,30 +121,41 @@ export class CrearUsuarioPage implements OnInit {
     }
   }
 
+  showToast(message: string, success: boolean = true) {
+    this.toastMessage = message;
+    this.toastClass = success ? 'toast-success' : 'toast-error';
+    this.isToastOpen = true;
+  }
+
+  // Método llamado al cerrarse el toast
+  onToastDismiss() {
+    this.isToastOpen = false;
+  }
+
   async guardarPerfil() {
     // Validar campos obligatorios
     if (!this.nombre.trim()) {
-      await this.showToast('Por favor, ingresa un nombre.', 'danger');
+      this.showToast('Por favor, ingresa un nombre.', false);
       return;
     }
   
     if (!this.usuario.trim()) {
-      await this.showToast('Por favor, ingresa un usuario.', 'danger');
+      this.showToast('Por favor, ingresa un usuario.', false);
       return;
     }
   
     if (!this.tipoContrasena) {
-      await this.showToast('Por favor, selecciona un tipo de contraseña.', 'danger');
+      this.showToast('Por favor, selecciona un tipo de contraseña.', false);
       return;
     }
   
     if (this.tipoContrasena === 'Texto' && !this.contrasena.trim()) {
-      await this.showToast('Por favor, ingresa una contraseña de texto.', 'danger');
+      this.showToast('Por favor, ingresa una contraseña de texto.', false);
       return;
     }
   
     if (this.tipoContrasena === 'Pictograma' && this.selectedImagesOrder.length < this.maxSelections) {
-      await this.showToast(`Por favor, selecciona ${this.maxSelections} pictogramas para la contraseña.`, 'danger');
+      this.showToast(`Por favor, selecciona ${this.maxSelections} pictogramas para la contraseña.`, false);
       return;
     }
   
@@ -148,40 +165,43 @@ export class CrearUsuarioPage implements OnInit {
       usuario: this.usuario,
       nivelAccesibilidad: this.nivelAccesibilidad,
       tipoContrasena: this.tipoContrasena,
-      contrasenaPicto: [],
-      imagenesPicto: [],
-      contrasena: '',
       foto: this.profileImageUrl, // Incluye la URL de la imagen de perfil
       tareasAsig: [],
       tareasTermin: []
     };
-  
+    
+    // Solo se agrega contrasenaPicto o contrasena cuando ya se ha decidido el tipo de contraseña
     if (this.tipoContrasena === 'Pictograma') {
-      perfilData.contrasenaPicto = this.selectedOrder;
-      perfilData.imagenesPicto = this.selectedImageUrls;
+      const uploadedImageUrls: string[] = [];
+      for (const file of this.nuevosPictogramas) {
+        if (file) {
+          const uploadedUrl = await this.uploadImage(file);  // Subir cada imagen
+          uploadedImageUrls.push(uploadedUrl);
+        }
+      }
+
+      const finalSelectedImageUrls = [...this.selectedImageUrls]; // Copiar las imágenes seleccionadas
+      if (uploadedImageUrls.length > 0) {
+        // Si hay nuevas imágenes subidas, reemplazarlas en el array de URLs
+        for (let i = 0; i < uploadedImageUrls.length; i++) {
+          finalSelectedImageUrls[i] = uploadedImageUrls[i];  // Reemplazar las URLs con las nuevas
+        }
+      }
+      perfilData.contrasenaPicto = this.selectedOrder; // Aquí agregas la contraseña de pictogramas
+      perfilData.imagenesPicto = finalSelectedImageUrls; // Si es necesario, las imágenes de los pictogramas seleccionados
     } else if (this.tipoContrasena === 'Texto' || this.tipoContrasena === 'PIN') {
-      perfilData.contrasena = this.contrasena;
+      perfilData.contrasena = this.contrasena; // Aquí agregas la contraseña de texto o PIN
     }
   
     try {
       await this.firebaseService.guardarPerfil(perfilData); // Guarda el perfil en Firebase
-      await this.showToast('Perfil guardado con éxito.', 'success');
+      this.showToast('Perfil guardado con éxito.', true);
     } catch (error) {
       console.error('Error al guardar el perfil:', error);
-      await this.showToast('Error al guardar el perfil. Inténtalo de nuevo.', 'danger');
+      this.showToast('Error al guardar el perfil. Inténtalo de nuevo.', false);
     }
   }
   
-  // Método auxiliar para mostrar mensajes Toast
-  private async showToast(message: string, color: string = 'primary') {
-    const toast = await this.toastController.create({
-      message,
-      duration: 3000,
-      position: 'top',
-      color
-    });
-    await toast.present();
-  }
   
   triggerFileInput(index: number) {
     const fileInput = this.fileInputs.toArray()[index];
@@ -255,15 +275,42 @@ export class CrearUsuarioPage implements OnInit {
     }
   }
 
-async uploadProfileImage(file: File) {
-  try {
-    const filePath = `profile_images/${file.name}`;
-    await this.firebaseService.uploadFile(file, filePath);
-    const downloadUrl = await this.firebaseService.getDownloadURL(filePath);
-    this.profileImageUrl = downloadUrl;
-  } catch (error) {
-    console.error('Error al subir la imagen de perfil:', error);
+  async uploadProfileImage(file: File) {
+    try {
+      const filePath = `pictogramas/${file.name}_${Date.now()}`;
+      await this.firebaseService.uploadFile(file, filePath);
+      const downloadUrl = await this.firebaseService.getDownloadURL(filePath);
+      this.profileImageUrl = downloadUrl;
+    } catch (error) {
+      console.error('Error al subir la imagen de perfil:', error);
+    }
   }
-}
+
+  async uploadImage(file: File): Promise<string> {
+    try {
+      const filePath = `pictogramas/${file.name}_${Date.now()}`;
+      await this.firebaseService.uploadFile(file, filePath); // Subir la imagen al almacenamiento de Firebase
+      const downloadUrl = await this.firebaseService.getDownloadURL(filePath); // Obtener la URL de descarga
+      return downloadUrl;
+    } catch (error) {
+      console.error('Error al subir imagen:', error);
+      throw new Error('Error al subir imagen');
+    }
+  }
+
+  cambiarImagen(event: Event, index: number): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.nuevosPictogramas[index] = file; // Guardar el archivo nuevo
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.selectedImageUrls[index] = reader.result as string; // Mostrar vista previa
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 
 }

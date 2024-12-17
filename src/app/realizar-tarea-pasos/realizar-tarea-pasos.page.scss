@@ -10,18 +10,6 @@ ion-title {
     color: #005682;
 }
 
-.image-container {
-    text-align: center;
-    margin: 20px 0;
-}
-
-.task-image {
-    width: 300px; /* Ancho fijo */
-    height: 300px; /* Alto fijo */
-    object-fit: cover;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-}
 
 .tarea-preview-image {
     width: 100px; /* Tamaño fijo de la imagen */
@@ -220,20 +208,11 @@ ion-icon {
     gap: 32px; /* Espaciado entre los botones */
 }
 
-.custom-button {
-    --background: #005682; /* Cambia el color de fondo */
-    --color: #ffffff;      /* Cambia el color del texto y el icono */
-    width: 100px;
-    height: 50px;
-}
-
-
-
 .container-row {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 300px;
+    height: 500px;
     border-radius: 10px;
     border: 2px solid #005682;
     margin-top: 150px;
@@ -252,5 +231,32 @@ ion-icon {
     display: flex; /* Contenedor del texto y la imagen */
     flex-direction: column; /* Coloca el texto debajo de la imagen */
     align-items: center;
-    gap: 10px; /* Espacio entre la imagen y el texto */
+    gap: 10px;
+}
+
+.horizontal-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Distribuir elementos */
+}
+
+/* Estilo cuando solo está la imagen (imagen centrada) */
+.center-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centrar la imagen horizontalmente */
+}
+
+
+.image-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.task-image {
+    width: 300px; /* Ancho fijo */
+    height: 300px; /* Alto fijo */
+    object-fit: cover;
+    border: 2px solid #ccc;
+    border-radius: 10px;
 }

@@ -30,7 +30,7 @@
     <ion-row>
       <ion-col size="3" *ngFor="let user of paginatedUsers">
         <ion-card (click)="goToUserLogin(user)">
-          <img [src]="user.foto" alt="{{ user.nombre }}" />
+          <img [src]="user.foto" alt="Foto de lista de usuarios de {{ user.nombre }}" />
           <ion-card-header>
             <ion-card-title>{{ user.nombre | uppercase }}</ion-card-title>
           </ion-card-header>
@@ -41,7 +41,7 @@
 
   <!-- Botones de navegación -->
   <div class="pagination-buttons">
-    <ion-button class="custom-button" (click)="previousPage()" *ngIf="currentPage === 0 && maxPage > 0">
+    <ion-button class="custom-button" (click)="previousPage()" *ngIf="currentPage > 1 && maxPage > 0">
       <ion-icon name="arrow-back"></ion-icon>
     </ion-button>
     <ion-button class="custom-button" (click)="nextPage()" *ngIf="currentPage === 0 && maxPage > 0">

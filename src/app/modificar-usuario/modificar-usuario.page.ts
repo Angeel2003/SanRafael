@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController } from '@ionic/angular';
 import { FirebaseService } from '../services/firebase.service';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-modificar-usuario',
@@ -18,76 +18,50 @@ import { ActivatedRoute } from '@angular/router';
   ]
 })
 export class ModificarUsuarioPage {
-  usuario: any = {
-    nombre: '',
-    usuario: '',
-    nivelAccesibilidad: '',
-    tipoContrasena: '',
-    contrasena: '',
-  };
+  usuario: any;
 
-
+  user: any;
   profileImageUrl: string | null = null; // URL de la imagen seleccionada
   passwordVisible: boolean = false; // Controla la visibilidad de la contraseña
 
-    // Pictogramas
-    pictogramasDisponibles: string[] = [
-      'assets/pictogramas/imagen1.png',
-      'assets/pictogramas/imagen2.png',
-      'assets/pictogramas/imagen3.png',
-      'assets/pictogramas/imagen4.png',
-    ];
-    pictogramasSeleccionados: string[] = [];
+  // Pictogramas
+  pictogramasDisponibles: string[] = [];
+  pictogramasSeleccionados: string[] = [];
+  nuevosPictogramas: File[] = []; // Archivos de imágenes nuevas seleccionadas
+  isToastOpen = false; // Controla la visibilidad del toast
+  toastMessage = ''; // Mensaje dinámico del toast
+  toastClass = '';
 
   constructor(  
-    private route: ActivatedRoute,
-    private firebaseService: FirebaseService
+    private router: Router,
+    private firebaseService: FirebaseService, 
+    private toastController: ToastController
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      const idUsuario = params.get('id');  // Aquí obtienes el parámetro 'id' de la URL
-      if (idUsuario) {
-        this.cargarDatosUsuario(idUsuario);
-      } else {
-        console.error('No se pudo obtener el ID del usuario.');
-      }
-    });
+    const navigation = this.router.getCurrentNavigation();
+    this.user = navigation?.extras.state?.['user'];
+    this.pictogramasDisponibles = this.user.imagenesPicto;
+    this.profileImageUrl = this.user.foto;
+    if (this.user.tipoContrasena === 'Pictograma') {
+      this.pictogramasSeleccionados = this.user.contrasenaPicto.map((index: number) => this.pictogramasDisponibles[index]);
+    }
   }
 
-  cargarDatosUsuario(id: string): void {
-    this.firebaseService.obtenerUsuario(id).then((usuario: any) => {
-      if (usuario) {
-        this.usuario.nombre = usuario.nombre || '';
-        this.usuario.usuario = usuario.usuario || '';
-        this.usuario.nivelAccesibilidad = usuario.nivelAccesibilidad || ''; 
-        this.usuario.tipoContrasena = usuario.tipoContrasena || '';
-        this.usuario.contrasena = usuario.contrasena || '';
-  
-        // Cargar la foto de perfil desde Firestore
-        if (usuario.foto) {
-          this.profileImageUrl = usuario.foto;  // Aquí asignamos la URL de la foto
-        }
-      } else {
-        console.error('El usuario no existe en la base de datos.');
-      }
-    }).catch((error) => {
-      console.error('Error al cargar el usuario:', error);
-    });
-  }
+
   actualizarDatosUsuario(): void {
-    if (this.usuario.nombre && this.usuario.usuario && this.usuario.nivelAccesibilidad) {
-      this.firebaseService.actualizarAlumno(this.usuario.id, this.usuario).then((resultado) => {
+    if (this.user.nombre && this.user.usuario && this.user.nivelAccesibilidad) {
+      this.firebaseService.actualizarAlumno(this.user.id, this.user).then((resultado) => {
         if (resultado) {
-          alert('Datos actualizados con éxito');
+          this.showToast('Datos actualizados con éxito', true); 
         } else {
-          alert('Error al actualizar los datos del usuario.');
+          this.showToast('Error al actualizar los datos del usuario.', true); 
         }
       }).catch(() => {
-        alert('Error al actualizar los datos.');
+        this.showToast('Error al actualizar los datos', false); 
       });
     } else {
-      alert('Por favor, complete todos los campos.');
+      this.showToast('Por favor, complete todos los campos.', false); 
     }
   }
   /**
@@ -99,12 +73,14 @@ export class ModificarUsuarioPage {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        this.profileImageUrl = reader.result as string;
+        this.profileImageUrl = reader.result as string; // Vista previa de la imagen
       };
       reader.readAsDataURL(file);
+  
+      // Guardar la imagen seleccionada para subirla posteriormente
+      this.user.foto = file;
     }
   }
-
   /**
    * Método para disparar el input de selección de imágenes.
    */
@@ -125,35 +101,114 @@ export class ModificarUsuarioPage {
 
   togglePictogramaSeleccionado(index: number): void {
     const pictograma = this.pictogramasDisponibles[index];
-    if (this.pictogramasSeleccionados.includes(pictograma)) {
-      this.pictogramasSeleccionados = this.pictogramasSeleccionados.filter(p => p !== pictograma);
+  
+    // Verifica si el pictograma ya está seleccionado
+    const indexInSeleccionados = this.pictogramasSeleccionados.indexOf(pictograma);
+  
+    if (indexInSeleccionados !== -1) {
+      // Si ya está seleccionado, lo quitamos de la lista
+      this.pictogramasSeleccionados.splice(indexInSeleccionados, 1);
     } else {
-      if (this.pictogramasSeleccionados.length < 4) { // Máximo de 4 pictogramas
+      // Verifica si no se ha alcanzado el límite máximo
+      if (this.pictogramasSeleccionados.length < 4) {
         this.pictogramasSeleccionados.push(pictograma);
       } else {
-        alert('Solo puedes seleccionar un máximo de 4 pictogramas.');
+        // Muestra una alerta si se excede el límite de 4 pictogramas
+        this.showToast('Solo puedes seleccionar un máximo de 4 pictogramas.', false); 
       }
+    }
+
+  }
+  
+  cambiarImagen(event: Event, index: number): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.nuevosPictogramas[index] = file; // Guardar el archivo nuevo
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.pictogramasDisponibles[index] = reader.result as string; // Mostrar vista previa
+      };
+      reader.readAsDataURL(file);
     }
   }
 
-  modificarUsuario(): void {
-    // Aquí es donde puedes agregar la lógica para modificar el usuario.
-    // Por ejemplo, actualizar los datos del usuario en Firebase.
+  showToast(message: string, success: boolean = true) {
+    this.toastMessage = message;
+    this.toastClass = success ? 'toast-success' : 'toast-error';
+    this.isToastOpen = true;
+  }
 
-    // Verifica que todos los campos estén llenos (por ejemplo, nombre, usuario, etc.)
-    if (this.usuario.nombre && this.usuario.usuario && this.usuario.contrasena) {
-      // Actualizar en Firebase o en la base de datos
-      this.firebaseService.actualizarAlumno(this.usuario.id, this.usuario)
-        .then(() => {
-          // Redirige o muestra un mensaje de éxito
-          alert('Usuario modificado correctamente.');
-        })
-        .catch((error) => {
-          console.error('Error al modificar el usuario:', error);
-          alert('Hubo un error al modificar el usuario.');
-        });
-    } else {
-      alert('Por favor, completa todos los campos requeridos.');
+  // Método llamado al cerrarse el toast
+  onToastDismiss() {
+    this.isToastOpen = false;
+  }
+
+
+  async modificarUsuario(): Promise<void> {
+    try {
+      if(this.user.tipoContrasena == 'Pictograma'){
+        this.usuario = {
+          nombre: this.user.nombre,
+          usuario: this.user.usuario,
+          foto: this.user.foto,
+          nivelAccesibilidad: this.user.nivelAccesibilidad,
+          tipoContrasena: this.user.tipoContrasena,
+          contrasenaPicto: this.user.contrasena,
+          imagenesPicto: this.user.imagenesPicto,
+        };
+      }else{
+        this.usuario = {
+          nombre: this.user.nombre,
+          usuario: this.user.usuario,
+          foto: this.user.foto,
+          nivelAccesibilidad: this.user.nivelAccesibilidad,
+          tipoContrasena: this.user.tipoContrasena,
+          contrasena: this.user.contrasena,
+        };
+      }
+      
+
+      // Subir la imagen de perfil si se seleccionó una nueva
+      if (this.profileImageUrl) {
+        const filePath = `pictogramas/${this.user.foto.name}_${Date.now()}`; // Asegura el nombre único
+        await this.firebaseService.uploadFile(this.user.foto, filePath); // Subir el archivo
+        const downloadUrl = await this.firebaseService.getDownloadURL(filePath); // Obtener la URL
+        this.usuario.foto = downloadUrl;
+      }
+  
+      // Subir nuevas imágenes de pictogramas si se seleccionaron
+      if(this.user.nivelAccesibilidad == 'Imagen' || this.user.nivelAccesibilidad == 'Pictograma' || this.user.nivelAccesibilidad == 'Video'){
+        const urlsActualizadas: string[] = [];
+        for (let i = 0; i < this.pictogramasDisponibles.length; i++) {
+          if (this.nuevosPictogramas[i]) {
+            const filePath = `pictogramas/${this.nuevosPictogramas[i].name}_${Date.now()}`;
+            await this.firebaseService.uploadFile(this.nuevosPictogramas[i], filePath);
+            const downloadUrl = await this.firebaseService.getDownloadURL(filePath);
+            urlsActualizadas[i] = downloadUrl;
+          } else {
+            urlsActualizadas[i] = this.user.imagenesPicto[i];
+          }
+        }
+          
+        // Actualizar el objeto usuario con las nuevas URLs
+        this.usuario.imagenesPicto = urlsActualizadas;
+        
+        this.usuario.contrasenaPicto = this.pictogramasSeleccionados
+        .map((selectedImage) => this.pictogramasDisponibles.indexOf(selectedImage))
+        .filter((index) => index !== -1); // Asegurarse de que no haya índices inválidos
+
+      }
+      
+      console.log(this.usuario);
+      // Guardar los datos en la base de datos
+      await this.firebaseService.actualizarAlumno(this.user.id, this.usuario);
+      this.showToast('Usuario modificado correctamente con las nuevas imágenes.', true); 
+    } catch (error) {
+      console.error('Error al modificar el usuario:', error);
+      this.showToast('Error al actualizar las imágenes y los datos del usuario.', false); 
     }
   }
 
