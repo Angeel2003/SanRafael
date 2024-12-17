@@ -41,7 +41,7 @@
 
   <!-- Botones de navegación -->
   <div class="pagination-buttons">
-    <ion-button class="custom-button" (click)="previousPage()" *ngIf="currentPage > 1 && maxPage > 0">
+    <ion-button class="custom-button" (click)="previousPage()" *ngIf="currentPage >= 1 && maxPage > 0">
       <ion-icon name="arrow-back"></ion-icon>
     </ion-button>
     <ion-button class="custom-button" (click)="nextPage()" *ngIf="currentPage === 0 && maxPage > 0">

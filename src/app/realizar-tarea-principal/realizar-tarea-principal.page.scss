@@ -12,12 +12,12 @@ ion-title {
 
 .image-container {
     text-align: center;
-    margin: 20px 0;
+    margin: 5px 0;
 }
 
 .task-image {
-    max-width: 60%; /* Ajusta al 50% del ancho del contenedor */
-    max-height: 250px; /* Altura máxima de 150px */
+    max-width: 40%; /* Ajusta al 40% del ancho del contenedor */
+    max-height: 150px; /* Altura máxima de 150px */
     height: auto; /* Mantiene la proporción */
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -45,7 +45,7 @@ ion-icon {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 1rem;
+    margin-top: 5px 0;
 }
 
 .task-video {
@@ -55,7 +55,7 @@ ion-icon {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer; 
     display: block;
-    margin: 0 auto;
+    margin: 0;
     transition: transform 0.2s ease;
 }
 

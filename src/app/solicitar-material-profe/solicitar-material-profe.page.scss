@@ -15,7 +15,7 @@ ion-toolbar {
 ion-title {
   text-align: center; /* Asegura que el texto esté centrado */
   width: 100%; /* Ocupa el 100% del ancho para centrarse correctamente */
-  font-size: 34px;
+  font-size: 28px;
   color: #005682;
 }
 
@@ -32,61 +32,46 @@ ion-icon.icon-add {
   color: #FFFFFF;
 }
 
-/* Fondo de contenido */
-ion-content {
-  background-color: #FFFFFF;
-  padding: 45px;
+ion-grid {
+  margin-top: 20px;
 }
 
-  
-  ion-grid {
-    margin-top: 20px;
-  }
-  
-  
-  .cabecera-label{
-    color: #ffffff;
-    background-color: #005682;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 10px;
-  }
-  
-  .characteristics-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .sizes {
-    display: flex;
-    flex-direction: column;
-    margin-right: 20px;
-  }
-  
-  .colors {
-    flex: 2;
-  }
+.cabecera-label{
+  color: #ffffff;
+  background-color: #005682;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+}
+
+.characteristics-container {
+  display: flex;
+  align-items: center;
+}
+
+.sizes {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+}
   
 /* Input y etiquetas */
 ion-item {
   background: #FFFFFF;
   color: #005682;
-  font-size: 25px;
+  font-size: 20px;
 }
 
 ion-input {
   color: #005682;
-  font-size: 25px;
+  font-size: 20px;
 }
 
 ion-label{
   font-size: 25px;
 }
-
 
 /* Boton de añadir item */
 ion-button.add-material-button {
@@ -94,7 +79,7 @@ ion-button.add-material-button {
   color: #FFFFFF;
   border-radius: 5px;
   align-items: center;
-  font-size: 25px;
+  font-size: 20px;
 }
 
 /* Boton de guardar */
@@ -103,7 +88,7 @@ ion-button.request-button {
   color: #FFFFFF;
   border-radius: 10px;
   align-items: right;
-  font-size: 25px;
+  font-size: 20px;
 
 }
 
