@@ -3,17 +3,19 @@
     <ion-buttons slot="start">
       <ion-back-button 
         defaultHref="/agenda" 
-        aria-label="Volver a la agenda">
+        [attr.aria-label]="'Volver a la agenda'">
       </ion-back-button>
     </ion-buttons>
     <ion-row class="header-row">
       <ion-col size="auto">
-        <ion-title class="title">{{ tarea.nombre | uppercase }}</ion-title>
+        <ion-title class="title" [attr.aria-label]="'Nombre de la tarea: ' + tarea.nombre">
+          {{ tarea.nombre | uppercase }}
+        </ion-title>
       </ion-col>
       <ion-col size="auto" class="image-col">
         <img 
           [src]="tarea.previewUrl" 
-          alt="Pictograma de previsualización de tarea" 
+          alt="Pictograma de previsualización de la tarea {{ tarea.nombre }}" 
           class="tarea-preview-image" 
         />
       </ion-col>
@@ -26,16 +28,22 @@
     <ion-grid>
       <ion-row [ngClass]="{'horizontal-container': (tipoTarea === 'tarea-comanda' && todasAulasGuardadas()), 'center-container': (tipoTarea === 'tarea-comanda' && !todasAulasGuardadas())}">
         <ion-col [ngClass]="{'size=12': (tipoTarea === 'tarea-comanda' && todasAulasGuardadas()), 'size=6': (tipoTarea === 'tarea-comanda' && !todasAulasGuardadas())}" class="image-container">
-          <img [src]="tarea.previewUrl" alt="Previsualización {{tarea.nombre}}" class="task-image" />
+          <img [src]="tarea.previewUrl" alt="Previsualización de la tarea {{ tarea.nombre }}" class="task-image" />
         </ion-col>
         
-        <ion-col *ngIf="tipoTarea === 'tarea-comanda' && todasAulasGuardadas()"  size="6" class="image-container">
+        <ion-col *ngIf="tipoTarea === 'tarea-comanda' && todasAulasGuardadas()" size="6" class="image-container">
           <ion-button 
             (click)="finalizarTarea(tarea, '/agenda')"
             class="finish-task-button"
-            >
+            [attr.aria-label]="'Finalizar tarea ' + tarea.nombre"
+          >
             <div class="button-content">
-              <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="imageOk" alt="Imagen de terminar tarea" class="task-image" />
+              <img 
+                *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" 
+                [src]="imageOk" 
+                alt="Imagen que indica terminar tarea" 
+                class="task-image" 
+              />
               <h1>TERMINAR TAREA</h1>
             </div>
           </ion-button>
@@ -49,42 +57,69 @@
               [src]="tarea.videoCompletoUrl" 
               class="task-video" 
               #videoPlayer 
-              (click)="togglePlay(videoPlayer)">
+              (click)="togglePlay(videoPlayer)" 
+              [attr.aria-label]="'Video de la tarea ' + tarea.nombre"
+            >
             </video>
             <button 
               class="play-button" 
               [class.hidden]="!showPlayButton" 
-              (click)="togglePlay(videoPlayer)">
+              (click)="togglePlay(videoPlayer)" 
+              [attr.aria-label]="'Reproducir o pausar el video'"
+            >
               <ion-icon name="play-outline"></ion-icon>
             </button>
           </div>
         </ion-col>
       </ion-row>
 
-      <ion-row *ngIf="tipoTarea === 'tarea-comanda'" >
-        <ion-col  size="3" *ngFor="let aula of aulas" class="aula-button-col">
-          <ion-button class="aula-button" (click)="entrarAula(aula)">
+      <ion-row *ngIf="tipoTarea === 'tarea-comanda'">
+        <ion-col size="3" *ngFor="let aula of aulas" class="aula-button-col">
+          <ion-button 
+            class="aula-button" 
+            (click)="entrarAula(aula)" 
+            [attr.aria-label]="'Entrar en el aula ' + aula.nombre"
+          >
             {{ aula.nombre }}
           </ion-button>
-          <ion-icon *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio' && aulaGuardada(aula.nombre)" name="checkmark-outline" class="check-overlay"></ion-icon>
+          <ion-icon 
+            *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio' && aulaGuardada(aula.nombre)" 
+            name="checkmark-outline" 
+            class="check-overlay" 
+            aria-hidden="true"
+          ></ion-icon>
         </ion-col>
       </ion-row>
 
       <ion-row *ngIf="tipoTarea === 'tarea-material'">
         <ion-col>
-          <ion-label class="label-aula">MATERIAL&nbsp; PARA&nbsp; EL&nbsp; AULA:&nbsp;&nbsp;{{ tarea.aula | uppercase}}</ion-label>
+          <ion-label 
+            class="label-aula" 
+            [attr.aria-label]="'Material necesario para el aula ' + tarea.aula | uppercase "
+          >
+            MATERIAL&nbsp; PARA&nbsp; EL&nbsp; AULA:&nbsp;&nbsp;{{ tarea.aula | uppercase}}
+          </ion-label>
         </ion-col>
       </ion-row>
     </ion-grid>
   </div>
 
   <div class="pagination-buttons">
-    <ion-button *ngIf="tipoTarea === 'tarea-por-pasos'" class="custom-button" (click)="realizarTareaPasos(tarea, videoPlayer.nativeElement)">
+    <ion-button 
+      *ngIf="tipoTarea === 'tarea-por-pasos'" 
+      class="custom-button" 
+      (click)="realizarTareaPasos(tarea, videoPlayer.nativeElement)" 
+      [attr.aria-label]="'Realizar tarea por pasos'"
+    >
       <ion-icon name="arrow-forward-outline"></ion-icon>
     </ion-button>
-    <ion-button *ngIf="tipoTarea === 'tarea-material'" class="custom-button" (click)="realizarTarea(tarea)">
+    <ion-button 
+      *ngIf="tipoTarea === 'tarea-material'" 
+      class="custom-button" 
+      (click)="realizarTarea(tarea)" 
+      [attr.aria-label]="'Realizar tarea con el material indicado'"
+    >
       <ion-icon name="arrow-forward-outline"></ion-icon>
     </ion-button>
-    
   </div>
 </ion-content>

@@ -1,17 +1,18 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/"></ion-back-button>
+      <ion-back-button defaultHref="/" [attr.aria-label]="'Volver a la página principal'"></ion-back-button>
     </ion-buttons>
     <ion-row class="header-row">
       <ion-col size="auto">
-        <ion-title class="title">USUARIOS</ion-title>
+        <ion-title class="title" [attr.aria-label]="'Usuarios, sección de usuarios'">USUARIOS</ion-title>
       </ion-col>
       <ion-col size="auto" class="image-col">
         <img 
           [src]="previewUserGirl" 
           alt="Pictograma de usuario niña" 
-          class="user-preview-image" 
+          class="user-preview-image"
+          [attr.aria-label]="'Pictograma de usuario niña'" 
         />
       </ion-col>
       <ion-col size="auto" class="image-col">
@@ -19,6 +20,7 @@
           [src]="previewUserBoy" 
           alt="Pictograma de usuario niño" 
           class="user-preview-image" 
+          [attr.aria-label]="'Pictograma de usuario niño'" 
         />
       </ion-col>
     </ion-row>
@@ -29,8 +31,8 @@
   <ion-grid>
     <ion-row>
       <ion-col size="3" *ngFor="let user of paginatedUsers">
-        <ion-card (click)="goToUserLogin(user)">
-          <img [src]="user.foto" alt="Foto de lista de usuarios de {{ user.nombre }}" />
+        <ion-card (click)="goToUserLogin(user)" [attr.aria-label]="'Ir al perfil de ' + user.nombre">
+          <img [src]="user.foto" alt="Foto de lista de usuarios de {{ user.nombre }}" [attr.aria-label]="'Foto de perfil de ' + user.nombre"/>
           <ion-card-header>
             <ion-card-title>{{ user.nombre | uppercase }}</ion-card-title>
           </ion-card-header>
@@ -41,10 +43,10 @@
 
   <!-- Botones de navegación -->
   <div class="pagination-buttons">
-    <ion-button class="custom-button" (click)="previousPage()" *ngIf="currentPage >= 1 && maxPage > 0">
+    <ion-button class="custom-button" (click)="previousPage()" *ngIf="currentPage >= 1 && maxPage > 0" [attr.aria-label]="'Página anterior'">
       <ion-icon name="arrow-back"></ion-icon>
     </ion-button>
-    <ion-button class="custom-button" (click)="nextPage()" *ngIf="currentPage === 0 && maxPage > 0">
+    <ion-button class="custom-button" (click)="nextPage()" *ngIf="currentPage === 0 && maxPage > 0" [attr.aria-label]="'Página siguiente'">
       <ion-icon name="arrow-forward"></ion-icon>
     </ion-button>
   </div>

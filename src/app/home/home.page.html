@@ -1,19 +1,32 @@
 <ion-header [translucent]="true">
-
   <ion-toolbar>
-    <ion-title>INDEPAPP</ion-title>
+    <ion-title aria-label="IndepApp">INDEPAPP</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-  <ion-button class="admin-button" (click)="goToAdminLogin()" shape="round">
+  <!-- Botón para Administradores/Profesores -->
+  <ion-button 
+    class="admin-button" 
+    (click)="goToAdminLogin()" 
+    shape="round" 
+    aria-label="Iniciar sesión como administrador o profesor">
     ADMIN/PROFESORES
   </ion-button>
 
+  <!-- Botón para Estudiantes -->
   <div class="center-button">
-    <ion-button class="user-button" (click)="goToUserLogin()" shape="round" expand="full">
+    <ion-button 
+      class="user-button" 
+      (click)="goToUserLogin()" 
+      shape="round" 
+      expand="full" 
+      aria-label="Iniciar sesión como estudiante">
       <div class="button-content">
-        <img [src]="imagen" alt="Imagen de boton de estudiante" class="imagen-estudiante">
+        <img 
+          [src]="imagen" 
+          alt="Imagen de botón para estudiantes" 
+          class="imagen-estudiante">
         <p><strong>ESTUDIANTE</strong></p>
       </div>
     </ion-button>
