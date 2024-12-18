@@ -91,12 +91,9 @@ export class AgendaPage implements OnInit {
     this.fechaHoy = new Date();
 
     await this.cargarTareasCompletas();
-    await this.loadTareas();
-    
-    
-    console.log('Descomentar para presentacion');
-    
-    // await this.tareasVencidasService.moverTareasVencidas();
+    await this.loadTareas();    
+     
+    await this.tareasVencidasService.moverTareasVencidas();
 
   }
 

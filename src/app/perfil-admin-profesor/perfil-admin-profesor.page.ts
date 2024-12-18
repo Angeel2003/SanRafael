@@ -37,14 +37,13 @@ export class PerfilAdminProfesorPage implements OnInit {
   
     this.users = await this.firebaseService.getCollection('alumnos');
     await this.tareasVencidasService.moverTareasVencidas();
-    console.log('Descomentar para presentacion');
-    // if (this.adminProfe.tipoUsuario === 'administrador') {
-    //   this.checkCollectionStatus(); // Primera carga
-    //   this.intervalId = setInterval(() => {
-    //     this.checkCollectionStatus(); // Actualizaciones periódicas
-    //   }, 5000);
-    // }
-    this.checkCollectionStatus();
+    
+    if (this.adminProfe.tipoUsuario === 'administrador') {
+      this.checkCollectionStatus(); // Primera carga
+      this.intervalId = setInterval(() => {
+        this.checkCollectionStatus(); // Actualizaciones periódicas
+      }, 2000);
+    }
   }
 
   async checkCollectionStatus() {
