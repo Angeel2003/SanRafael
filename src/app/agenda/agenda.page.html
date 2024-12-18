@@ -3,23 +3,19 @@
     <ion-buttons slot="start">
       <ion-back-button 
         defaultHref="/user-list" 
-        aria-label="Volver a la lista de usuarios">
+        [attr.aria-label]="'Volver a la lista de usuarios'">
       </ion-back-button>
     </ion-buttons>
     <ion-row class="header-row">
       <ion-col size="auto">
-        <ion-title class="title" aria-label="Agenda">AGENDA</ion-title>
+        <ion-title class="title" [attr.aria-label]="'Agenda'">AGENDA</ion-title>
       </ion-col>
       <ion-col size="auto" class="image-col">
         <img 
           [src]="previewAgenda" 
           alt="Pictograma de agenda" 
           class="tarea-preview-image" 
-          aria-describedby="agenda-image-desc"
         />
-        <span id="agenda-image-desc" class="sr-only">
-          Imagen que representa la agenda del usuario.
-        </span>
       </ion-col>
     </ion-row>
   </ion-toolbar>
@@ -65,7 +61,7 @@
               </span>
             </ng-container>
             <ng-template #noImagen>
-              <p class="no-image" aria-label="Sin imagen disponible">
+              <p class="no-image" [attr.aria-label]="'Sin imagen disponible'">
                 SIN IMAGEN
               </p>
             </ng-template>
@@ -90,14 +86,14 @@
           (click)="prevPage()" 
           *ngIf="currentPage > 1" 
           class="custom-button"
-          aria-label="Página anterior">
+          [attr.aria-label]="'Página anterior'">
           <ion-icon name="arrow-back-outline"></ion-icon>
         </ion-button>
         <ion-button 
           (click)="nextPage()" 
           *ngIf="finTarea !== true && tareas.length > 4"
           class="custom-button"
-          aria-label="Página siguiente">
+          [attr.aria-label]="'Página siguiente'">
           <ion-icon name="arrow-forward-outline"></ion-icon>
         </ion-button>
       </div>

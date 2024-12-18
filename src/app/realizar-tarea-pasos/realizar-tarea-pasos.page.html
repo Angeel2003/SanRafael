@@ -3,18 +3,19 @@
     <ion-buttons slot="start">
       <ion-back-button 
         defaultHref="/realizar-tarea-principal" 
-        aria-label="Volver a la agenda">
+        [attr.aria-label]="'Volver a la agenda'">
       </ion-back-button>
     </ion-buttons>
     <ion-row class="header-row">
       <ion-col size="auto">
-        <ion-title class="title">{{ tarea.nombre | uppercase }}</ion-title>
+        <ion-title class="title" id="tarea-title">{{ tarea.nombre | uppercase }}</ion-title>
       </ion-col>
       <ion-col size="auto" class="image-col">
         <img 
           [src]="tarea.previewUrl" 
-          alt="Pictograma de previsualización de tarea" 
+          alt="Pictograma de previsualización de la tarea {{ tarea.nombre }}" 
           class="tarea-preview-image" 
+          aria-labelledby="tarea-title"
         />
       </ion-col>
     </ion-row>
@@ -22,126 +23,118 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <!-- Tarea por pasos -->
   <div *ngIf="nivelAccesibilidad != 'Audio' && tipoTarea == 'tarea-por-pasos' && !finTarea">
     <ion-grid>
       <ion-row>
         <ion-col size="12" class="text-container">
-          <img *ngIf="nivelAccesibilidad == 'Pictograma'" [src]="tarea.pasosPicto[currentPage]" alt="PASO {{ currentPage + 1 }}" class="task-image" />
-          <img *ngIf="nivelAccesibilidad == 'Imagen'" [src]="tarea.pasosImagenes[currentPage]" alt="PASO {{ currentPage + 1 }}" class="task-image"/>
+          <img 
+            *ngIf="nivelAccesibilidad == 'Pictograma'" 
+            [src]="tarea.pasosPicto[currentPage]" 
+            alt="Pictograma del paso {{ currentPage + 1 }}" 
+            class="task-image" 
+            [attr.aria-label]="'Pictograma del paso ' + (currentPage + 1 )"
+          />
+          <img 
+            *ngIf="nivelAccesibilidad == 'Imagen'" 
+            [src]="tarea.pasosImagenes[currentPage]" 
+            alt="Imagen del paso {{ currentPage + 1 }}" 
+            class="task-image" 
+            [attr.aria-label]="'Imagen del paso '+ (currentPage + 1) "
+          />
           
           <div *ngIf="nivelAccesibilidad == 'Video'">
             <video 
               [src]="tarea.pasosVideos[currentPage]"
               class="task-video" 
               #videoPlayer
+              [attr.aria-label]="'Video del paso '+ (currentPage + 1)"
               (click)="togglePlay(videoPlayer, currentPage)">
             </video>
   
             <button 
               class="play-button" 
               [class.hidden]="!showPlayButton[currentPage]" 
-              (click)="togglePlay(videoPlayer, currentPage)">
+              (click)="togglePlay(videoPlayer, currentPage)"
+              [attr.aria-label]="'Reproducir video del paso ' + (currentPage + 1)">
               <ion-icon name="play-outline"></ion-icon>
             </button>
           </div> 
 
-
-          <p class="task-text">{{ tarea.pasosTexto[currentPage] | uppercase}}</p>
-        
+          <p class="task-text" [attr.aria-live]="'polite'"  [attr.aria-label]="'Paso ' + (currentPage + 1) + ': '  + tarea.pasosTexto[currentPage]">
+            {{ tarea.pasosTexto[currentPage] | uppercase }}
+          </p>
         </ion-col>
       </ion-row>
     </ion-grid>
   </div>
 
+  <!-- Audio completo -->
   <div *ngIf="nivelAccesibilidad == 'Audio' && tipoTarea == 'tarea-por-pasos' && !finTarea">
     <ion-grid>
       <ion-row>
         <ion-col class="text-container">
-
           <ion-button 
             *ngIf="!finTarea" 
             (click)="toggleAudio(audioElement)"
-            class="audio-button">
+            class="audio-button"
+            [attr.aria-label]="'Reproducir audio completo de la tarea'">
             <ion-icon class="volume-icon" name="volume-high" size="large"></ion-icon> 
           </ion-button>  
-
           <audio #audioElement [src]="tarea.audioCompletoUrl"></audio>
         </ion-col>
       </ion-row>
     </ion-grid>
   </div>
 
-
+  <!-- Tarea comanda -->
   <ion-grid *ngIf="tipoTarea === 'tarea-comanda' && !finTarea" style="text-align: center;">
     <ion-row *ngFor="let menu of paginatedUsers; let i = index" class="container-row">
       <ion-col>
-        <p class="item-title">{{ menu.nombre | uppercase }}</p>
+        <p class="item-title" [attr.aria-label]="'Nombre del menú: ' + menu.nombre | uppercase">
+          {{ menu.nombre | uppercase }}
+        </p>
       </ion-col>
-  
       <ion-col *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'">
-        <img [src]="menu.image.url" alt="Imagen de {{ menu.nombre | uppercase }}" class="menu-image" />
+        <img [src]="menu.image.url" alt="Imagen del menú {{ menu.nombre }}" class="menu-image" />
       </ion-col>
-  
       <ion-col>
         <div class="menu-controls">
-          <button class="numButton" (click)="decrementar(i)">-</button>
-          <span class="numBox">{{ menu.num }}</span>
-          <button class="numButton" (click)="aumentar(i)">+</button>
+          <button class="numButton" (click)="decrementar(i)" [attr.aria-label]="'Disminuir cantidad de ' + menu.nombre">
+            -
+          </button>
+          <span class="numBox" [attr.aria-label]="'Cantidad actual de ' + menu.nombre">
+            {{ menu.num }}
+          </span>
+          <button class="numButton" (click)="aumentar(i)" [attr.aria-label]="'Aumentar cantidad de ' + menu.nombre">
+            +
+          </button>
         </div>
       </ion-col>
-  
-      <ion-col *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'">
-        <img [src]="numberImages[menu.num]" alt="Imagen del numero {{ menu.num }}" class="menu-image" />
-      </ion-col>
     </ion-row>
   </ion-grid>
-  
-  <ion-grid *ngIf="tipoTarea === 'tarea-material' && !finTarea" style="text-align: center;">
-    <ion-row *ngFor="let item of paginatedUsers; let i = index" class="container-row">
-      <ion-col>
-        <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="item.imagen" alt="Imagen de {{ item.material }}" class="menu-image" />
-        <p class="item-title">{{ item.material | uppercase }}</p>
-      </ion-col>
-  
-      <ion-col>
-        <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="item.imgColor" alt="Imagen del color {{ item.color }}" class="menu-image" />
-        <p class="item-title">{{ item.color | uppercase }}</p>
-      </ion-col>
-  
-      <ion-col>
-        <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="item.imgTam" alt="Imagen del tamanño {{ item.tamanio }}" class="menu-image" />
-        <p class="item-title">{{ item.tamanio | uppercase }}</p>
-      </ion-col>
-  
-      <ion-col>
-        <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="numberImages[item.cantidad]" alt="Imagen de la cantidad {{ item.cantidad }}" class="menu-image" />
-        <p class="item-title">{{ item.cantidad }}</p>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-  
-  
 
-  <ion-grid  *ngIf="finTarea">
-    <ion-row >
+  <!-- Finalizar tarea -->
+  <ion-grid *ngIf="finTarea">
+    <ion-row>
       <ion-col size="12" class="image-container">
-        
         <ion-button 
           *ngIf="tipoTarea != 'tarea-comanda'"
           (click)="tareaTerminada(tarea, '/agenda')"
-          class="finish-task-button">
+          class="finish-task-button"
+          [attr.aria-label]="'Terminar la tarea ' + tarea.nombre">
           <div class="button-content">
-            <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="imageOk" alt="Imagen de bien" class="task-image"/>
+            <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="imageOk" alt="Imagen indicando éxito" class="task-image"/>
             <span>TERMINAR TAREA</span>
           </div>
         </ion-button>
-
         <ion-button 
           *ngIf="tipoTarea == 'tarea-comanda'"
           (click)="guardarComanda(tarea, '/realizar-tarea-principal')"
-          class="finish-task-button">
+          class="finish-task-button"
+          [attr.aria-label]="'Guardar la comanda de la clase ' + aula">
           <div class="button-content">
-            <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="imageOk" alt="Imagen de bien" class="task-image"/>
+            <img *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" [src]="imageOk" alt="Imagen indicando éxito" class="task-image"/>
             <span>GUARDAR COMANDA DE LA CLASE {{ aula }}</span>
           </div>
         </ion-button>
@@ -149,12 +142,11 @@
     </ion-row>
   </ion-grid>
 
-
   <div class="pagination-buttons">
-    <ion-button class="custom-button" (click)="prevPage(tarea)">
+    <ion-button class="custom-button" (click)="prevPage(tarea)" [attr.aria-label]="'Ir a la página anterior'">
       <ion-icon name="arrow-back-outline"></ion-icon>
     </ion-button>
-    <ion-button class="custom-button" (click)="nextPage()" *ngIf="finTarea !== true">
+    <ion-button class="custom-button" (click)="nextPage()" *ngIf="finTarea !== true" [attr.aria-label]="'Ir a la página siguiente'">
       <ion-icon name="arrow-forward-outline"></ion-icon>
     </ion-button>
   </div>
