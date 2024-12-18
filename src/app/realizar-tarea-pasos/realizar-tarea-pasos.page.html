@@ -114,6 +114,47 @@
     </ion-row>
   </ion-grid>
 
+  <ion-grid *ngIf="tipoTarea === 'tarea-material' && !finTarea"  style="text-align: center;">
+    <ion-row *ngFor="let item of paginatedUsers; let i = index" class="container-row">
+      <ion-col role="gridcell">
+        <img 
+          *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" 
+          [src]="item.imagen" 
+          [alt]="'Imagen de ' + item.material" 
+          class="menu-image" />
+        <p style="font-size: 150%;" [attr.aria-label]="'Material: ' + item.material">{{ item.material | uppercase }}</p>
+      </ion-col>
+  
+      <ion-col role="gridcell">
+        <img 
+          *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" 
+          [src]="item.imgColor" 
+          [alt]="'Imagen del color ' + item.color" 
+          class="menu-image" />
+        <p style="font-size: 150%;" [attr.aria-label]="'Color: ' + item.color">{{ item.color | uppercase }}</p>
+      </ion-col>
+  
+      <ion-col role="gridcell">
+        <img 
+          *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" 
+          [src]="item.imgTam" 
+          [alt]="'Imagen del tamaño ' + item.tamanio" 
+          class="menu-image" />
+        <p style="font-size: 150%;" [attr.aria-label]="'Tamaño: ' + item.tamanio">{{ item.tamanio | uppercase }}</p>
+      </ion-col>
+  
+      <ion-col role="gridcell">
+        <img 
+          *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" 
+          [src]="numberImages[item.cantidad]" 
+          [alt]="'Imagen de la cantidad ' + item.cantidad" 
+          class="menu-image" />
+        <p style="font-size: 150%;" [attr.aria-label]="'Cantidad: ' + item.cantidad">{{ item.cantidad }}</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  
+
   <!-- Finalizar tarea -->
   <ion-grid *ngIf="finTarea">
     <ion-row>
