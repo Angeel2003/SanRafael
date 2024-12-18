@@ -24,9 +24,8 @@ export class HomePage {
 
   async ngOnInit() {
     this.imagen = await this.firebaseService.getImageUrl('pictogramas/niña.png');
-    console.log('Descomentar para presentacion');
-
-    // await this.tareasVencidasService.moverTareasVencidas();
+    
+    await this.tareasVencidasService.moverTareasVencidas();
   }
   
   
