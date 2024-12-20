@@ -72,6 +72,11 @@ export class EditarMenuPage implements OnInit {
 
 
   constructor(private router: Router, private menuService: MenuService, private firebaseService: FirebaseService) {
+    
+  }
+
+  ngOnInit() {
+    this.loadMenus();
     addIcons({
       arrowBackOutline,
       personCircleOutline,
@@ -79,10 +84,6 @@ export class EditarMenuPage implements OnInit {
       saveOutline,
       trashOutline
     });
-  }
-
-  ngOnInit() {
-    this.loadMenus();
   }
 
   async loadMenus() {
