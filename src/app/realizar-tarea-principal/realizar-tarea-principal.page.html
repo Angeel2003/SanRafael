@@ -42,7 +42,7 @@
                 *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio'" 
                 [src]="imageOk" 
                 alt="Imagen que indica terminar tarea" 
-                class="task-image-ok" 
+                class="task-image" 
               />
               <h1>TERMINAR TAREA</h1>
             </div>
@@ -83,7 +83,7 @@
             {{ aula.nombre }}
           </ion-button>
           <ion-icon 
-            *ngIf="nivelAccesibilidad != 'Texto' && nivelAccesibilidad != 'Audio' && aulaGuardada(aula.nombre)" 
+            *ngIf="aulaGuardada(aula.nombre)" 
             name="checkmark-outline" 
             class="check-overlay" 
             aria-hidden="true"

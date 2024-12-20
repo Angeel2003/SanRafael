@@ -23,14 +23,6 @@ ion-title {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.task-image-ok {
-    max-width: 25%; /* Ajusta al 40% del ancho del contenedor */
-    max-height: 150px; /* Altura máxima de 150px */
-    height: auto; /* Mantiene la proporción */
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
 .pagination-buttons {
     display: flex;
     justify-content: center;
@@ -69,7 +61,7 @@ ion-icon {
 
 .check-overlay {
     color: green;
-    font-size: 100px; /* Ajusta el tamaño según sea necesario */
+    font-size: 60px; /* Ajusta el tamaño según sea necesario */
     pointer-events: none; /* Evita que interfiera con el clic en la imagen */
 }
 
@@ -149,7 +141,7 @@ ion-icon {
 }
 
 .aula-button-col {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
