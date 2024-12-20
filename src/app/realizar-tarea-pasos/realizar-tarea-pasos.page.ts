@@ -143,14 +143,15 @@ export class RealizarTareaPage implements OnInit {
     this.router.navigate([nombrePagina], navigationExtras);
   }
 
-  aumentar(index: number){
-    this.menus[index].num++;
-    
+  aumentar(index: number) {
+    const globalIndex = this.currentPage + index;
+    this.menus[globalIndex].num++;
   }
-
-  decrementar(index: number){
-    if(this.menus[index].num > 0){
-      this.menus[index].num--;
+  
+  decrementar(index: number) {
+    const globalIndex = this.currentPage + index;
+    if (this.menus[globalIndex].num > 0) {
+      this.menus[globalIndex].num--;
     }
   }
 
