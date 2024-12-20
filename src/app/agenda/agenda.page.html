@@ -36,7 +36,7 @@
         <div 
           (click)="realizarTareaPrincipal(tarea)" 
           class="tarea-card" 
-          *ngFor="let tarea of tareas; let i = index" 
+          *ngFor="let tarea of paginatedTareas; let i = index" 
           role="button" 
           [attr.aria-label]="'Abrir tarea ' + (i + 1) + ': ' + tarea.nombre | uppercase"
           tabindex="0"
@@ -91,7 +91,7 @@
         </ion-button>
         <ion-button 
           (click)="nextPage()" 
-          *ngIf="finTarea !== true && tareas.length > 4"
+          *ngIf="tareas.length >= 3 && currentPage !== maxPage "
           class="custom-button"
           [attr.aria-label]="'Página siguiente'">
           <ion-icon name="arrow-forward-outline"></ion-icon>

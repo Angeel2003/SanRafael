@@ -196,7 +196,7 @@ export class RealizarTareaPrincipalPage implements OnInit {
 
 
   finalizarTarea(tareaPulsada: Tarea, nombrePagina: string) {
-    if (this.aulaService.todasAulasGuardadas()) {
+    if (this.aulaService.todasAulasGuardadas(this.usuario.usuario)) {
       // Lógica para finalizar la tarea
       this.tareaTerminada(tareaPulsada, nombrePagina);
       
@@ -204,10 +204,10 @@ export class RealizarTareaPrincipalPage implements OnInit {
   }
 
   todasAulasGuardadas(){
-    return this.aulaService.todasAulasGuardadas();
+    return this.aulaService.todasAulasGuardadas(this.usuario.usuario);
   }
 
   aulaGuardada(aula: string) {
-    return this.aulaService.aulaGuardada(aula);
+    return this.aulaService.aulaGuardada(aula, this.usuario.usuario);
   }
 }

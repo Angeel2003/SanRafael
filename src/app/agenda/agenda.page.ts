@@ -41,7 +41,7 @@ export class AgendaPage implements OnInit {
   fullUser: any;
   fechaHoy: Date | undefined;
   currentPage = 1;
-  tareasPerPage = 4;
+  tareasPerPage = 3;
   finTarea = false;
 
   constructor(private firebaseService: FirebaseService, private router: Router, private tareasVencidasService: TareasVencidasService) {
@@ -187,18 +187,17 @@ export class AgendaPage implements OnInit {
     
     return existeEnPendientes; // Comparar si ya pasó la hora de fin
   }
-  get paginatedUsers() {
-    const start = this.currentPage * this.tareasPerPage;
+  
+  get paginatedTareas() {
+    const start = (this.currentPage - 1) * this.tareasPerPage;
     const end = start + this.tareasPerPage;
-
     return this.tareas.slice(start, end);
-    
   }
-
+  
   get maxPage() {
-    return Math.ceil(this.tareas.length) - 1;
-    
+    return Math.ceil(this.tareas.length / this.tareasPerPage);
   }
+  
 
   prevPage() {
     this.finTarea = false;

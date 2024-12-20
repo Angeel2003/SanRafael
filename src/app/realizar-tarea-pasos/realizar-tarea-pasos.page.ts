@@ -272,7 +272,7 @@ export class RealizarTareaPage implements OnInit {
   guardarComanda(tarea: Tarea, ruta: string) {
     this.aulaGuardada = true;
     // Actualizar el estado en el servicio
-    this.aulaService.guardarComanda(this.aula);
+    this.aulaService.guardarComanda(this.aula, this.usuario.usuario);
     this.irAPagPrincipalTarea(tarea, ruta)
   }
 

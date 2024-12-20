@@ -5,32 +5,37 @@ import { FirebaseService } from './firebase.service'; // Ajusta la importación 
   providedIn: 'root'
 })
 export class AulasGuardadasService {
-  aulasGuardadas: { [key: string]: boolean } = {};
+  aulasGuardadas: { [aula: string]: { [alumno: string]: boolean } } = {};
   aulasTotales: any;
 
   constructor(private firebaseService: FirebaseService) {
     this.reset();
   }
-  // Método para marcar que la comanda de un aula ha sido guardada
-  guardarComanda(aulaNombre: string) {
-    this.aulasGuardadas[aulaNombre] = true;
+
+  // Método para marcar que la comanda de un aula ha sido guardada por un alumno
+  guardarComanda(aulaNombre: string, alumnoNombre: string) {
+    if (!this.aulasGuardadas[aulaNombre]) {
+      this.aulasGuardadas[aulaNombre] = {};
+    }
+    this.aulasGuardadas[aulaNombre][alumnoNombre] = true;
   }
 
-  aulaGuardada( aula: string) {
-    return this.aulasGuardadas[aula];
+  // Método para verificar si una aula ha sido guardada por un alumno específico
+  aulaGuardada(aula: string, alumno: string) {
+    return this.aulasGuardadas[aula]?.[alumno] || false;
   }
 
-  // Método para verificar si todas las aulas han guardado su comanda
-  todasAulasGuardadas(): boolean {
-    return Object.values(this.aulasGuardadas).every(guardada => guardada);
+  // Método para verificar si todas las aulas han sido guardadas por un alumno específico
+  todasAulasGuardadas(alumno: string): boolean {
+    return Object.values(this.aulasGuardadas).every(aula => aula[alumno]);
   }
 
   // Método para reiniciar el estado de las aulas
   async reset() {
     this.aulasTotales = await this.firebaseService.getCollection('aulas');
     
-    for(let i = 0; i < this.aulasTotales.length; i++) {
-      this.aulasGuardadas[this.aulasTotales[i].nombre] = false;
+    for (let i = 0; i < this.aulasTotales.length; i++) {
+      this.aulasGuardadas[this.aulasTotales[i].nombre] = {};
     }
   }
 }
