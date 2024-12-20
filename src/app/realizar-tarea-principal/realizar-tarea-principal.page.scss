@@ -23,6 +23,14 @@ ion-title {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+.task-image-ok {
+    max-width: 25%; /* Ajusta al 40% del ancho del contenedor */
+    max-height: 150px; /* Altura máxima de 150px */
+    height: auto; /* Mantiene la proporción */
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 .pagination-buttons {
     display: flex;
     justify-content: center;
